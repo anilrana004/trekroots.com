@@ -1,0 +1,206 @@
+type Yatra = 
+ record {
+   accessibility: text;
+   description: text;
+   duration: text;
+   helicopterInfo: opt text;
+   id: Id;
+   imageUrl: text;
+   itinerary: vec DayItinerary;
+   name: text;
+   permits: text;
+   priceRange: PriceRange;
+   pujaGuide: text;
+   registration: text;
+   registrationInfo: text;
+   route: text;
+   season: text;
+   slug: Slug;
+   spiritualSignificance: text;
+   templeTimings: text;
+   temples: vec text;
+ };
+type Trek = 
+ record {
+   bestSeason: text;
+   category: text;
+   description: text;
+   difficulty: text;
+   distanceKm: float64;
+   durationDays: nat;
+   durationNights: nat;
+   endPoint: text;
+   exclusions: vec text;
+   highlights: vec text;
+   id: Id;
+   imageUrl: text;
+   inclusions: vec text;
+   itinerary: vec DayItinerary;
+   maxAltitudeFt: nat;
+   maxAltitudeM: nat;
+   name: text;
+   priceRange: PriceRange;
+   region: text;
+   slug: Slug;
+   startPoint: text;
+   state: text;
+ };
+type Timestamp = int;
+type Stay = 
+ record {
+   amenities: vec text;
+   description: text;
+   id: Id;
+   imageUrl: text;
+   location: text;
+   name: text;
+   nearbyAttractions: vec text;
+   ownerNote: text;
+   pricePerNightMax: nat;
+   pricePerNightMin: nat;
+   slug: Slug;
+   stayType: text;
+ };
+type Slug = text;
+type SearchResults = 
+ record {
+   blogPosts: vec BlogPost;
+   packages: vec Package;
+   stays: vec Stay;
+   treks: vec Trek;
+   yatras: vec Yatra;
+ };
+type RazorpayOrderResult = 
+ record {
+   amount: nat;
+   currency: text;
+   keyId: text;
+   orderId: text;
+ };
+type PriceRange = 
+ record {
+   maxINR: nat;
+   minINR: nat;
+ };
+type PackageTier = 
+ record {
+   name: text;
+   pricePerPerson: nat;
+ };
+type Package = 
+ record {
+   accommodationType: text;
+   category: text;
+   description: text;
+   duration: text;
+   exclusions: vec text;
+   groupSize: text;
+   groupSizeMax: nat;
+   id: Id;
+   imageUrl: text;
+   inclusions: vec text;
+   itinerary: vec DayItinerary;
+   name: text;
+   priceRange: PriceRange;
+   problemSolved: text;
+   slug: Slug;
+   tiers: vec PackageTier;
+ };
+type Id = nat;
+type DayItinerary = 
+ record {
+   campsite: text;
+   day: nat;
+   description: text;
+   difficulty: text;
+   distanceKm: float64;
+   endAltitudeM: nat;
+   landmarks: vec text;
+   mealsIncluded: text;
+   route: text;
+   startAltitudeM: nat;
+   title: text;
+ };
+type BookingWithPaymentResult = 
+ record {
+   bookingId: text;
+   razorpayOrder: RazorpayOrderResult;
+ };
+type BookingStatus = 
+ variant {
+   cancelled;
+   completed;
+   confirmed;
+   pending;
+ };
+type BookingInput = 
+ record {
+   amountINR: nat;
+   email: text;
+   groupSize: nat;
+   name: text;
+   packageId: opt Id;
+   phone: text;
+   stayId: opt Id;
+   travelDates: text;
+   trekId: opt Id;
+   yatraId: opt Id;
+ };
+type Booking = 
+ record {
+   amountINR: nat;
+   createdAt: Timestamp;
+   email: text;
+   groupSize: nat;
+   id: Id;
+   name: text;
+   packageId: opt Id;
+   paymentId: opt text;
+   paymentStatus: text;
+   phone: text;
+   razorpayOrderId: opt text;
+   razorpaySignature: opt text;
+   status: BookingStatus;
+   stayId: opt Id;
+   travelDates: text;
+   trekId: opt Id;
+   yatraId: opt Id;
+ };
+type BlogPost = 
+ record {
+   authorName: text;
+   category: text;
+   content: text;
+   excerpt: text;
+   id: Id;
+   imageUrl: text;
+   publishedAt: Timestamp;
+   readTime: nat;
+   readTimeMin: nat;
+   slug: Slug;
+   title: text;
+ };
+service : {
+  confirmBookingPayment: (bookingId: nat, paymentId: text, razorpaySignature:
+   text) -> (opt Booking);
+  createBooking: (input: BookingInput) -> (Booking);
+  createBookingWithPayment: (input: BookingInput) ->
+   (BookingWithPaymentResult);
+  getAllBlogPosts: () -> (vec BlogPost) query;
+  getAllBookings: () -> (vec Booking) query;
+  getAllPackages: () -> (vec Package) query;
+  getAllStays: () -> (vec Stay) query;
+  getAllTreks: () -> (vec Trek) query;
+  getAllYatras: () -> (vec Yatra) query;
+  getBlogPostBySlug: (slug: text) -> (opt BlogPost) query;
+  getPackageBySlug: (slug: text) -> (opt Package) query;
+  getStayBySlug: (slug: text) -> (opt Stay) query;
+  getTrekBySlug: (slug: text) -> (opt Trek) query;
+  getTreksByDifficulty: (difficulty: text) -> (vec Trek) query;
+  getTreksByState: (state: text) -> (vec Trek) query;
+  getUserBookings: (userEmail: text) -> (vec Booking) query;
+  getYatraBySlug: (slug: text) -> (opt Yatra) query;
+  searchAll: (searchTerm: text) -> (SearchResults) query;
+  searchTreks: (searchTerm: text) -> (vec Trek) query;
+  setRazorpayKeys: (keyId: text, secret: text) -> ();
+}

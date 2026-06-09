@@ -1,0 +1,858 @@
+// Version: 4.0.0
+type BlogPostState__283050486 =
+  {
+    authorName : Text;
+    category : Text;
+    content : Text;
+    excerpt : Text;
+    id : Nat;
+    imageUrl : Text;
+    publishedAt : Int;
+    readTime : Nat;
+    readTimeMin : Nat;
+    slug : Text;
+    title : Text
+  };
+type BlogPostState__490694268 =
+  {
+    category : Text;
+    content : Text;
+    excerpt : Text;
+    id : Nat;
+    imageUrl : Text;
+    publishedAt : Int;
+    readTime : Nat;
+    slug : Text;
+    title : Text
+  };
+type BlogPostState__729326894 =
+  {
+    authorName : Text;
+    category : Text;
+    content : Text;
+    excerpt : Text;
+    id : Nat;
+    imageUrl : Text;
+    publishedAt : Int;
+    readTime : Nat;
+    readTimeMin : Nat;
+    slug : Text;
+    title : Text
+  };
+type BlogPost__72627970 =
+  {
+    authorName : Text;
+    category : Text;
+    content : Text;
+    excerpt : Text;
+    id : Id__389469852;
+    imageUrl : Text;
+    publishedAt : Timestamp__301639476;
+    readTime : Nat;
+    readTimeMin : Nat;
+    slug : Slug__239290498;
+    title : Text
+  };
+type BookingState__184923905 =
+  {
+    createdAt : Int;
+    email : Text;
+    groupSize : Nat;
+    id : Nat;
+    name : Text;
+    packageId : ?Nat;
+    phone : Text;
+    status : {#cancelled; #completed; #confirmed; #pending};
+    stayId : ?Nat;
+    travelDates : Text;
+    trekId : ?Nat;
+    yatraId : ?Nat
+  };
+type BookingState__394320631 =
+  {
+    createdAt : Int;
+    email : Text;
+    groupSize : Nat;
+    id : Nat;
+    name : Text;
+    packageId : ?Nat;
+    phone : Text;
+    status : {#cancelled; #completed; #confirmed; #pending};
+    stayId : ?Nat;
+    travelDates : Text;
+    trekId : ?Nat;
+    yatraId : ?Nat
+  };
+type BookingState__790056491 =
+  {
+    amountINR : Nat;
+    createdAt : Int;
+    email : Text;
+    groupSize : Nat;
+    id : Nat;
+    name : Text;
+    packageId : ?Nat;
+    paymentId : ?Text;
+    paymentStatus : Text;
+    phone : Text;
+    razorpayOrderId : ?Text;
+    razorpaySignature : ?Text;
+    status : {#cancelled; #completed; #confirmed; #pending};
+    stayId : ?Nat;
+    travelDates : Text;
+    trekId : ?Nat;
+    yatraId : ?Nat
+  };
+type BookingStatus__866642965 =
+  {#cancelled; #completed; #confirmed; #pending};
+type Booking__1057793126 =
+  {
+    amountINR : Nat;
+    createdAt : Timestamp__301639476;
+    email : Text;
+    groupSize : Nat;
+    id : Id__389469852;
+    name : Text;
+    packageId : ?Id__389469852;
+    paymentId : ?Text;
+    paymentStatus : Text;
+    phone : Text;
+    razorpayOrderId : ?Text;
+    razorpaySignature : ?Text;
+    status : BookingStatus__866642965;
+    stayId : ?Id__389469852;
+    travelDates : Text;
+    trekId : ?Id__389469852;
+    yatraId : ?Id__389469852
+  };
+type DayItinerary__116191726 =
+  {
+    campsite : Text;
+    day : Nat;
+    description : Text;
+    difficulty : Text;
+    distanceKm : Float;
+    endAltitudeM : Nat;
+    landmarks : [Text];
+    mealsIncluded : Text;
+    route : Text;
+    startAltitudeM : Nat;
+    title : Text
+  };
+type DayItinerary__664062490 =
+  {
+    campsite : Text;
+    day : Nat;
+    description : Text;
+    difficulty : Text;
+    distanceKm : Float;
+    endAltitudeM : Nat;
+    landmarks : [Text];
+    mealsIncluded : Text;
+    route : Text;
+    startAltitudeM : Nat;
+    title : Text
+  };
+type DayItinerary__6862653 =
+  {
+    campsite : Text;
+    day : Nat;
+    description : Text;
+    difficulty : Text;
+    distanceKm : Float;
+    endAltitudeM : Nat;
+    landmarks : [Text];
+    mealsIncluded : Text;
+    route : Text;
+    startAltitudeM : Nat;
+    title : Text
+  };
+type DayItinerary__726439282 =
+  {
+    campsite : Text;
+    day : Nat;
+    description : Text;
+    difficulty : Text;
+    distanceKm : Float;
+    endAltitudeM : Nat;
+    landmarks : [Text];
+    mealsIncluded : Text;
+    route : Text;
+    startAltitudeM : Nat;
+    title : Text
+  };
+type DayItinerary__923927462 =
+  {
+    campsite : Text;
+    day : Nat;
+    description : Text;
+    difficulty : Text;
+    distanceKm : Float;
+    endAltitudeM : Nat;
+    landmarks : [Text];
+    mealsIncluded : Text;
+    route : Text;
+    startAltitudeM : Nat;
+    title : Text
+  };
+type Id__389469852 = Nat;
+type List__529703492<T> =
+  {
+    var blockIndex : Nat__1040412405;
+    var blocks : [var [var ?T]];
+    var elementIndex : Nat__1040412405
+  };
+type List__560604548<T> = List__529703492<T>;
+type Nat__1040412405 = Nat__920180692;
+type Nat__920180692 = Nat;
+type NewActor__1055556513 =
+  {
+    blogPosts : List__560604548<BlogPostState__490694268>;
+    bookings : List__560604548<BookingState__394320631>;
+    packages : List__560604548<PackageState__863880513>;
+    state : {var nextBookingId : Nat};
+    stays : List__560604548<StayState__224381060>;
+    treks : List__560604548<TrekState__957683308>;
+    yatras : List__560604548<YatraState__219417777>
+  };
+type NewActor__474943281 =
+  {
+    blogPosts : List__560604548<BlogPostState__729326894>;
+    bookings : List__560604548<NewBookingState__349382918>;
+    packages : List__560604548<PackageState__671019951>;
+    razorpayKeys : {var keyId : Text; var keySecret : Text};
+    state : {var nextBookingId : Nat};
+    stays : List__560604548<StayState__836233857>;
+    treks : List__560604548<TrekState__80194262>;
+    yatras : List__560604548<YatraState__216581774>
+  };
+type NewActor__677009683 =
+  {
+    blogPosts : List__560604548<NewBlogPostState__856575315>;
+    bookings : List__560604548<BookingState__184923905>;
+    packages : List__560604548<NewPackageState__513431186>;
+    state : {var nextBookingId : Nat};
+    stays : List__560604548<NewStayState__484876193>;
+    treks : List__560604548<TrekState__640123542>;
+    yatras : List__560604548<NewYatraState__832884794>
+  };
+type NewActor__746791053 =
+  {
+    blogPosts : List__560604548<BlogPostState__283050486>;
+    bookings : List__560604548<BookingState__790056491>;
+    packages : List__560604548<PackageState__502995222>;
+    razorpayKeys : {var keyId : Text; var keySecret : Text};
+    state : {var nextBookingId : Nat};
+    stays : List__560604548<StayState__602157609>;
+    treks : List__560604548<TrekState__403664970>;
+    yatras : List__560604548<NewYatraState__313325004>
+  };
+type NewBlogPostState__856575315 =
+  {
+    authorName : Text;
+    category : Text;
+    content : Text;
+    excerpt : Text;
+    id : Nat;
+    imageUrl : Text;
+    publishedAt : Int;
+    readTime : Nat;
+    readTimeMin : Nat;
+    slug : Text;
+    title : Text
+  };
+type NewBookingState__349382918 =
+  {
+    amountINR : Nat;
+    createdAt : Int;
+    email : Text;
+    groupSize : Nat;
+    id : Nat;
+    name : Text;
+    packageId : ?Nat;
+    paymentId : ?Text;
+    paymentStatus : Text;
+    phone : Text;
+    razorpayOrderId : ?Text;
+    razorpaySignature : ?Text;
+    status : {#cancelled; #completed; #confirmed; #pending};
+    stayId : ?Nat;
+    travelDates : Text;
+    trekId : ?Nat;
+    yatraId : ?Nat
+  };
+type NewPackageState__513431186 =
+  {
+    accommodationType : Text;
+    category : Text;
+    description : Text;
+    duration : Text;
+    exclusions : [Text];
+    groupSize : Text;
+    groupSizeMax : Nat;
+    id : Nat;
+    imageUrl : Text;
+    inclusions : [Text];
+    itinerary : [DayItinerary__726439282];
+    name : Text;
+    priceRange : PriceRange__498633790;
+    problemSolved : Text;
+    slug : Text;
+    tiers : [PackageTier__313067839]
+  };
+type NewStayState__484876193 =
+  {
+    amenities : [Text];
+    description : Text;
+    id : Nat;
+    imageUrl : Text;
+    location : Text;
+    name : Text;
+    nearbyAttractions : [Text];
+    ownerNote : Text;
+    pricePerNightMax : Nat;
+    pricePerNightMin : Nat;
+    slug : Text;
+    stayType : Text
+  };
+type NewYatraState__313325004 =
+  {
+    accessibility : Text;
+    description : Text;
+    duration : Text;
+    helicopterInfo : ?Text;
+    id : Nat;
+    imageUrl : Text;
+    itinerary : [DayItinerary__923927462];
+    name : Text;
+    permits : Text;
+    priceRange : PriceRange__762110990;
+    pujaGuide : Text;
+    registration : Text;
+    registrationInfo : Text;
+    route : Text;
+    season : Text;
+    slug : Text;
+    spiritualSignificance : Text;
+    templeTimings : Text;
+    temples : [Text]
+  };
+type NewYatraState__832884794 =
+  {
+    accessibility : Text;
+    description : Text;
+    duration : Text;
+    helicopterInfo : ?Text;
+    id : Nat;
+    imageUrl : Text;
+    name : Text;
+    permits : Text;
+    priceRange : PriceRange__498633790;
+    pujaGuide : Text;
+    registration : Text;
+    registrationInfo : Text;
+    route : Text;
+    season : Text;
+    slug : Text;
+    spiritualSignificance : Text;
+    templeTimings : Text;
+    temples : [Text]
+  };
+type OldActor__192817576 =
+  {
+    blogPosts : List__560604548<BlogPostState__283050486>;
+    bookings : List__560604548<BookingState__790056491>;
+    packages : List__560604548<PackageState__502995222>;
+    razorpayKeys : {var keyId : Text; var keySecret : Text};
+    state : {var nextBookingId : Nat};
+    stays : List__560604548<StayState__602157609>;
+    treks : List__560604548<TrekState__403664970>;
+    yatras : List__560604548<OldYatraState__306676843>
+  };
+type OldActor__541293704 = {};
+type OldActor__864308728 =
+  {
+    blogPosts : List__560604548<OldBlogPostState__644125403>;
+    bookings : List__560604548<BookingState__184923905>;
+    packages : List__560604548<OldPackageState__471593207>;
+    state : {var nextBookingId : Nat};
+    stays : List__560604548<OldStayState__318806088>;
+    treks : List__560604548<TrekState__640123542>;
+    yatras : List__560604548<OldYatraState__499628703>
+  };
+type OldActor__958496934 =
+  {
+    blogPosts : List__560604548<BlogPostState__729326894>;
+    bookings : List__560604548<OldBookingState__632467879>;
+    packages : List__560604548<PackageState__671019951>;
+    state : {var nextBookingId : Nat};
+    stays : List__560604548<StayState__836233857>;
+    treks : List__560604548<TrekState__80194262>;
+    yatras : List__560604548<YatraState__216581774>
+  };
+type OldBlogPostState__644125403 =
+  {
+    category : Text;
+    content : Text;
+    excerpt : Text;
+    id : Nat;
+    imageUrl : Text;
+    publishedAt : Int;
+    readTime : Nat;
+    slug : Text;
+    title : Text
+  };
+type OldBookingState__632467879 =
+  {
+    createdAt : Int;
+    email : Text;
+    groupSize : Nat;
+    id : Nat;
+    name : Text;
+    packageId : ?Nat;
+    phone : Text;
+    status : {#cancelled; #completed; #confirmed; #pending};
+    stayId : ?Nat;
+    travelDates : Text;
+    trekId : ?Nat;
+    yatraId : ?Nat
+  };
+type OldPackageState__471593207 =
+  {
+    category : Text;
+    description : Text;
+    duration : Text;
+    exclusions : [Text];
+    groupSize : Text;
+    id : Nat;
+    imageUrl : Text;
+    inclusions : [Text];
+    itinerary : [DayItinerary__726439282];
+    name : Text;
+    priceRange : PriceRange__498633790;
+    problemSolved : Text;
+    slug : Text
+  };
+type OldStayState__318806088 =
+  {
+    amenities : [Text];
+    description : Text;
+    id : Nat;
+    imageUrl : Text;
+    location : Text;
+    name : Text;
+    pricePerNightMax : Nat;
+    pricePerNightMin : Nat;
+    slug : Text;
+    stayType : Text
+  };
+type OldYatraState__306676843 =
+  {
+    accessibility : Text;
+    description : Text;
+    duration : Text;
+    helicopterInfo : ?Text;
+    id : Nat;
+    imageUrl : Text;
+    name : Text;
+    permits : Text;
+    priceRange : PriceRange__762110990;
+    pujaGuide : Text;
+    registration : Text;
+    registrationInfo : Text;
+    route : Text;
+    season : Text;
+    slug : Text;
+    spiritualSignificance : Text;
+    templeTimings : Text;
+    temples : [Text]
+  };
+type OldYatraState__499628703 =
+  {
+    description : Text;
+    duration : Text;
+    id : Nat;
+    imageUrl : Text;
+    name : Text;
+    priceRange : PriceRange__498633790;
+    registration : Text;
+    route : Text;
+    season : Text;
+    slug : Text;
+    spiritualSignificance : Text;
+    temples : [Text]
+  };
+type PackageState__502995222 =
+  {
+    accommodationType : Text;
+    category : Text;
+    description : Text;
+    duration : Text;
+    exclusions : [Text];
+    groupSize : Text;
+    groupSizeMax : Nat;
+    id : Nat;
+    imageUrl : Text;
+    inclusions : [Text];
+    itinerary : [DayItinerary__923927462];
+    name : Text;
+    priceRange : PriceRange__762110990;
+    problemSolved : Text;
+    slug : Text;
+    tiers : [PackageTier__138702667]
+  };
+type PackageState__671019951 =
+  {
+    accommodationType : Text;
+    category : Text;
+    description : Text;
+    duration : Text;
+    exclusions : [Text];
+    groupSize : Text;
+    groupSizeMax : Nat;
+    id : Nat;
+    imageUrl : Text;
+    inclusions : [Text];
+    itinerary : [DayItinerary__664062490];
+    name : Text;
+    priceRange : PriceRange__322299798;
+    problemSolved : Text;
+    slug : Text;
+    tiers : [PackageTier__772231604]
+  };
+type PackageState__863880513 =
+  {
+    category : Text;
+    description : Text;
+    duration : Text;
+    exclusions : [Text];
+    groupSize : Text;
+    id : Nat;
+    imageUrl : Text;
+    inclusions : [Text];
+    itinerary : [DayItinerary__6862653];
+    name : Text;
+    priceRange : PriceRange__246137443;
+    problemSolved : Text;
+    slug : Text
+  };
+type PackageTier__1036408106 = {name : Text; pricePerPerson : Nat};
+type PackageTier__138702667 = {name : Text; pricePerPerson : Nat};
+type PackageTier__313067839 = {name : Text; pricePerPerson : Nat};
+type PackageTier__772231604 = {name : Text; pricePerPerson : Nat};
+type Package__233320871 =
+  {
+    accommodationType : Text;
+    category : Text;
+    description : Text;
+    duration : Text;
+    exclusions : [Text];
+    groupSize : Text;
+    groupSizeMax : Nat;
+    id : Id__389469852;
+    imageUrl : Text;
+    inclusions : [Text];
+    itinerary : [DayItinerary__116191726];
+    name : Text;
+    priceRange : PriceRange__350980086;
+    problemSolved : Text;
+    slug : Slug__239290498;
+    tiers : [PackageTier__1036408106]
+  };
+type PriceRange__246137443 = {maxINR : Nat; minINR : Nat};
+type PriceRange__322299798 = {maxINR : Nat; minINR : Nat};
+type PriceRange__350980086 = {maxINR : Nat; minINR : Nat};
+type PriceRange__498633790 = {maxINR : Nat; minINR : Nat};
+type PriceRange__762110990 = {maxINR : Nat; minINR : Nat};
+type Slug__239290498 = Text;
+type StayState__224381060 =
+  {
+    amenities : [Text];
+    description : Text;
+    id : Nat;
+    imageUrl : Text;
+    location : Text;
+    name : Text;
+    pricePerNightMax : Nat;
+    pricePerNightMin : Nat;
+    slug : Text;
+    stayType : Text
+  };
+type StayState__602157609 =
+  {
+    amenities : [Text];
+    description : Text;
+    id : Nat;
+    imageUrl : Text;
+    location : Text;
+    name : Text;
+    nearbyAttractions : [Text];
+    ownerNote : Text;
+    pricePerNightMax : Nat;
+    pricePerNightMin : Nat;
+    slug : Text;
+    stayType : Text
+  };
+type StayState__836233857 =
+  {
+    amenities : [Text];
+    description : Text;
+    id : Nat;
+    imageUrl : Text;
+    location : Text;
+    name : Text;
+    nearbyAttractions : [Text];
+    ownerNote : Text;
+    pricePerNightMax : Nat;
+    pricePerNightMin : Nat;
+    slug : Text;
+    stayType : Text
+  };
+type Stay__301915366 =
+  {
+    amenities : [Text];
+    description : Text;
+    id : Id__389469852;
+    imageUrl : Text;
+    location : Text;
+    name : Text;
+    nearbyAttractions : [Text];
+    ownerNote : Text;
+    pricePerNightMax : Nat;
+    pricePerNightMin : Nat;
+    slug : Slug__239290498;
+    stayType : Text
+  };
+type Timestamp__301639476 = Int;
+type TrekState__403664970 =
+  {
+    bestSeason : Text;
+    category : Text;
+    description : Text;
+    difficulty : Text;
+    distanceKm : Float;
+    durationDays : Nat;
+    durationNights : Nat;
+    endPoint : Text;
+    exclusions : [Text];
+    highlights : [Text];
+    id : Nat;
+    imageUrl : Text;
+    inclusions : [Text];
+    itinerary : [DayItinerary__923927462];
+    maxAltitudeFt : Nat;
+    maxAltitudeM : Nat;
+    name : Text;
+    priceRange : PriceRange__762110990;
+    region : Text;
+    slug : Text;
+    startPoint : Text;
+    state : Text
+  };
+type TrekState__640123542 =
+  {
+    bestSeason : Text;
+    category : Text;
+    description : Text;
+    difficulty : Text;
+    distanceKm : Float;
+    durationDays : Nat;
+    durationNights : Nat;
+    endPoint : Text;
+    exclusions : [Text];
+    highlights : [Text];
+    id : Nat;
+    imageUrl : Text;
+    inclusions : [Text];
+    itinerary : [DayItinerary__726439282];
+    maxAltitudeFt : Nat;
+    maxAltitudeM : Nat;
+    name : Text;
+    priceRange : PriceRange__498633790;
+    region : Text;
+    slug : Text;
+    startPoint : Text;
+    state : Text
+  };
+type TrekState__80194262 =
+  {
+    bestSeason : Text;
+    category : Text;
+    description : Text;
+    difficulty : Text;
+    distanceKm : Float;
+    durationDays : Nat;
+    durationNights : Nat;
+    endPoint : Text;
+    exclusions : [Text];
+    highlights : [Text];
+    id : Nat;
+    imageUrl : Text;
+    inclusions : [Text];
+    itinerary : [DayItinerary__664062490];
+    maxAltitudeFt : Nat;
+    maxAltitudeM : Nat;
+    name : Text;
+    priceRange : PriceRange__322299798;
+    region : Text;
+    slug : Text;
+    startPoint : Text;
+    state : Text
+  };
+type TrekState__957683308 =
+  {
+    bestSeason : Text;
+    category : Text;
+    description : Text;
+    difficulty : Text;
+    distanceKm : Float;
+    durationDays : Nat;
+    durationNights : Nat;
+    endPoint : Text;
+    exclusions : [Text];
+    highlights : [Text];
+    id : Nat;
+    imageUrl : Text;
+    inclusions : [Text];
+    itinerary : [DayItinerary__6862653];
+    maxAltitudeFt : Nat;
+    maxAltitudeM : Nat;
+    name : Text;
+    priceRange : PriceRange__246137443;
+    region : Text;
+    slug : Text;
+    startPoint : Text;
+    state : Text
+  };
+type Trek__744479174 =
+  {
+    bestSeason : Text;
+    category : Text;
+    description : Text;
+    difficulty : Text;
+    distanceKm : Float;
+    durationDays : Nat;
+    durationNights : Nat;
+    endPoint : Text;
+    exclusions : [Text];
+    highlights : [Text];
+    id : Id__389469852;
+    imageUrl : Text;
+    inclusions : [Text];
+    itinerary : [DayItinerary__116191726];
+    maxAltitudeFt : Nat;
+    maxAltitudeM : Nat;
+    name : Text;
+    priceRange : PriceRange__350980086;
+    region : Text;
+    slug : Slug__239290498;
+    startPoint : Text;
+    state : Text
+  };
+type YatraState__216581774 =
+  {
+    accessibility : Text;
+    description : Text;
+    duration : Text;
+    helicopterInfo : ?Text;
+    id : Nat;
+    imageUrl : Text;
+    name : Text;
+    permits : Text;
+    priceRange : PriceRange__322299798;
+    pujaGuide : Text;
+    registration : Text;
+    registrationInfo : Text;
+    route : Text;
+    season : Text;
+    slug : Text;
+    spiritualSignificance : Text;
+    templeTimings : Text;
+    temples : [Text]
+  };
+type YatraState__219417777 =
+  {
+    description : Text;
+    duration : Text;
+    id : Nat;
+    imageUrl : Text;
+    name : Text;
+    priceRange : PriceRange__246137443;
+    registration : Text;
+    route : Text;
+    season : Text;
+    slug : Text;
+    spiritualSignificance : Text;
+    temples : [Text]
+  };
+type Yatra__174763650 =
+  {
+    accessibility : Text;
+    description : Text;
+    duration : Text;
+    helicopterInfo : ?Text;
+    id : Id__389469852;
+    imageUrl : Text;
+    itinerary : [DayItinerary__116191726];
+    name : Text;
+    permits : Text;
+    priceRange : PriceRange__350980086;
+    pujaGuide : Text;
+    registration : Text;
+    registrationInfo : Text;
+    route : Text;
+    season : Text;
+    slug : Slug__239290498;
+    spiritualSignificance : Text;
+    templeTimings : Text;
+    temples : [Text]
+  };
+{
+  "20260608_000000_Init" : OldActor__541293704 -> NewActor__1055556513;
+  "20260608_000001_Phase2Data" :
+    (old : OldActor__864308728) -> NewActor__677009683;
+  "20260608_000002_SeedData" :
+    (old : OldActor__958496934) -> NewActor__474943281;
+  "20260608_000003_YatraItineraries" :
+    (old : OldActor__192817576) -> NewActor__746791053
+}
+actor  {
+  stable blogPosts :
+    {
+      var blockIndex : Nat__1040412405;
+      var blocks : [var [var ?BlogPost__72627970]];
+      var elementIndex : Nat__1040412405
+    };
+  stable bookings :
+    {
+      var blockIndex : Nat__1040412405;
+      var blocks : [var [var ?Booking__1057793126]];
+      var elementIndex : Nat__1040412405
+    };
+  stable packages :
+    {
+      var blockIndex : Nat__1040412405;
+      var blocks : [var [var ?Package__233320871]];
+      var elementIndex : Nat__1040412405
+    };
+  stable razorpayKeys : {var keyId : Text; var keySecret : Text};
+  stable state : {var nextBookingId : Nat};
+  stable stays :
+    {
+      var blockIndex : Nat__1040412405;
+      var blocks : [var [var ?Stay__301915366]];
+      var elementIndex : Nat__1040412405
+    };
+  stable treks :
+    {
+      var blockIndex : Nat__1040412405;
+      var blocks : [var [var ?Trek__744479174]];
+      var elementIndex : Nat__1040412405
+    };
+  stable yatras :
+    {
+      var blockIndex : Nat__1040412405;
+      var blocks : [var [var ?Yatra__174763650]];
+      var elementIndex : Nat__1040412405
+    }
+};
