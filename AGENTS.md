@@ -6,23 +6,14 @@
 
 ## Verified Commands
 
-**Frontend** (run from `src/frontend/`):
+Run from project root:
 
 - **install**: `pnpm install --prefer-offline`
-- **typecheck**: `pnpm typecheck`
-- **lint fix**: `pnpm fix`
+- **dev**: `pnpm dev`
 - **build**: `pnpm build`
-
-**Backend** (run from `src/backend/`):
-
-- **install**: `mops install`
-- **typecheck**: `mops check --fix`
-- **build**: `mops build`
-
-**Backend and frontend integration** (run from root):
-
-- **generate bindings**: `pnpm bindgen` This step is necessary to ensure the frontend can call the backend methods.
+- **start**: `pnpm start`
 
 ## Learnings
 
-[No learnings yet]
+- Migrated off Caffeine/ICP Motoko to Next.js App Router with static catalog data in `src/data/`.
+- Bookings are WhatsApp enquiry only (no Razorpay backend).

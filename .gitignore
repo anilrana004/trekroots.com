@@ -1,7 +1,15 @@
 node_modules/
 dist/
+.next/
+out/
 .mops/
 .old/
 .platform/
 .pnpm-store/
 .cache/
+_migrate/
+*.log
+.env*
+!.env.example
+
+tsconfig.tsbuildinfo
