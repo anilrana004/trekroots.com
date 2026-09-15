@@ -3,6 +3,7 @@
 import { getYatraBySlug } from "@/data";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
 import {
   Calendar,
   CheckCircle2,
@@ -934,7 +935,20 @@ export default function YatraDetailPage() {
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const navRef = useRef<HTMLDivElement>(null);
   const [navSticky, setNavSticky] = useState(false);
-  const enrichment: YatraEnrichment = ENRICHMENTS[slug] ?? DEFAULT_ENRICHMENT;
+  const enrichmentKey =
+    {
+      "char-dham": "char-dham-yatra",
+      kedarnath: "kedarnath-yatra",
+      "do-dham-yatra": "do-dham-yatra",
+    }[slug] ?? slug;
+  const enrichment: YatraEnrichment = {
+    ...(ENRICHMENTS[enrichmentKey] ?? DEFAULT_ENRICHMENT),
+    ...(yatra?.faqs?.length
+      ? { faqs: yatra.faqs }
+      : {}),
+    ...(yatra?.tagline ? { tagline: yatra.tagline } : {}),
+    ...(yatra?.imageUrl ? { coverImage: yatra.imageUrl } : {}),
+  };
 
   // Scroll spy for sticky nav
   useEffect(() => {
@@ -1060,10 +1074,14 @@ export default function YatraDetailPage() {
     <div className="min-h-screen" style={{ backgroundColor: "#FFFFFF" }}>
       {/* ── Hero ──────────────────────────────────────────── */}
       <div data-hero className="relative h-[80vh] overflow-hidden">
-        <img
+        <CloudinaryImage
           src={heroImage}
           alt={yatra.name}
+          width={1600}
+          height={900}
+          priority
           className="w-full h-full object-cover"
+          transform={{ width: 1600, height: 900, crop: "fill", gravity: "auto" }}
         />
         <div
           className="absolute inset-0"
@@ -1997,10 +2015,13 @@ export default function YatraDetailPage() {
                     style={{ border: "1px solid #E8E8E8" }}
                   >
                     <div className="relative h-32 overflow-hidden">
-                      <img
+                      <CloudinaryImage
                         src={rel.coverImage}
                         alt={names[relSlug] || relSlug}
+                        width={400}
+                        height={160}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        transform={{ width: 400, height: 160, crop: "fill" }}
                       />
                       <div
                         className="absolute inset-0"

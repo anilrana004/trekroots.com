@@ -12,6 +12,7 @@ import {
   Youtube,
 } from "lucide-react";
 import { useState } from "react";
+import { LOGO_URL } from "@/lib/cloudinary";
 
 const EXPLORE_LINKS = [
   { label: "Treks", to: "/treks" },
@@ -26,10 +27,10 @@ const EXPLORE_LINKS = [
 const TOP_TREKS = [
   { label: "Kedarkantha Trek", to: "/treks/kedarkantha" },
   { label: "Valley of Flowers", to: "/treks/valley-of-flowers" },
-  { label: "Roopkund Trek", to: "/treks/roopkund" },
+  { label: "Brahmatal Trek", to: "/treks/brahmatal" },
   { label: "Hampta Pass", to: "/treks/hampta-pass" },
   { label: "Har Ki Dun", to: "/treks/har-ki-dun" },
-  { label: "Sar Pass Trek", to: "/treks/sar-pass" },
+  { label: "Chopta Tungnath", to: "/treks/chopta-tungnath" },
 ] as const;
 
 const TRUST_BADGES = [
@@ -120,11 +121,12 @@ export function Footer() {
               aria-label="TrekRoots"
             >
               <Image
-                src="/assets/images/logo.png"
-                alt="TrekRoots"
+                src={LOGO_URL}
+                alt="TrekRoots — Explore New Heights"
                 width={200}
                 height={56}
                 className="h-12 w-auto object-contain object-left"
+                unoptimized
               />
             </Link>
             <p

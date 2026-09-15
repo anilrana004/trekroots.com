@@ -16,7 +16,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       style={{ backgroundColor: "#FFFFFF" }}
     >
       <Navbar />
-      <main className="flex-1 pt-[68px]">{children}</main>
+      <main className="flex-1">{children}</main>
       <Footer />
       <div className="h-14 md:hidden" aria-hidden="true" />
       <MobileBottomNav />

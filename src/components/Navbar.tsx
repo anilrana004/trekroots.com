@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRight, Menu, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { LOGO_URL } from "@/lib/cloudinary";
 
 const NAV_LINKS = [
   { label: "Treks", to: "/treks" },
@@ -36,7 +37,7 @@ export function Navbar() {
     <>
       <header
         data-ocid="navbar"
-        className="fixed top-0 left-0 right-0 z-50 h-[68px] flex items-center bg-white"
+        className="sticky top-0 left-0 right-0 z-50 h-[68px] flex items-center bg-white"
         style={{
           borderBottom: "1px solid #E8E8E8",
         }}
@@ -49,12 +50,13 @@ export function Navbar() {
             aria-label="TrekRoots — Explore New Heights"
           >
             <Image
-              src="/assets/images/logo.png"
-              alt="TrekRoots"
+              src={LOGO_URL}
+              alt="TrekRoots — Explore New Heights"
               width={200}
               height={56}
               className="h-12 w-auto object-contain object-left"
               priority
+              unoptimized
             />
           </Link>
 

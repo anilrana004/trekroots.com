@@ -12,4 +12,8 @@ _migrate/
 .env*
 !.env.example
 
+# Large scrape dumps — regenerate via tools/*.py
+tools/secure_travels_raw.json
+tools/__pycache__/
+
 tsconfig.tsbuildinfo

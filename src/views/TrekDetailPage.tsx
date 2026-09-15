@@ -1,12 +1,46 @@
 "use client";
 
 import type { DayItinerary, Trek } from "@/data";
-import { getAllTreks, getTrekBySlug } from "@/data";
+import { getAllTreks, getTrekBySlug, getTrekHeroImages } from "@/data";
 import { TrekCard } from "@/components/TrekCard";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { TrekHeroCarousel } from "@/components/TrekHeroCarousel";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import {
+  MapPin,
+  Mountain,
+  Activity,
+  Backpack,
+  BarChart3,
+  Package,
+  Tent,
+  Timer,
+  Users,
+  Route,
+  Luggage,
+  RotateCcw,
+  RotateCw,
+  type LucideIcon,
+} from "lucide-react";
 import { TripCostCalculator } from "@/components/TripCostCalculator";
+import { getTrekFacts } from "@/data/trek-facts";
+
+const TREK_FACT_ICONS: Record<string, LucideIcon> = {
+  difficulty: BarChart3,
+  duration: Timer,
+  altitude: Mountain,
+  suitableFor: Users,
+  basecamp: Route,
+  accommodation: Tent,
+  fitness: Activity,
+  pickup: RotateCw,
+  dropoff: RotateCcw,
+  packing: Backpack,
+  cloakroom: Luggage,
+  offloading: Package,
+};
 
 const DIFFICULTY_COLOR: Record<string, string> = {
   Easy: "bg-emerald-100 text-emerald-800",
@@ -141,16 +175,35 @@ function StatBadge({
   icon,
   label,
   value,
-}: { icon: string; label: string; value: string }) {
+  href,
+}: {
+  icon: ReactNode;
+  label: string;
+  value: string;
+  href?: string;
+}) {
+  const valueEl = href ? (
+    <a
+      href={href}
+      className="text-sm font-semibold text-sky-700 font-body leading-tight text-center underline underline-offset-2 hover:text-sky-900"
+    >
+      {value}
+    </a>
+  ) : (
+    <span className="text-sm font-semibold text-foreground font-body leading-tight text-center">
+      {value}
+    </span>
+  );
+
   return (
-    <div className="flex flex-col items-center gap-0.5 px-3 py-2 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 min-w-[80px]">
-      <span className="text-lg">{icon}</span>
-      <span className="text-[10px] text-white/70 font-body uppercase tracking-wider">
+    <div className="flex flex-col items-center gap-2 px-4 py-4 sm:py-5 bg-white rounded-xl border border-border shadow-sm min-w-0">
+      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFC107]/15 text-[#1A1A1A]">
+        {icon}
+      </span>
+      <span className="text-[10px] text-muted-foreground font-body uppercase tracking-wider text-center">
         {label}
       </span>
-      <span className="text-xs font-semibold text-white font-body leading-tight text-center">
-        {value}
-      </span>
+      {valueEl}
     </div>
   );
 }
@@ -228,8 +281,11 @@ function DayBlock({ day }: { day: DayItinerary }) {
 }
 
 function BookingWidget({ trek }: { trek: Trek }) {
-  const minPrice = Number(trek.priceRange.minINR).toLocaleString("en-IN");
-  const maxPrice = Number(trek.priceRange.maxINR).toLocaleString("en-IN");
+  const min = Number(trek.priceRange.minINR);
+  const max = Number(trek.priceRange.maxINR);
+  const minPrice = min.toLocaleString("en-IN");
+  const maxPrice = max.toLocaleString("en-IN");
+  const onRequest = min <= 0;
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -252,10 +308,12 @@ function BookingWidget({ trek }: { trek: Trek }) {
         Starting from
       </p>
       <p className="font-mono text-3xl font-bold text-primary mb-0.5">
-        ₹{minPrice}
+        {onRequest ? "On Request" : `₹${minPrice}`}
       </p>
       <p className="text-xs text-muted-foreground font-body mb-4">
-        Up to ₹{maxPrice} · per person · GST incl.
+        {onRequest
+          ? "Contact us for current batch pricing · per person"
+          : `Up to ₹${maxPrice} · per person · 5% GST extra`}
       </p>
 
       <TripCostCalculator
@@ -569,6 +627,11 @@ export default function TrekDetailPage() {
   const relatedTreks = allTreks
     .filter((t) => t.slug !== trek.slug && t.state === trek.state)
     .slice(0, 3);
+  const packingSections =
+    trek.packing && trek.packing.length > 0 ? trek.packing : PACKING_SECTIONS;
+  const faqItems = trek.faqs && trek.faqs.length > 0 ? trek.faqs : FAQS;
+  const howToReachSections = trek.howToReach ?? [];
+  const heroImages = getTrekHeroImages(trek.slug, trek.imageUrl);
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
@@ -587,73 +650,63 @@ export default function TrekDetailPage() {
 
   return (
     <div className="bg-background min-h-screen">
-      {/* Hero */}
-      <div className="relative h-[60vh] md:h-[70vh] overflow-hidden bg-muted">
-        {trek.imageUrl ? (
-          <img
-            src={trek.imageUrl}
-            alt={trek.name}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-muted">
-            <span className="text-8xl">🏔️</span>
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-        <div className="absolute inset-0 flex flex-col justify-end px-4 md:px-8 pb-8">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-1.5 text-xs text-white/70 font-body mb-3">
-            <Link href="/" className="hover:text-white">
-              Home
-            </Link>
-            <span>/</span>
-            <Link href="/treks" className="hover:text-white">
-              Treks
-            </Link>
-            <span>/</span>
-            <span className="text-white/50">{trek.state}</span>
-            <span>/</span>
-            <span className="text-white">{trek.name}</span>
-          </nav>
-          <h1 className="font-display text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
-            {trek.name}
-          </h1>
-          {/* Stat badges */}
-          <div className="flex flex-wrap gap-2 mb-4">
-            <StatBadge
-              icon="📅"
-              label="Duration"
-              value={`${Number(trek.durationDays)}D / ${Number(trek.durationNights)}N`}
-            />
-            <StatBadge
-              icon="⛰️"
-              label="Max Altitude"
-              value={`${Number(trek.maxAltitudeM).toLocaleString()}m`}
-            />
-            <StatBadge icon="💪" label="Difficulty" value={trek.difficulty} />
-            <StatBadge icon="🌸" label="Best Season" value={trek.bestSeason} />
-            <StatBadge icon="📍" label="Start Point" value={trek.startPoint} />
-          </div>
-          {/* Hero CTAs */}
-          <div className="flex gap-3">
-            <Link
-              href={`/booking/${String(trek.id) }`}
-              data-ocid="trek.hero_book_button"
-              className="px-5 py-2.5 bg-primary text-primary-foreground font-semibold font-body text-sm rounded-lg hover:bg-primary/90 transition-colors"
-            >
-              Book This Trek
-            </Link>
-            <button
-              type="button"
-              data-ocid="trek.download_itinerary_button"
-              className="px-5 py-2.5 bg-white/10 backdrop-blur-sm border border-white/30 text-white font-semibold font-body text-sm rounded-lg hover:bg-white/20 transition-colors"
-            >
-              Download Itinerary
-            </button>
+      {/* Hero — full viewport below sticky navbar */}
+      <div className="relative h-[calc(100dvh-68px)] min-h-[520px] overflow-hidden bg-muted">
+        <TrekHeroCarousel images={heroImages} alt={trek.name} />
+        <div className="absolute inset-0 z-[3] bg-gradient-to-t from-black/75 via-black/40 to-black/25 pointer-events-none" />
+        <div className="absolute inset-0 z-[4] flex flex-col items-center justify-center px-4 md:px-8 pointer-events-none">
+          <div className="w-full max-w-4xl mx-auto flex flex-col items-center text-center">
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 leading-tight tracking-tight">
+              {trek.name}
+            </h1>
+            {trek.tagline && (
+              <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-white/85 font-body leading-relaxed mb-7">
+                {trek.tagline}
+              </p>
+            )}
+            {/* Hero CTAs */}
+            <div className="flex flex-wrap items-center justify-center gap-3 pointer-events-auto">
+              <Link
+                href={`/booking/${String(trek.id) }`}
+                data-ocid="trek.hero_book_button"
+                className="px-6 py-3 bg-primary text-primary-foreground font-semibold font-body text-sm rounded-lg hover:bg-primary/90 transition-colors"
+              >
+                Book This Trek
+              </Link>
+              <button
+                type="button"
+                data-ocid="trek.download_itinerary_button"
+                className="px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/30 text-white font-semibold font-body text-sm rounded-lg hover:bg-white/20 transition-colors"
+              >
+                Download Itinerary
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Trek quick facts — below hero */}
+      <section
+        className="border-b border-border bg-[#F5F5F5]"
+        data-ocid="trek.quick_facts"
+      >
+        <div className="container mx-auto px-4 py-6 md:py-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+            {getTrekFacts(trek).map((fact) => {
+              const Icon = TREK_FACT_ICONS[fact.id] ?? MapPin;
+              return (
+                <StatBadge
+                  key={fact.id}
+                  icon={<Icon size={18} strokeWidth={2} />}
+                  label={fact.label}
+                  value={fact.value}
+                  href={fact.href}
+                />
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       {/* Sticky jump-to-section (hides under header / rises to top on phone scroll) */}
       <div
@@ -834,7 +887,7 @@ export default function TrekDetailPage() {
                 Packing List
               </h2>
               <div className="grid sm:grid-cols-2 gap-5">
-                {PACKING_SECTIONS.map((sec) => (
+                {packingSections.map((sec) => (
                   <div key={sec.label} className="bg-muted/40 rounded-lg p-4">
                     <h3 className="font-semibold text-foreground font-body mb-2 text-sm">
                       {sec.label}
@@ -855,6 +908,40 @@ export default function TrekDetailPage() {
                   </div>
                 ))}
               </div>
+              {trek.fitnessTips && trek.fitnessTips.length > 0 && (
+                <div className="mt-6 bg-card border border-border rounded-lg p-4">
+                  <h3 className="font-semibold text-foreground font-body mb-2 text-sm">
+                    Fitness Preparation
+                  </h3>
+                  <ul className="space-y-1.5">
+                    {trek.fitnessTips.map((tip) => (
+                      <li
+                        key={tip}
+                        className="text-sm font-body text-muted-foreground"
+                      >
+                        {tip}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {trek.medicalNotes && trek.medicalNotes.length > 0 && (
+                <div className="mt-4 bg-card border border-border rounded-lg p-4">
+                  <h3 className="font-semibold text-foreground font-body mb-2 text-sm">
+                    Medical Readiness
+                  </h3>
+                  <ul className="space-y-1.5">
+                    {trek.medicalNotes.map((note) => (
+                      <li
+                        key={note}
+                        className="text-sm font-body text-muted-foreground"
+                      >
+                        {note}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </section>
 
             {/* How to Reach */}
@@ -862,61 +949,125 @@ export default function TrekDetailPage() {
               <h2 className="font-display text-2xl font-bold text-foreground mb-4">
                 How to Reach {trek.startPoint}
               </h2>
-              <div className="grid sm:grid-cols-3 gap-4">
-                {[
-                  {
-                    icon: "✈️",
-                    mode: "By Air",
-                    detail:
-                      "Jolly Grant Airport, Dehradun (DED) is the nearest airport. From there, hire a taxi or take GMOU bus service to the trek base.",
-                  },
-                  {
-                    icon: "🚆",
-                    mode: "By Train",
-                    detail:
-                      "Dehradun Railway Station and Haridwar Junction are the nearest railheads. Overnight trains available from Delhi (NDLS).",
-                  },
-                  {
-                    icon: "🚌",
-                    mode: "By Road",
-                    detail: `Regular GMOU/private buses and shared taxis operate from Dehradun, Haridwar, and Rishikesh to ${trek.startPoint}.`,
-                  },
-                ].map((opt) => (
-                  <div
-                    key={opt.mode}
-                    className="bg-card border border-border rounded-lg p-4"
-                  >
-                    <p className="text-2xl mb-2">{opt.icon}</p>
-                    <p className="font-semibold text-foreground font-body text-sm mb-1">
-                      {opt.mode}
-                    </p>
-                    <p className="text-xs text-muted-foreground font-body leading-relaxed">
-                      {opt.detail}
-                    </p>
-                  </div>
-                ))}
-              </div>
+              {howToReachSections.length > 0 ? (
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {howToReachSections.map((section) => (
+                    <div
+                      key={section.title}
+                      className="bg-card border border-border rounded-lg p-4"
+                    >
+                      <p className="font-semibold text-foreground font-body text-sm mb-2">
+                        {section.title}
+                      </p>
+                      <ol className="space-y-2 list-decimal list-inside">
+                        {section.steps.map((step) => (
+                          <li
+                            key={step}
+                            className="text-xs text-muted-foreground font-body leading-relaxed"
+                          >
+                            {step}
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid sm:grid-cols-3 gap-4">
+                  {[
+                    {
+                      icon: "✈️",
+                      mode: "By Air",
+                      detail:
+                        "Jolly Grant Airport, Dehradun (DED) is the nearest airport. From there, hire a taxi or take GMOU bus service to the trek base.",
+                    },
+                    {
+                      icon: "🚆",
+                      mode: "By Train",
+                      detail:
+                        "Dehradun Railway Station and Haridwar Junction are the nearest railheads. Overnight trains available from Delhi (NDLS).",
+                    },
+                    {
+                      icon: "🚌",
+                      mode: "By Road",
+                      detail: `Regular GMOU/private buses and shared taxis operate from Dehradun, Haridwar, and Rishikesh to ${trek.startPoint}.`,
+                    },
+                  ].map((opt) => (
+                    <div
+                      key={opt.mode}
+                      className="bg-card border border-border rounded-lg p-4"
+                    >
+                      <p className="text-2xl mb-2">{opt.icon}</p>
+                      <p className="font-semibold text-foreground font-body text-sm mb-1">
+                        {opt.mode}
+                      </p>
+                      <p className="text-xs text-muted-foreground font-body leading-relaxed">
+                        {opt.detail}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </section>
+
+            {trek.policies && trek.policies.length > 0 && (
+              <section id="section-policies" className="scroll-mt-36">
+                <h2 className="font-display text-2xl font-bold text-foreground mb-4">
+                  Booking Terms & Policies
+                </h2>
+                <div className="grid sm:grid-cols-3 gap-4">
+                  {trek.policies.map((policy) => (
+                    <div
+                      key={policy.title}
+                      className="bg-card border border-border rounded-lg p-4"
+                    >
+                      <h3 className="font-semibold text-foreground font-body text-sm mb-2">
+                        {policy.title}
+                      </h3>
+                      <ul className="space-y-1.5">
+                        {policy.items.map((item) => (
+                          <li
+                            key={item}
+                            className="text-xs text-muted-foreground font-body leading-relaxed"
+                          >
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
 
             {/* Gallery */}
             <section id="section-gallery" className="scroll-mt-36">
               <h2 className="font-display text-2xl font-bold text-foreground mb-4">
                 Gallery
               </h2>
-              {trek.imageUrl ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {Array.from({ length: 6 }, (_, i) => (
+              {heroImages.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {heroImages.map((src, i) => (
                     <button
-                      key={`gallery-img-${i + 1}`}
+                      key={src}
                       type="button"
                       data-ocid={`trek.gallery.item.${i + 1}`}
-                      onClick={() => setLightboxImg(trek.imageUrl)}
-                      className="aspect-square overflow-hidden rounded-lg bg-muted hover:opacity-90 transition-opacity"
+                      onClick={() => setLightboxImg(src)}
+                      className="group relative aspect-[16/10] overflow-hidden rounded-xl bg-muted border border-border hover:shadow-md transition-shadow"
                     >
-                      <img
-                        src={trek.imageUrl}
+                      <CloudinaryImage
+                        src={src}
                         alt={`${trek.name} view ${i + 1}`}
-                        className="w-full h-full object-cover"
+                        width={640}
+                        height={400}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                        transform={{
+                          width: 640,
+                          height: 400,
+                          crop: "fill",
+                          gravity: "auto",
+                        }}
                       />
                     </button>
                   ))}
@@ -1043,7 +1194,7 @@ export default function TrekDetailPage() {
                 Frequently Asked Questions
               </h2>
               <div className="space-y-2">
-                {FAQS.map((faq, i) => (
+                {faqItems.map((faq, i) => (
                   <div
                     key={faq.q}
                     className="border border-border rounded-lg overflow-hidden"

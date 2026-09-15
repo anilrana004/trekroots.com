@@ -4,6 +4,7 @@ import type { Package } from "@/data";
 import Link from "next/link";
 import { ArrowRight, Clock, Users } from "lucide-react";
 import { ZoomInCard } from "@/components/ZoomInCard";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
 
 interface PackageCardProps {
   pkg: Package;
@@ -17,11 +18,22 @@ const CATEGORY_COLORS: Record<string, string> = {
   Family: "bg-sky-100 text-sky-700",
   Solo: "bg-rose-100 text-rose-700",
   Corporate: "bg-slate-100 text-slate-700",
+  Ladakh: "bg-orange-100 text-orange-800",
+  Spiti: "bg-cyan-100 text-cyan-800",
+  Himachal: "bg-lime-100 text-lime-800",
+  Uttarakhand: "bg-teal-100 text-teal-800",
+  Kerala: "bg-green-100 text-green-800",
 };
 
 export function PackageCard({ pkg, index = 0 }: PackageCardProps) {
-  const minPrice = Number(pkg.priceRange.minINR).toLocaleString("en-IN");
-  const maxPrice = Number(pkg.priceRange.maxINR).toLocaleString("en-IN");
+  const min = Number(pkg.priceRange.minINR);
+  const max = Number(pkg.priceRange.maxINR);
+  const priceLabel =
+    min <= 0
+      ? "On Request"
+      : max > min
+        ? `₹${min.toLocaleString("en-IN")}–₹${max.toLocaleString("en-IN")}`
+        : `₹${min.toLocaleString("en-IN")}`;
   const catClass =
     CATEGORY_COLORS[pkg.category] || "bg-muted text-muted-foreground";
 
@@ -34,11 +46,13 @@ export function PackageCard({ pkg, index = 0 }: PackageCardProps) {
       >
       <div className="relative h-52 overflow-hidden bg-muted">
         {pkg.imageUrl ? (
-          <img
+          <CloudinaryImage
             src={pkg.imageUrl}
             alt={pkg.name}
+            width={800}
+            height={416}
             className="w-full h-full object-cover group-hover:scale-105 transition-smooth"
-            loading="lazy"
+            transform={{ width: 800, height: 416, crop: "fill", gravity: "auto" }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-muted">
@@ -76,14 +90,8 @@ export function PackageCard({ pkg, index = 0 }: PackageCardProps) {
               From
             </span>
             <span className="ml-1 text-sm font-semibold text-foreground font-mono">
-              ₹{minPrice}
+              {priceLabel}
             </span>
-            {minPrice !== maxPrice && (
-              <span className="text-xs text-muted-foreground font-mono">
-                {" "}
-                - ₹{maxPrice}
-              </span>
-            )}
           </div>
           <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary font-body group-hover:gap-2 transition-all">
             View Package <ArrowRight size={13} />

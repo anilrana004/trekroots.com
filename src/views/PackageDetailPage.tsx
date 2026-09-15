@@ -3,6 +3,7 @@
 import { getPackageBySlug } from "@/data";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
 import {
   ArrowRight,
   BedDouble,
@@ -162,9 +163,16 @@ export default function PackageDetailPage() {
     );
   }
 
-  const minPrice = Number(pkg.priceRange.minINR).toLocaleString("en-IN");
-  const maxPrice = Number(pkg.priceRange.maxINR).toLocaleString("en-IN");
+  const min = Number(pkg.priceRange.minINR);
+  const max = Number(pkg.priceRange.maxINR);
+  const minPrice = min.toLocaleString("en-IN");
+  const maxPrice = max.toLocaleString("en-IN");
+  const onRequest = min <= 0;
   const hasTiers = pkg.tiers && pkg.tiers.length > 0;
+  const faqItems = pkg.faqs && pkg.faqs.length > 0 ? pkg.faqs : SAMPLE_FAQS;
+  const packingSections = pkg.packing ?? [];
+  const howToReachSections = pkg.howToReach ?? [];
+  const policySections = pkg.policies ?? [];
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
@@ -172,10 +180,14 @@ export default function PackageDetailPage() {
       <section className="relative h-[75vh] min-h-[520px] flex items-end overflow-hidden">
         <div className="absolute inset-0">
           {pkg.imageUrl ? (
-            <img
+            <CloudinaryImage
               src={pkg.imageUrl}
               alt={pkg.name}
+              width={1600}
+              height={900}
+              priority
               className="w-full h-full object-cover"
+              transform={{ width: 1600, height: 900, crop: "fill", gravity: "auto" }}
             />
           ) : (
             <div
@@ -779,7 +791,7 @@ export default function PackageDetailPage() {
                           className="text-right py-3 px-5 font-mono"
                           style={{ color: "var(--brand-secondary)" }}
                         >
-                          ₹{minPrice}
+                          {onRequest ? "On Request" : `₹${minPrice}`}
                         </td>
                       </tr>
                       <tr
@@ -979,6 +991,129 @@ export default function PackageDetailPage() {
               </div>
             </section>
 
+            {packingSections.length > 0 && (
+              <section id="packing" className="scroll-mt-28">
+                <h2
+                  className="font-display italic text-2xl md:text-3xl font-bold mb-6"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  What to Pack
+                </h2>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {packingSections.map((sec) => (
+                    <div
+                      key={sec.label}
+                      className="rounded-xl p-4"
+                      style={{
+                        background: "var(--bg-secondary)",
+                        border: "1px solid var(--border-light)",
+                      }}
+                    >
+                      <h3
+                        className="font-body font-semibold text-sm mb-2"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {sec.label}
+                      </h3>
+                      <ul className="space-y-1.5">
+                        {sec.items.map((item) => (
+                          <li
+                            key={item}
+                            className="text-sm font-body"
+                            style={{ color: "var(--text-secondary)" }}
+                          >
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {howToReachSections.length > 0 && (
+              <section id="how-to-reach" className="scroll-mt-28">
+                <h2
+                  className="font-display italic text-2xl md:text-3xl font-bold mb-6"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  How to Reach
+                </h2>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {howToReachSections.map((section) => (
+                    <div
+                      key={section.title}
+                      className="rounded-xl p-4"
+                      style={{
+                        background: "var(--bg-secondary)",
+                        border: "1px solid var(--border-light)",
+                      }}
+                    >
+                      <h3
+                        className="font-body font-semibold text-sm mb-2"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {section.title}
+                      </h3>
+                      <ol className="space-y-2 list-decimal list-inside">
+                        {section.steps.map((step) => (
+                          <li
+                            key={step}
+                            className="text-sm font-body"
+                            style={{ color: "var(--text-secondary)" }}
+                          >
+                            {step}
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {policySections.length > 0 && (
+              <section id="policies" className="scroll-mt-28">
+                <h2
+                  className="font-display italic text-2xl md:text-3xl font-bold mb-6"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  Booking Terms
+                </h2>
+                <div className="grid sm:grid-cols-3 gap-4">
+                  {policySections.map((policy) => (
+                    <div
+                      key={policy.title}
+                      className="rounded-xl p-4"
+                      style={{
+                        background: "var(--bg-secondary)",
+                        border: "1px solid var(--border-light)",
+                      }}
+                    >
+                      <h3
+                        className="font-body font-semibold text-sm mb-2"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {policy.title}
+                      </h3>
+                      <ul className="space-y-1.5">
+                        {policy.items.map((item) => (
+                          <li
+                            key={item}
+                            className="text-xs font-body leading-relaxed"
+                            style={{ color: "var(--text-secondary)" }}
+                          >
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
             {/* FAQ */}
             <section
               ref={(el) => {
@@ -993,7 +1128,7 @@ export default function PackageDetailPage() {
                 Frequently Asked Questions
               </h2>
               <div className="space-y-3">
-                {SAMPLE_FAQS.map((faq, idx) => (
+                {faqItems.map((faq, idx) => (
                   <div
                     key={faq.q}
                     className="rounded-xl overflow-hidden"
@@ -1068,7 +1203,8 @@ export default function PackageDetailPage() {
                   Ready for your Himalayan journey?
                 </h2>
                 <p className="font-body mb-1 text-white/75">
-                  From ₹{minPrice} per person · {pkg.duration}
+                  From {onRequest ? "On Request" : `₹${minPrice}`} per person ·{" "}
+                  {pkg.duration}
                 </p>
                 <p className="font-body text-white/60 mb-7 max-w-lg mx-auto text-sm">
                   Secure your spot today. Limited group sizes ensure an
@@ -1122,13 +1258,15 @@ export default function PackageDetailPage() {
                   className="font-mono text-3xl font-bold"
                   style={{ color: "var(--brand-secondary)" }}
                 >
-                  ₹{minPrice}
+                  {onRequest ? "On Request" : `₹${minPrice}`}
                 </p>
                 <p
                   className="text-xs font-body mt-0.5"
                   style={{ color: "var(--text-muted)" }}
                 >
-                  per person · incl. GST
+                  {onRequest
+                    ? "Contact for current pricing"
+                    : "per person · 5% GST extra"}
                 </p>
 
                 {hasTiers && (
@@ -1342,7 +1480,8 @@ export default function PackageDetailPage() {
               className="font-body text-sm mt-0.5"
               style={{ color: "rgba(255,255,255,0.65)" }}
             >
-              From ₹{minPrice} per person · {pkg.duration} · {pkg.groupSize}
+              From {onRequest ? "On Request" : `₹${minPrice}`} per person ·{" "}
+              {pkg.duration} · {pkg.groupSize}
             </p>
           </div>
           <div className="flex items-center gap-3">

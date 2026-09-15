@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Car, Flame, MapPin, Star, UtensilsCrossed, Wifi } from "lucide-react";
 import { ZoomInCard } from "@/components/ZoomInCard";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
 
 interface StayCardProps {
   stay: Stay;
@@ -37,10 +38,13 @@ export function StayCard({ stay, index = 0 }: StayCardProps) {
       >
       <div className="relative h-56 overflow-hidden bg-muted">
         {stay.imageUrl ? (
-          <img
+          <CloudinaryImage
             src={stay.imageUrl}
             alt={stay.name}
+            width={800}
+            height={448}
             className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
+            transform={{ width: 800, height: 448, crop: "fill", gravity: "auto" }}
           />
         ) : (
           <div

@@ -4,6 +4,7 @@ import type { Yatra } from "@/data";
 import Link from "next/link";
 import { Calendar, ChevronRight, Clock, MapPin } from "lucide-react";
 import { ZoomInCard } from "@/components/ZoomInCard";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
 
 interface YatraCardProps {
   yatra: Yatra;
@@ -97,11 +98,13 @@ export function YatraCard({ yatra, index = 0 }: YatraCardProps) {
       {/* Hero image */}
       <div className="relative h-56 overflow-hidden bg-muted flex-shrink-0">
         {yatra.imageUrl ? (
-          <img
+          <CloudinaryImage
             src={yatra.imageUrl}
             alt={yatra.name}
+            width={800}
+            height={448}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            loading="lazy"
+            transform={{ width: 800, height: 448, crop: "fill", gravity: "auto" }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-muted">

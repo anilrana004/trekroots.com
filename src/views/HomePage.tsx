@@ -14,6 +14,13 @@ import {
 import { motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FeaturedCardCarousel } from "@/components/FeaturedCardCarousel";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { MEDIA, mediaUrl } from "@/lib/cloudinary";
+import {
+  getTrekCoverImage,
+  getTrekHeroImages,
+  trekSlugFromPath,
+} from "@/data";
 
 // ─── Carousel Data ────────────────────────────────────────────────────────────
 
@@ -27,7 +34,11 @@ const CAROUSEL_ITEMS = [
     altitude: "3,962 m",
     tagline:
       "A monsoon meadow of 300+ Himalayan wildflower species — UNESCO World Heritage.",
-    image: "/assets/generated/carousel-valley-of-flowers.dim_1920x900.jpg",
+    image: mediaUrl(MEDIA.home.carouselValleyOfFlowers, {
+      width: 1920,
+      height: 900,
+      crop: "fill",
+    }),
   },
   {
     id: 2,
@@ -38,18 +49,22 @@ const CAROUSEL_ITEMS = [
     altitude: "3,811 m",
     tagline:
       "India's finest winter trek — a snow-clad summit at sunrise above the clouds.",
-    image: "/assets/generated/carousel-kedarkantha.dim_1920x900.jpg",
+    image: getTrekCoverImage("kedarkantha"),
   },
   {
     id: 3,
-    slug: "/treks/roopkund",
-    name: "Roopkund Trek",
+    slug: "/treks/brahmatal",
+    name: "Brahmatal Trek",
     category: "TREK",
-    duration: "8 Days",
-    altitude: "5,029 m",
+    duration: "6 Days",
+    altitude: "12,250 ft",
     tagline:
-      "The mysterious Skeleton Lake sits atop a dramatic glacial ridge at 5,000 m.",
-    image: "/assets/generated/carousel-roopkund.dim_1920x900.jpg",
+      "Frozen alpine lake, oak forests, and Mt. Trishul views — a classic winter Himalayan trek.",
+    image: mediaUrl(MEDIA.home.carouselBrahmatal, {
+      width: 1920,
+      height: 900,
+      crop: "fill",
+    }),
   },
   {
     id: 4,
@@ -60,7 +75,11 @@ const CAROUSEL_ITEMS = [
     altitude: "3,583 m",
     tagline:
       "Walk the four sacred shrines of Uttarakhand — a journey of a lifetime.",
-    image: "/assets/generated/carousel-char-dham.dim_1920x900.jpg",
+    image: mediaUrl(MEDIA.home.carouselCharDham, {
+      width: 1920,
+      height: 900,
+      crop: "fill",
+    }),
   },
   {
     id: 5,
@@ -71,7 +90,11 @@ const CAROUSEL_ITEMS = [
     altitude: "3,583 m",
     tagline:
       "Lord Shiva's high abode — one of the 12 Jyotirlingas in the Himalayas.",
-    image: "/assets/generated/carousel-kedarnath.dim_1920x900.jpg",
+    image: mediaUrl(MEDIA.home.carouselKedarnath, {
+      width: 1920,
+      height: 900,
+      crop: "fill",
+    }),
   },
 ];
 
@@ -87,9 +110,9 @@ const FEATURED_TREKS = [
     difficultyColor: "#5A8A6A",
     duration: "6 Days",
     altitude: "3,811 m",
-    price: "₹8,500",
-    image: "/assets/generated/trek-kedarkantha.dim_800x600.jpg",
-    season: "Dec–Apr",
+    price: "₹3,999",
+    image: getTrekCoverImage("kedarkantha"),
+    season: "Nov–Mar",
   },
   {
     id: 2,
@@ -100,22 +123,30 @@ const FEATURED_TREKS = [
     difficultyColor: "#3D7A8A",
     duration: "6 Days",
     altitude: "3,962 m",
-    price: "₹9,500",
-    image: "/assets/generated/trek-valley-flowers.dim_800x600.jpg",
+    price: "₹6,500",
+    image: mediaUrl(MEDIA.home.trekValleyFlowers, {
+      width: 800,
+      height: 600,
+      crop: "fill",
+    }),
     season: "Jul–Sep",
   },
   {
     id: 3,
-    slug: "/treks/roopkund",
-    name: "Roopkund Trek",
+    slug: "/treks/chopta-tungnath",
+    name: "Chopta Tungnath Trek",
     region: "Uttarakhand",
-    difficulty: "Difficult",
-    difficultyColor: "#8B2635",
-    duration: "8 Days",
-    altitude: "5,029 m",
-    price: "₹14,000",
-    image: "/assets/generated/trek-roopkund.dim_800x600.jpg",
-    season: "May–Jun, Sep–Oct",
+    difficulty: "Easy–Moderate",
+    difficultyColor: "#5A8A6A",
+    duration: "3 Days",
+    altitude: "12,083 ft",
+    price: "₹6,500",
+    image: mediaUrl(MEDIA.home.trekChopta, {
+      width: 800,
+      height: 600,
+      crop: "fill",
+    }),
+    season: "Dec–Feb",
   },
   {
     id: 4,
@@ -125,9 +156,13 @@ const FEATURED_TREKS = [
     difficulty: "Moderate",
     difficultyColor: "#3D7A8A",
     duration: "5 Days",
-    altitude: "4,270 m",
-    price: "₹9,500",
-    image: "/assets/generated/trek-hampta-pass.dim_800x600.jpg",
+    altitude: "14,100 ft",
+    price: "₹5,999",
+    image: mediaUrl(MEDIA.home.trekHampta, {
+      width: 800,
+      height: 600,
+      crop: "fill",
+    }),
     season: "Jun–Sep",
   },
 ];
@@ -144,8 +179,12 @@ const FEATURED_YATRAS = [
     typeColor: "#C9973A",
     duration: "12 Days",
     temples: "4 Sacred Shrines",
-    price: "₹22,000",
-    image: "/assets/generated/yatra-chardham.dim_800x600.jpg",
+    price: "₹19,999",
+    image: mediaUrl(MEDIA.home.yatraCharDham, {
+      width: 800,
+      height: 600,
+      crop: "fill",
+    }),
     season: "May–Nov",
   },
   {
@@ -157,35 +196,47 @@ const FEATURED_YATRAS = [
     typeColor: "#FFC107",
     duration: "4 Days",
     temples: "1 Jyotirlinga",
-    price: "₹6,500",
-    image: "/assets/generated/yatra-kedarnath.dim_800x600.jpg",
+    price: "₹9,499",
+    image: mediaUrl(MEDIA.home.yatraKedarnath, {
+      width: 800,
+      height: 600,
+      crop: "fill",
+    }),
     season: "May–Nov",
   },
   {
     id: 3,
-    slug: "/yatra/badrinath",
-    name: "Badrinath Yatra",
+    slug: "/yatra/do-dham-yatra",
+    name: "Do Dham Yatra",
     region: "Uttarakhand",
     type: "Char Dham",
     typeColor: "#C9973A",
-    duration: "3 Days",
-    temples: "Vishnu Dham",
-    price: "₹5,500",
-    image: "/assets/generated/yatra-chardham.dim_800x600.jpg",
+    duration: "6 Days",
+    temples: "Kedar + Badri",
+    price: "₹13,499",
+    image: mediaUrl(MEDIA.home.yatraCharDham, {
+      width: 800,
+      height: 600,
+      crop: "fill",
+    }),
     season: "May–Nov",
   },
   {
     id: 4,
-    slug: "/yatra/gangotri-yamunotri",
-    name: "Gangotri–Yamunotri",
+    slug: "/yatra/adi-kailash-om-parvat",
+    name: "Adi Kailash & Om Parvat",
     region: "Uttarakhand",
-    type: "Source Pilgrimage",
+    type: "Sacred Yatra",
     typeColor: "#5A8A6A",
-    duration: "5 Days",
-    temples: "2 Sacred Sources",
-    price: "₹9,000",
-    image: "/assets/generated/yatra-chardham.dim_800x600.jpg",
-    season: "May–Nov",
+    duration: "6 Days",
+    temples: "Adi Kailash + Om Parvat",
+    price: "₹36,999",
+    image: mediaUrl(MEDIA.home.yatraCharDham, {
+      width: 800,
+      height: 600,
+      crop: "fill",
+    }),
+    season: "May–Oct",
   },
 ];
 
@@ -257,7 +308,7 @@ const ARTICLES = [
     excerpt:
       "Everything you need — gear, fitness prep, itinerary, what to expect on the summit.",
     readTime: "8 min read",
-    image: "/assets/generated/trek-kedarkantha.dim_800x600.jpg",
+    image: getTrekCoverImage("kedarkantha"),
   },
   {
     slug: "/blog/char-dham-yatra-guide",
@@ -266,7 +317,11 @@ const ARTICLES = [
     excerpt:
       "How to register, what to carry, which season to go, and how to make the most of your pilgrimage.",
     readTime: "10 min read",
-    image: "/assets/generated/yatra-chardham.dim_800x600.jpg",
+    image: mediaUrl(MEDIA.home.yatraCharDham, {
+      width: 800,
+      height: 600,
+      crop: "fill",
+    }),
   },
   {
     slug: "/blog/spiti-valley-itinerary",
@@ -275,7 +330,11 @@ const ARTICLES = [
     excerpt:
       "Monasteries, permits, road conditions, best stays — a practical guide to the cold desert.",
     readTime: "12 min read",
-    image: "/assets/generated/package-spiti.dim_800x600.jpg",
+    image: mediaUrl(MEDIA.home.packageSpiti, {
+      width: 800,
+      height: 600,
+      crop: "fill",
+    }),
   },
 ];
 
@@ -316,7 +375,7 @@ function HeroCarousel() {
   return (
     <section
       data-ocid="carousel.section"
-      className="relative h-screen min-h-[600px] overflow-hidden"
+      className="relative h-[calc(100dvh-68px)] min-h-[600px] overflow-hidden"
     >
       {CAROUSEL_ITEMS.map((slide, i) => (
         <div
@@ -326,11 +385,14 @@ function HeroCarousel() {
           }`}
           aria-hidden={i !== current}
         >
-          <img
+          <CloudinaryImage
             src={slide.image}
             alt={slide.name}
+            width={1920}
+            height={1080}
+            priority={i === 0}
             className="w-full h-full object-cover object-center"
-            loading={i === 0 ? "eager" : "lazy"}
+            transform={{ width: 1920, height: 1080, crop: "fill", gravity: "auto" }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/5 to-black/70" />
         </div>
@@ -523,11 +585,17 @@ export default function HomePage() {
           <FeaturedCardCarousel
             ocidPrefix="treks"
             surface="muted"
-            items={FEATURED_TREKS.map((t) => ({
-              ...t,
-              badge: "Trek",
-              badgeTone: "trek" as const,
-            }))}
+            items={FEATURED_TREKS.map((t) => {
+              const slug = trekSlugFromPath(t.slug);
+              const gallery = getTrekHeroImages(slug, t.image);
+              return {
+                ...t,
+                image: gallery[0] ?? t.image,
+                images: gallery.length > 1 ? gallery : undefined,
+                badge: "Trek",
+                badgeTone: "trek" as const,
+              };
+            })}
           />
         </div>
       </section>
@@ -873,11 +941,13 @@ export default function HomePage() {
                 <Link href={post.slug} className="group block">
                   <div className="lux-editorial-card mb-5">
                     <div className="relative h-[240px]">
-                      <img
+                      <CloudinaryImage
                         src={post.image}
                         alt={post.title}
+                        width={800}
+                        height={240}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                        loading="lazy"
+                        transform={{ width: 800, height: 240, crop: "fill" }}
                       />
                       <div className="lux-editorial-overlay opacity-60" />
                       <div className="absolute top-4 left-4 z-10">

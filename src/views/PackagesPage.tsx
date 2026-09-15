@@ -8,12 +8,12 @@ import { useMemo, useState } from "react";
 
 const CATEGORIES = [
   "All",
+  "Ladakh",
+  "Spiti",
+  "Himachal",
+  "Uttarakhand",
+  "Kerala",
   "Adventure",
-  "Spiritual",
-  "Luxury",
-  "Family",
-  "Solo",
-  "Corporate",
 ] as const;
 
 const SORT_OPTIONS = [

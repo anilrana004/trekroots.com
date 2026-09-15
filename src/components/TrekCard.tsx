@@ -1,9 +1,12 @@
 "use client";
 
 import type { Trek } from "@/data";
+import { getTrekHeroImages } from "@/data";
 import Link from "next/link";
 import { Calendar, ChevronRight, Clock, Mountain } from "lucide-react";
 import { ZoomInCard } from "@/components/ZoomInCard";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { useEffect, useState } from "react";
 
 const DIFFICULTY_CONFIG: Record<
   string,
@@ -29,15 +32,31 @@ interface TrekCardProps {
 }
 
 export function TrekCard({ trek, index = 0 }: TrekCardProps) {
-  const diff = DIFFICULTY_CONFIG[trek.difficulty] ?? {
+  const diffKey = Object.keys(DIFFICULTY_CONFIG).find((k) =>
+    trek.difficulty.toLowerCase().includes(k.toLowerCase()),
+  );
+  const diff = DIFFICULTY_CONFIG[diffKey ?? ""] ?? {
     bg: "bg-muted",
     text: "text-muted-foreground",
     dot: "bg-muted-foreground",
   };
-  const minPrice = Number(trek.priceRange.minINR).toLocaleString("en-IN");
+  const min = Number(trek.priceRange.minINR);
+  const minPrice =
+    min <= 0 ? "On Request" : `₹${min.toLocaleString("en-IN")}`;
   const altitudeFt = Number(trek.maxAltitudeFt).toLocaleString("en-IN");
   const firstHighlight = trek.highlights[0] ?? "";
   const secondHighlight = trek.highlights[1] ?? "";
+  const gallery = getTrekHeroImages(trek.slug, trek.imageUrl);
+  const [frame, setFrame] = useState(0);
+
+  useEffect(() => {
+    if (gallery.length < 2) return;
+    const id = setInterval(
+      () => setFrame((f) => (f + 1) % gallery.length),
+      3500,
+    );
+    return () => clearInterval(id);
+  }, [gallery.length]);
 
   return (
     <ZoomInCard index={index}>
@@ -48,18 +67,54 @@ export function TrekCard({ trek, index = 0 }: TrekCardProps) {
         style={{ minHeight: "460px" }}
       >
         <div className="relative h-56 overflow-hidden bg-muted flex-shrink-0">
-          {trek.imageUrl ? (
-            <img
-              src={trek.imageUrl}
-              alt={trek.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            />
+          {gallery.length > 0 ? (
+            <>
+              {/* Current + next only — avoid mounting every gallery frame on listing grids */}
+              {[frame, (frame + 1) % gallery.length]
+                .filter((i, pos, arr) => arr.indexOf(i) === pos)
+                .map((i) => (
+                  <div
+                    key={gallery[i]}
+                    className={`absolute inset-0 transition-opacity duration-700 ${
+                      i === frame ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    <CloudinaryImage
+                      src={gallery[i]}
+                      alt={`${trek.name} — ${i + 1}`}
+                      width={640}
+                      height={360}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      priority={index < 2 && i === 0}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      transform={{
+                        width: 640,
+                        height: 360,
+                        crop: "fill",
+                        gravity: "auto",
+                      }}
+                    />
+                  </div>
+                ))}
+            </>
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-muted">
               <Mountain className="text-muted-foreground" size={48} />
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+          {gallery.length > 1 && (
+            <div className="absolute top-3 right-3 flex gap-1 z-10">
+              {gallery.map((src, i) => (
+                <span
+                  key={`pip-${src}`}
+                  className={`h-1 rounded-full transition-all ${
+                    i === frame ? "w-3 bg-[#FFC107]" : "w-1 bg-white/55"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
           <div
             className={`absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold font-body ${diff.bg} ${diff.text}`}
           >
@@ -122,7 +177,7 @@ export function TrekCard({ trek, index = 0 }: TrekCardProps) {
                 className="text-lg font-bold font-body"
                 style={{ color: "#FFC107" }}
               >
-                ₹{minPrice}
+                {minPrice}
               </p>
               <p className="text-xs text-muted-foreground font-body">
                 per person

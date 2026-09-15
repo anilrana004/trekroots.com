@@ -15,6 +15,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
 
 const AUTO_MS = 3800;
 const CARD_W = "min(78vw, 300px)";
@@ -29,6 +30,8 @@ export type FeaturedCarouselItem = {
   temples?: string;
   price: string;
   image: string;
+  /** Optional multi-image set — card crossfades through these when present */
+  images?: string[];
   season: string;
   badge: string;
   badgeTone: "trek" | "yatra";
@@ -68,6 +71,22 @@ function FeaturedSlide({
 }) {
   const chip = tone(item.difficultyColor ?? item.typeColor);
   const meta = item.altitude ?? item.temples ?? "";
+  const gallery =
+    item.images && item.images.length > 0 ? item.images : [item.image];
+  const [frame, setFrame] = useState(0);
+
+  useEffect(() => {
+    if (!active || gallery.length < 2) return;
+    const id = setInterval(
+      () => setFrame((f) => (f + 1) % gallery.length),
+      3200,
+    );
+    return () => clearInterval(id);
+  }, [active, gallery.length]);
+
+  useEffect(() => {
+    if (!active) setFrame(0);
+  }, [active]);
 
   return (
     <div
@@ -84,13 +103,28 @@ function FeaturedSlide({
         aria-current={active ? "true" : undefined}
       >
         <div className="relative h-[300px] md:h-[320px] overflow-hidden">
-          <img
-            src={item.image}
-            alt={item.name}
-            className="w-full h-full object-cover transition-transform duration-700"
-            loading="lazy"
-            draggable={false}
-          />
+          {gallery.map((src, i) => (
+            <div
+              key={src}
+              className={`absolute inset-0 transition-opacity duration-700 ${
+                i === frame ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <CloudinaryImage
+                src={src}
+                alt={`${item.name} — ${i + 1}`}
+                width={600}
+                height={320}
+                className="w-full h-full object-cover"
+                transform={{
+                  width: 600,
+                  height: 320,
+                  crop: "fill",
+                  gravity: "auto",
+                }}
+              />
+            </div>
+          ))}
           <div className="lux-editorial-overlay" />
           <div className="absolute top-4 left-4 flex items-center gap-2 z-10">
             <span
@@ -110,6 +144,18 @@ function FeaturedSlide({
               </span>
             )}
           </div>
+          {gallery.length > 1 && (
+            <div className="absolute top-4 right-4 z-10 flex gap-1">
+              {gallery.map((src, i) => (
+                <span
+                  key={`pip-${src}`}
+                  className={`h-1 rounded-full transition-all ${
+                    i === frame ? "w-3 bg-[#FFC107]" : "w-1 bg-white/50"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
           <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
             <h4 className="font-display text-lg text-white leading-snug mb-2">
               {item.name}

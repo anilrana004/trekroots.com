@@ -6,7 +6,7 @@ import { SectionHeader } from "@/components/SectionHeader";
 import { TrekCard } from "@/components/TrekCard";
 import { useMemo, useState } from "react";
 
-const STATES = ["All", "Uttarakhand", "Himachal Pradesh"];
+const STATES = ["All", "Uttarakhand", "Himachal Pradesh", "Maharashtra"];
 const DIFFICULTIES = ["All", "Easy", "Moderate", "Difficult", "Extreme"];
 const SORT_OPTIONS = [
   { label: "Popularity", value: "popularity" },
@@ -30,7 +30,9 @@ export default function TreksPage() {
     if (stateFilter !== "All")
       result = result.filter((t) => t.state === stateFilter);
     if (diffFilter !== "All")
-      result = result.filter((t) => t.difficulty === diffFilter);
+      result = result.filter((t) =>
+        t.difficulty.toLowerCase().includes(diffFilter.toLowerCase()),
+      );
     if (search.trim()) {
       const q = search.toLowerCase();
       result = result.filter(

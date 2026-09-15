@@ -17,7 +17,39 @@ export interface PriceRange {
   maxINR: number
 }
 
-export interface Trek {
+export interface FaqItem {
+  q: string
+  a: string
+}
+
+export interface PackingSection {
+  label: string
+  items: string[]
+}
+
+export interface HowToReachSection {
+  title: string
+  steps: string[]
+}
+
+export interface PolicySection {
+  title: string
+  items: string[]
+}
+
+/** Shared detail-page enrichment copied from Secure Travels trip pages */
+export interface CatalogEnrichment {
+  tagline?: string
+  faqs?: FaqItem[]
+  packing?: PackingSection[]
+  howToReach?: HowToReachSection[]
+  policies?: PolicySection[]
+  fitnessTips?: string[]
+  medicalNotes?: string[]
+  sourceUrl?: string
+}
+
+export interface Trek extends CatalogEnrichment {
   id: number
   name: string
   slug: string
@@ -42,7 +74,7 @@ export interface Trek {
   category: string
 }
 
-export interface Yatra {
+export interface Yatra extends CatalogEnrichment {
   id: number
   name: string
   slug: string
@@ -62,6 +94,8 @@ export interface Yatra {
   registrationInfo?: string
   itinerary?: DayItinerary[]
   accessibility?: string
+  inclusions?: string[]
+  exclusions?: string[]
 }
 
 export interface PackageTier {
@@ -69,7 +103,7 @@ export interface PackageTier {
   pricePerPerson: number
 }
 
-export interface Package {
+export interface Package extends CatalogEnrichment {
   id: number
   name: string
   slug: string
