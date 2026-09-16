@@ -101,13 +101,12 @@ export function TrekHeroCarousel({
               sizes="100vw"
               className="w-full h-full object-cover object-center"
               transform={{
-                width: 1600,
-                height: 900,
+                width: 1920,
+                height: 1080,
                 crop: "fill",
                 gravity: "auto",
-                quality: "auto",
+                quality: "auto:good",
                 format: "auto",
-                dpr: "auto",
               }}
               lazy={!(i === index || i === (index + 1) % slides.length)}
             />

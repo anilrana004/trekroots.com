@@ -34,11 +34,7 @@ const CAROUSEL_ITEMS = [
     altitude: "3,962 m",
     tagline:
       "A monsoon meadow of 300+ Himalayan wildflower species — UNESCO World Heritage.",
-    image: mediaUrl(MEDIA.home.carouselValleyOfFlowers, {
-      width: 1920,
-      height: 900,
-      crop: "fill",
-    }),
+    image: getTrekCoverImage("valley-of-flowers"),
   },
   {
     id: 2,
@@ -60,11 +56,7 @@ const CAROUSEL_ITEMS = [
     altitude: "12,250 ft",
     tagline:
       "Frozen alpine lake, oak forests, and Mt. Trishul views — a classic winter Himalayan trek.",
-    image: mediaUrl(MEDIA.home.carouselBrahmatal, {
-      width: 1920,
-      height: 900,
-      crop: "fill",
-    }),
+    image: getTrekCoverImage("brahmatal"),
   },
   {
     id: 4,
@@ -391,8 +383,15 @@ function HeroCarousel() {
             width={1920}
             height={1080}
             priority={i === 0}
+            sizes="100vw"
             className="w-full h-full object-cover object-center"
-            transform={{ width: 1920, height: 1080, crop: "fill", gravity: "auto" }}
+            transform={{
+              width: 1920,
+              height: 1080,
+              crop: "fill",
+              gravity: "auto",
+              quality: "auto:good",
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/5 to-black/70" />
         </div>

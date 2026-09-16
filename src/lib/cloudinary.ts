@@ -9,7 +9,7 @@ export type CldTransform = {
   width?: number
   height?: number
   crop?: "fill" | "fit" | "limit" | "scale" | "thumb"
-  quality?: "auto" | number
+  quality?: "auto" | "auto:best" | "auto:good" | "auto:eco" | number
   format?: "auto" | "webp" | "jpg" | "png"
   gravity?: "auto" | "face" | "center"
   dpr?: "auto" | number
@@ -148,20 +148,32 @@ export function resolveMediaUrl(
   return src
 }
 
-/** Responsive srcset widths for catalog imagery. */
-export function buildCldSrcSet(
-  src: string,
-  base: CldTransform,
-  widths: number[] = [640, 960, 1280, 1920],
-): string {
+const SRCSET_WIDTHS = [480, 640, 828, 1080, 1280, 1600, 1920, 2560]
+
+/**
+ * Responsive srcset for catalog imagery, capped at 2× the layout width so
+ * candidates never need upscaling (which reads as blur) on HiDPI screens.
+ *
+ * `dpr` is dropped here on purpose: srcset `w` descriptors already let the
+ * browser account for device pixel ratio, and combining the two double-scales.
+ */
+export function buildCldSrcSet(src: string, base: CldTransform): string {
+  const layoutWidth = base.width
+  if (!layoutWidth) return ""
+
+  const aspect = base.height ? base.height / layoutWidth : undefined
+  const maxWidth = layoutWidth * 2
+  const widths = SRCSET_WIDTHS.filter((w) => w <= maxWidth)
+  if (!widths.includes(layoutWidth)) widths.push(layoutWidth)
+
   return widths
+    .sort((a, b) => a - b)
     .map((w) => {
       const url = resolveMediaUrl(src, {
         ...base,
+        dpr: undefined,
         width: w,
-        height: base.height
-          ? Math.round((base.height / (base.width || w)) * w)
-          : undefined,
+        height: aspect ? Math.round(aspect * w) : undefined,
       })
       return `${url} ${w}w`
     })

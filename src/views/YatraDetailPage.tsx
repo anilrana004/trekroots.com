@@ -1077,11 +1077,18 @@ export default function YatraDetailPage() {
         <CloudinaryImage
           src={heroImage}
           alt={yatra.name}
-          width={1600}
-          height={900}
+          width={1920}
+          height={1080}
           priority
+          sizes="100vw"
           className="w-full h-full object-cover"
-          transform={{ width: 1600, height: 900, crop: "fill", gravity: "auto" }}
+          transform={{
+            width: 1920,
+            height: 1080,
+            crop: "fill",
+            gravity: "auto",
+            quality: "auto:good",
+          }}
         />
         <div
           className="absolute inset-0"

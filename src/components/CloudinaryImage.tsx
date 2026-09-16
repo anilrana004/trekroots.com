@@ -17,6 +17,7 @@ type CloudinaryImageProps = {
   /** Use native lazy loading (default true). */
   lazy?: boolean;
   priority?: boolean;
+  /** Layout hint for srcset selection. Pass "100vw" for full-bleed images. */
   sizes?: string;
   onClick?: () => void;
 };
@@ -44,20 +45,24 @@ export function CloudinaryImage({
       width: transform?.width ?? width,
       height: transform?.height ?? height,
       crop: transform?.crop ?? (width && height ? "fill" : "limit"),
-      quality: transform?.quality ?? "auto",
+      quality: transform?.quality ?? "auto:good",
       format: transform?.format ?? "auto",
       gravity: transform?.gravity,
-      dpr: transform?.dpr ?? "auto",
+      dpr: transform?.dpr,
     }),
     [width, height, transform],
   );
 
-  const resolved = useMemo(() => resolveMediaUrl(src, opts), [src, opts]);
+  const srcSet = useMemo(
+    () => (failed ? undefined : buildCldSrcSet(src, opts) || undefined),
+    [src, opts, failed],
+  );
 
-  const srcSet = useMemo(() => {
-    if (!opts.width || failed) return undefined;
-    return buildCldSrcSet(src, opts);
-  }, [src, opts, failed]);
+  // Fall back to a 2× URL so non-srcset paths still render crisp on HiDPI.
+  const resolved = useMemo(
+    () => resolveMediaUrl(src, srcSet ? opts : { ...opts, dpr: "auto" }),
+    [src, opts, srcSet],
+  );
 
   const finalSrc = failed ? src : resolved || src;
 
@@ -68,9 +73,7 @@ export function CloudinaryImage({
       srcSet={srcSet}
       sizes={
         sizes ??
-        (priority
-          ? "100vw"
-          : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw")
+        (opts.width ? `(max-width: ${opts.width}px) 100vw, ${opts.width}px` : undefined)
       }
       alt={alt}
       width={width}

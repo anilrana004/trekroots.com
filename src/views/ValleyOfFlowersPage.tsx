@@ -27,6 +27,10 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { getTrekCoverImage, getTrekHeroImages } from "@/data";
+
+const VOF_GALLERY = getTrekHeroImages("valley-of-flowers");
 
 const VOF_JUMP_TABS = [
   { label: "Overview", id: "section-overview" },
@@ -61,30 +65,32 @@ const HIGHLIGHTS = [
   },
 ];
 
+const HERO_IMAGE = getTrekCoverImage("valley-of-flowers");
+
 const GALLERY = [
   {
-    src: "/assets/generated/vof-hero-cinematic.dim_1920x1080.jpg",
-    alt: "Valley of Flowers panoramic view",
+    src: VOF_GALLERY[1] ?? HERO_IMAGE,
+    alt: "Alpine lupine meadow below snow-capped peaks",
     span: "col-span-2 row-span-2",
   },
   {
-    src: "/assets/generated/vof-gallery-blue-poppies.dim_800x600.jpg",
-    alt: "Himalayan blue poppies",
+    src: VOF_GALLERY[2] ?? HERO_IMAGE,
+    alt: "Himalayan rhododendron blooms against a summit ridge",
     span: "col-span-1",
   },
   {
-    src: "/assets/generated/vof-gallery-ghangaria.dim_800x600.jpg",
-    alt: "Ghangaria base camp",
+    src: VOF_GALLERY[3] ?? HERO_IMAGE,
+    alt: "Golden wildflower meadow under rolling cloud",
     span: "col-span-1",
   },
   {
-    src: "/assets/generated/vof-gallery-trekkers.dim_800x600.jpg",
-    alt: "Trekkers in the valley",
+    src: VOF_GALLERY[4] ?? HERO_IMAGE,
+    alt: "Trekker among violet blooms on the valley trail",
     span: "col-span-1",
   },
   {
-    src: "/assets/generated/vof-gallery-hemkund.dim_800x600.jpg",
-    alt: "Hemkund Sahib",
+    src: VOF_GALLERY[5] ?? HERO_IMAGE,
+    alt: "Terraced Garhwal village on the approach trek",
     span: "col-span-1",
   },
 ];
@@ -1042,12 +1048,24 @@ export default function ValleyOfFlowersPage() {
         className="relative overflow-hidden"
         style={{ height: "100vh", minHeight: "640px" }}
       >
-        <img
-          src="/assets/generated/vof-hero-cinematic.dim_1920x1080.jpg"
-          alt="Valley of Flowers National Park"
-          className="absolute inset-0 w-full h-full object-cover object-center"
-          fetchPriority="high"
-        />
+        <div className="absolute inset-0">
+          <CloudinaryImage
+            src={HERO_IMAGE}
+            alt="Valley of Flowers National Park"
+            width={1920}
+            height={1080}
+            priority
+            sizes="100vw"
+            className="w-full h-full object-cover object-center"
+            transform={{
+              width: 1920,
+              height: 1080,
+              crop: "fill",
+              gravity: "auto",
+              quality: "auto:good",
+            }}
+          />
+        </div>
         <div
           className="absolute inset-0"
           style={{
@@ -1324,11 +1342,23 @@ export default function ValleyOfFlowersPage() {
                     aria-label={`View ${img.alt}`}
                     data-ocid={`vof.gallery.item.${i + 1}`}
                   >
-                    <img
+                    <CloudinaryImage
                       src={img.src}
                       alt={img.alt}
+                      width={i === 0 ? 960 : 480}
+                      height={i === 0 ? 720 : 360}
+                      sizes={
+                        i === 0
+                          ? "(max-width: 1024px) 100vw, 640px"
+                          : "(max-width: 1024px) 50vw, 320px"
+                      }
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      loading="lazy"
+                      transform={{
+                        width: i === 0 ? 960 : 480,
+                        height: i === 0 ? 720 : 360,
+                        crop: "fill",
+                        gravity: "auto",
+                      }}
                     />
                     <div
                       className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -1817,10 +1847,19 @@ export default function ValleyOfFlowersPage() {
               className="relative max-w-5xl w-full max-h-[90vh] rounded-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <img
+              <CloudinaryImage
                 src={GALLERY[galleryOpen].src}
                 alt={GALLERY[galleryOpen].alt}
+                width={1600}
+                height={1000}
+                priority
+                sizes="(max-width: 1024px) 100vw, 1024px"
                 className="w-full h-full object-contain"
+                transform={{
+                  width: 1600,
+                  crop: "limit",
+                  quality: "auto:good",
+                }}
               />
               <button
                 type="button"
