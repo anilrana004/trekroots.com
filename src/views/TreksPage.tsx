@@ -64,83 +64,92 @@ export default function TreksPage() {
         </div>
       </div>
 
-      {/* Filters Bar */}
-      <div className="sticky top-[72px] z-10 bg-card border-b border-border shadow-sm">
-        <div className="container mx-auto px-4 py-3 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-          {/* Search */}
-          <div className="relative flex-1 min-w-0">
-            <svg
-              aria-hidden="true"
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"
+      {/* Filters Bar — rides under the header, flush to top once it hides on phones */}
+      <div className="detail-section-nav bg-card border-b border-border shadow-sm">
+        <div className="container mx-auto px-4 py-2 md:py-3 flex flex-col md:flex-row gap-2 md:gap-3 md:items-center">
+          {/* Search + sort share a row on phones to keep the bar short */}
+          <div className="flex items-center gap-2 md:contents">
+            <div className="relative flex-1 min-w-0 md:flex-1 md:min-w-0">
+              <svg
+                aria-hidden="true"
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4 text-muted-foreground"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"
+                />
+              </svg>
+              <input
+                data-ocid="treks.search_input"
+                type="text"
+                placeholder="Search treks..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-8 md:pl-9 pr-2 py-1.5 md:py-2 text-xs md:text-sm border border-input rounded-md bg-background font-body focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
-            </svg>
-            <input
-              data-ocid="treks.search_input"
-              type="text"
-              placeholder="Search treks..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-sm border border-input rounded-md bg-background font-body focus:outline-none focus:ring-2 focus:ring-primary/30"
+            </div>
+            {/* Sits beside search on phones, trails the chips on desktop */}
+            <select
+              data-ocid="treks.sort_select"
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              className="text-xs border border-input rounded-md px-2 py-1.5 md:py-2 bg-background font-body focus:outline-none focus:ring-2 focus:ring-primary/30 shrink-0 max-w-[40%] md:max-w-none md:order-last"
+            >
+              {SORT_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Chips: one swipeable row on phones, wrapped groups on desktop */}
+          <div className="flex md:contents gap-1.5 overflow-x-auto hide-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
+            <div className="flex gap-1.5 shrink-0 md:flex-wrap">
+              {STATES.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  data-ocid={`treks.state_filter.${s.replace(/ /g, "_").toLowerCase()}`}
+                  onClick={() => setStateFilter(s)}
+                  className={`px-2.5 md:px-3 py-1 md:py-1.5 rounded-full text-[11px] md:text-xs font-semibold font-body whitespace-nowrap transition-colors ${
+                    stateFilter === s
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-muted/70"
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+            <span
+              aria-hidden="true"
+              className="md:hidden self-center shrink-0 w-px h-4 bg-border mx-0.5"
             />
+            <div className="flex gap-1.5 shrink-0 md:flex-wrap">
+              {DIFFICULTIES.map((d) => (
+                <button
+                  key={d}
+                  type="button"
+                  data-ocid={`treks.diff_filter.${d.toLowerCase()}`}
+                  onClick={() => setDiffFilter(d)}
+                  className={`px-2.5 md:px-3 py-1 md:py-1.5 rounded-full text-[11px] md:text-xs font-semibold font-body whitespace-nowrap transition-colors ${
+                    diffFilter === d
+                      ? "bg-accent text-accent-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-muted/70"
+                  }`}
+                >
+                  {d}
+                </button>
+              ))}
+            </div>
           </div>
-          {/* State filter */}
-          <div className="flex gap-1.5 flex-wrap">
-            {STATES.map((s) => (
-              <button
-                key={s}
-                type="button"
-                data-ocid={`treks.state_filter.${s.replace(/ /g, "_").toLowerCase()}`}
-                onClick={() => setStateFilter(s)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold font-body transition-colors ${
-                  stateFilter === s
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:bg-muted/70"
-                }`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-          {/* Difficulty filter */}
-          <div className="flex gap-1.5 flex-wrap">
-            {DIFFICULTIES.map((d) => (
-              <button
-                key={d}
-                type="button"
-                data-ocid={`treks.diff_filter.${d.toLowerCase()}`}
-                onClick={() => setDiffFilter(d)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold font-body transition-colors ${
-                  diffFilter === d
-                    ? "bg-accent text-accent-foreground"
-                    : "bg-muted text-muted-foreground hover:bg-muted/70"
-                }`}
-              >
-                {d}
-              </button>
-            ))}
-          </div>
-          {/* Sort */}
-          <select
-            data-ocid="treks.sort_select"
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-            className="text-xs border border-input rounded-md px-2 py-2 bg-background font-body focus:outline-none focus:ring-2 focus:ring-primary/30 shrink-0"
-          >
-            {SORT_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
+
         </div>
       </div>
 

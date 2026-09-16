@@ -200,32 +200,32 @@ export default function StaysPage() {
         </div>
       </section>
 
-      {/* Filter Bar */}
+      {/* Filter Bar — one swipeable strip on phones, wrapped groups on desktop */}
       <section
-        className="sticky top-[72px] z-30 border-b"
+        className="detail-section-nav border-b"
         style={{
           background: "var(--bg-primary)",
           borderColor: "var(--border-light)",
           boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
         }}
       >
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-            <div className="flex items-center gap-2">
+        <div className="container mx-auto px-6 py-2.5 md:py-4">
+          <div className="flex items-center gap-3 md:gap-x-6 md:gap-y-3 md:flex-wrap overflow-x-auto md:overflow-visible hide-scrollbar -mx-6 px-6 md:mx-0 md:px-0">
+            <div className="flex items-center gap-2 shrink-0">
               <span
-                className="text-[11px] font-body font-semibold uppercase tracking-widest"
+                className="text-[10px] md:text-[11px] font-body font-semibold uppercase tracking-widest shrink-0"
                 style={{ color: "var(--text-muted)" }}
               >
                 Region
               </span>
-              <div className="flex gap-1.5">
+              <div className="flex gap-1.5 shrink-0">
                 {REGIONS.map((r) => (
                   <button
                     key={r}
                     type="button"
                     data-ocid={`stay.filter.region.${r.toLowerCase()}`}
                     onClick={() => setRegion(r)}
-                    className="px-3 py-1.5 rounded-full text-xs font-body font-medium transition-all duration-200"
+                    className="px-2.5 md:px-3 py-1 md:py-1.5 rounded-full text-[11px] md:text-xs font-body font-medium whitespace-nowrap transition-all duration-200"
                     style={{
                       background:
                         region === r
@@ -243,21 +243,21 @@ export default function StaysPage() {
                 ))}
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <span
-                className="text-[11px] font-body font-semibold uppercase tracking-widest"
+                className="text-[10px] md:text-[11px] font-body font-semibold uppercase tracking-widest shrink-0"
                 style={{ color: "var(--text-muted)" }}
               >
                 Type
               </span>
-              <div className="flex gap-1.5 flex-wrap">
+              <div className="flex gap-1.5 shrink-0 md:flex-wrap">
                 {PROPERTY_TYPES.map((t) => (
                   <button
                     key={t}
                     type="button"
                     data-ocid={`stay.filter.type.${t.toLowerCase().replace(/\s+/g, "-")}`}
                     onClick={() => setStayType(t)}
-                    className="px-3 py-1.5 rounded-full text-xs font-body font-medium transition-all duration-200"
+                    className="px-2.5 md:px-3 py-1 md:py-1.5 rounded-full text-[11px] md:text-xs font-body font-medium whitespace-nowrap transition-all duration-200"
                     style={{
                       background:
                         stayType === t
@@ -275,21 +275,21 @@ export default function StaysPage() {
                 ))}
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <span
-                className="text-[11px] font-body font-semibold uppercase tracking-widest"
+                className="text-[10px] md:text-[11px] font-body font-semibold uppercase tracking-widest shrink-0"
                 style={{ color: "var(--text-muted)" }}
               >
                 Price
               </span>
-              <div className="flex gap-1.5">
+              <div className="flex gap-1.5 shrink-0">
                 {PRICE_RANGES.map((p) => (
                   <button
                     key={p.label}
                     type="button"
                     data-ocid={`stay.filter.price.${p.label.toLowerCase().replace(/[^a-z0-9]/g, "-")}`}
                     onClick={() => setPriceRange(p.label)}
-                    className="px-3 py-1.5 rounded-full text-xs font-body font-medium transition-all duration-200"
+                    className="px-2.5 md:px-3 py-1 md:py-1.5 rounded-full text-[11px] md:text-xs font-body font-medium whitespace-nowrap transition-all duration-200"
                     style={{
                       background:
                         priceRange === p.label
@@ -310,19 +310,19 @@ export default function StaysPage() {
                 ))}
               </div>
             </div>
-            <div className="flex items-center gap-2 ml-auto">
+            <div className="flex items-center gap-2 shrink-0 md:ml-auto">
               <span
-                className="text-[11px] font-body font-semibold uppercase tracking-widest shrink-0"
+                className="text-[10px] md:text-[11px] font-body font-semibold uppercase tracking-widest shrink-0"
                 style={{ color: "var(--text-muted)" }}
               >
                 Sort
               </span>
-              <div className="relative">
+              <div className="relative shrink-0">
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as SortValue)}
                   data-ocid="stay.sort_select"
-                  className="appearance-none pl-3 pr-8 py-1.5 rounded-full text-xs font-body font-medium cursor-pointer focus:outline-none"
+                  className="appearance-none pl-2.5 md:pl-3 pr-7 md:pr-8 py-1 md:py-1.5 rounded-full text-[11px] md:text-xs font-body font-medium cursor-pointer focus:outline-none"
                   style={{
                     background: "var(--bg-tertiary)",
                     color: "var(--text-secondary)",

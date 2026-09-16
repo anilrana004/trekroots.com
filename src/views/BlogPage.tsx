@@ -243,9 +243,9 @@ function BlogPage() {
       </section>
 
       {/* Category Pills */}
-      <section className="bg-card border-b border-border sticky top-[72px] z-30">
+      <section className="detail-section-nav bg-card border-b border-border">
         <div className="container mx-auto px-4">
-          <div className="flex items-center gap-1.5 py-3 overflow-x-auto">
+          <div className="flex items-center gap-1.5 py-2.5 md:py-3 overflow-x-auto hide-scrollbar">
             {CATEGORIES.map((c) => (
               <button
                 key={c}

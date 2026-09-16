@@ -288,14 +288,14 @@ export default function PackageDetailPage() {
 
       {/* Sticky Tab Nav */}
       <nav
-        className="sticky top-[72px] z-30 backdrop-blur-sm"
+        className="detail-section-nav backdrop-blur-sm"
         style={{
           background: "rgba(250,250,247,0.96)",
           borderBottom: "1px solid var(--border-light)",
         }}
       >
         <div className="w-full max-w-[1400px] mx-auto px-6">
-          <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide py-2.5">
+          <div className="flex items-center gap-1 overflow-x-auto hide-scrollbar py-2.5">
             {TABS.map((tab) => (
               <button
                 key={tab.id}

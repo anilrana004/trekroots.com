@@ -79,9 +79,9 @@ export default function PackagesPage() {
       </section>
 
       {/* Filters & Sort */}
-      <section className="sticky top-[72px] z-30 bg-card/95 backdrop-blur-sm border-b border-border">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide">
+      <section className="detail-section-nav bg-card/95 backdrop-blur-sm border-b border-border">
+        <div className="container mx-auto px-4 py-2.5 md:py-3">
+          <div className="flex items-center gap-2 md:gap-3 overflow-x-auto hide-scrollbar">
             <SlidersHorizontal
               size={16}
               className="text-muted-foreground shrink-0"
