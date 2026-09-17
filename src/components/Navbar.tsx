@@ -367,8 +367,9 @@ export function Navbar() {
         className="sticky top-0 left-0 right-0 z-50 bg-white"
         style={{ borderBottom: "1px solid #E8E8E8" }}
       >
-        <div className="w-full max-w-[1400px] mx-auto px-4 lg:px-6 h-[60px] lg:h-[68px] flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 min-w-0">
+        <div className="w-full max-w-[1400px] mx-auto px-4 lg:px-6 h-[60px] lg:h-[68px] grid grid-cols-3 items-center lg:flex lg:justify-between lg:gap-3">
+          {/* Left: hamburger (phone) / logo (desktop) */}
+          <div className="flex items-center justify-start min-w-0">
             <button
               type="button"
               data-ocid="navbar.mobile_menu_toggle"
@@ -384,7 +385,7 @@ export function Navbar() {
             <Link
               href="/"
               data-ocid="navbar.logo"
-              className="flex items-center min-w-0 shrink-0 rounded-md overflow-hidden"
+              className="hidden lg:flex items-center min-w-0 shrink-0 rounded-md overflow-hidden"
               aria-label="TrekRoots — Explore New Heights"
             >
               <Image
@@ -392,12 +393,30 @@ export function Navbar() {
                 alt="TrekRoots — Explore New Heights"
                 width={200}
                 height={56}
-                className="h-9 lg:h-12 w-auto object-contain object-left"
+                className="h-12 w-auto object-contain object-left"
                 priority
                 unoptimized
               />
             </Link>
           </div>
+
+          {/* Center logo — phone only, truly centered in the bar */}
+          <Link
+            href="/"
+            data-ocid="navbar.logo.mobile"
+            className="lg:hidden flex items-center justify-center justify-self-center"
+            aria-label="TrekRoots — Explore New Heights"
+          >
+            <Image
+              src={LOGO_URL}
+              alt="TrekRoots — Explore New Heights"
+              width={160}
+              height={44}
+              className="h-9 w-auto object-contain"
+              priority
+              unoptimized
+            />
+          </Link>
 
           <nav
             className="hidden lg:flex items-center gap-0.5"
@@ -447,7 +466,7 @@ export function Navbar() {
             })}
           </nav>
 
-          <div className="flex items-center gap-1.5 shrink-0">
+          <div className="flex items-center justify-end gap-1.5 shrink-0">
             <Link
               href="/search"
               data-ocid="navbar.search"
