@@ -649,7 +649,7 @@ export const treks: Trek[] = [
     ],
     inclusions: ["Accommodation in guesthouses and camps", "Meals during trek (Breakfast, Lunch, Dinner)", "Experienced trek leader and guides", "Camping equipment", "First aid and medical kit", "Transportation from Dehradun (as per itinerary)", "Forest permits and entry fees", "Support staff and helpers", "Safety equipment", "Trek briefing and assistance"],
     exclusions: ["Personal expenses", "Travel to/from Dehradun", "Insurance", "Personal trekking gear", "Porter or mule charges", "Emergency evacuation", "Tips and gratuities", "Any cost due to delays/weather", "GST (if applicable)", "Anything not mentioned in inclusions"],
-    priceRange: { minINR: 3999, maxINR: 3999, originalINR: 5999 },
+    priceRange: { minINR: 7000, maxINR: 7000, originalINR: 8999 },
     imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200",
     category: "Trek",
     tagline: "India’s favourite beginner winter summit — snow forests, a frozen lake, and a sunrise you’ll never forget.",
