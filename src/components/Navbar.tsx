@@ -34,8 +34,6 @@ const PRIMARY_LINKS = [
   { label: "Yatra", to: "/yatra" },
   { label: "Packages", to: "/packages" },
   { label: "Stays", to: "/stays" },
-  { label: "Blog", to: "/blog" },
-  { label: "About", to: "/about" },
 ] as const;
 
 const FACET_GROUPS: FacetGroup[] = trekFacetGroups();
