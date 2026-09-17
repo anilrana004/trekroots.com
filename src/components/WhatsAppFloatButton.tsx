@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 
 /** Paths where page content already has WhatsApp CTAs / sticky book bars */
 function isDetailPage(pathname: string) {
-  if (pathname === "/treks/valley-of-flowers") return true;
   if (/^\/treks\/[^/]+$/.test(pathname)) return true;
   if (/^\/yatra\/[^/]+$/.test(pathname)) return true;
   if (/^\/packages\/[^/]+$/.test(pathname)) return true;

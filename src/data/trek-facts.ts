@@ -23,6 +23,21 @@ const TREK_FACT_OVERRIDES: Record<string, Partial<Record<string, string>>> = {
     cloakroom: "Available",
     offloading: "Available",
   },
+  "valley-of-flowers": {
+    difficulty: "Easy to Moderate",
+    duration: "6 days / 5 nights",
+    altitude: "14,200 feet",
+    suitableFor: "10 years and above",
+    basecamp: "Ghangaria, Chamoli, Uttarakhand",
+    // Camping is prohibited inside the national park
+    accommodation: "Hotels & guesthouses",
+    fitness: "5 km in 45 mins",
+    pickup: "Rishikesh, early morning departure",
+    dropoff: "Rishikesh, by evening",
+    packing: "Click to view checklist",
+    cloakroom: "Available at Ghangaria",
+    offloading: "Ponies & porters on request",
+  },
 }
 
 export function getTrekFacts(trek: Trek): TrekFact[] {
