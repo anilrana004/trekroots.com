@@ -55,8 +55,7 @@ function FooterLink({ label, to }: { label: string; to: string }) {
     <li>
       <Link
         href={to}
-        className="text-[13px] font-body transition-colors hover:text-[#FFC107]"
-        style={{ color: "#A0A0A0" }}
+        className="text-[13px] font-body text-[#555555] transition-colors hover:text-[#FFC107]"
       >
         {label}
       </Link>
@@ -79,7 +78,12 @@ export function Footer() {
   };
 
   return (
-    <footer data-ocid="footer" style={{ backgroundColor: "#000000" }}>
+    <footer
+      data-ocid="footer"
+      className="bg-white border-t"
+      style={{ borderColor: "#E8E8E8" }}
+    >
+      {/* Newsletter band — keep the yellow accent strip */}
       <div style={{ backgroundColor: "#FFC107" }} className="py-8">
         <div className="max-w-[1400px] mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-5">
           <div>
@@ -93,7 +97,7 @@ export function Footer() {
           </div>
           {subscribed ? (
             <div className="flex items-center gap-2 px-5 py-2.5 rounded bg-black/15 text-black text-[14px] font-medium font-body">
-              ✓ You're subscribed!
+              ✓ You&apos;re subscribed!
             </div>
           ) : (
             <form
@@ -108,12 +112,12 @@ export function Footer() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 data-ocid="footer.newsletter_input"
-                className="flex-1 md:w-64 px-4 py-2.5 rounded text-[13px] font-body bg-black/10 border border-black/20 text-black placeholder-black/45 focus:outline-none focus:border-black/50"
+                className="no-retro flex-1 md:w-64 px-4 py-2.5 rounded text-[13px] font-body bg-white border border-black/15 text-black placeholder-black/45 focus:outline-none focus:border-black/40"
               />
               <button
                 type="submit"
                 data-ocid="footer.newsletter_submit"
-                className="px-5 py-2.5 rounded text-[13px] font-semibold font-body bg-black text-[#FFC107] hover:bg-black/90 transition-colors whitespace-nowrap"
+                className="no-retro px-5 py-2.5 rounded text-[13px] font-semibold font-body bg-black text-white hover:bg-black/90 transition-colors whitespace-nowrap"
               >
                 Subscribe
               </button>
@@ -140,10 +144,7 @@ export function Footer() {
                 unoptimized
               />
             </Link>
-            <p
-              className="text-[13px] font-body leading-relaxed mb-6"
-              style={{ color: "#888888" }}
-            >
+            <p className="text-[13px] font-body leading-relaxed mb-6 text-[#555555]">
               Explore new heights. Curated Himalayan journeys across Uttarakhand
               &amp; Himachal Pradesh since 2012.
             </p>
@@ -177,7 +178,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   aria-label={label}
                   data-ocid={`footer.social.${label.toLowerCase().replace(/[^a-z]/g, "")}`}
-                  className="w-8 h-8 flex items-center justify-center rounded-full border border-white/15 text-white/50 hover:text-[#FFC107] hover:border-[#FFC107]/40 transition-colors"
+                  className="no-retro w-8 h-8 flex items-center justify-center rounded-full border border-[#E0E0E0] text-[#555555] hover:text-[#FFC107] hover:border-[#FFC107] transition-colors"
                 >
                   {icon}
                 </a>
@@ -188,7 +189,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 aria-label="Chat on WhatsApp"
                 data-ocid="footer.social.whatsapp"
-                className="w-8 h-8 flex items-center justify-center rounded-full border border-white/15 text-white/50 hover:text-green-400 hover:border-green-400/40 transition-colors"
+                className="no-retro w-8 h-8 flex items-center justify-center rounded-full border border-[#E0E0E0] text-[#555555] hover:text-[#25D366] hover:border-[#25D366] transition-colors"
               >
                 <span className="sr-only">Chat on WhatsApp</span>
                 <svg
@@ -202,7 +203,7 @@ export function Footer() {
                 </svg>
               </a>
             </div>
-            <div className="text-[12px] font-body" style={{ color: "#888888" }}>
+            <div className="text-[12px] font-body text-[#666666]">
               <div className="flex items-center gap-1.5 mb-1">
                 <span>⭐</span>
                 <span>4.9/5 on Google (800+ reviews)</span>
@@ -215,10 +216,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h4
-              className="font-body text-[11px] font-semibold uppercase tracking-widest mb-5"
-              style={{ color: "#FFC107" }}
-            >
+            <h4 className="font-body text-[11px] font-semibold uppercase tracking-widest mb-5 text-[#1A1A1A]">
               Explore
             </h4>
             <ul className="space-y-3">
@@ -226,10 +224,7 @@ export function Footer() {
                 <FooterLink key={to} label={label} to={to} />
               ))}
             </ul>
-            <h4
-              className="font-body text-[11px] font-semibold uppercase tracking-widest mt-7 mb-5"
-              style={{ color: "#FFC107" }}
-            >
+            <h4 className="font-body text-[11px] font-semibold uppercase tracking-widest mt-7 mb-5 text-[#1A1A1A]">
               Popular Treks
             </h4>
             <ul className="space-y-3">
@@ -240,29 +235,22 @@ export function Footer() {
           </div>
 
           <div>
-            <h4
-              className="font-body text-[11px] font-semibold uppercase tracking-widest mb-5"
-              style={{ color: "#FFC107" }}
-            >
+            <h4 className="font-body text-[11px] font-semibold uppercase tracking-widest mb-5 text-[#1A1A1A]">
               Contact Us
             </h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <Phone
                   size={14}
-                  className="mt-0.5 shrink-0"
-                  style={{ color: "#FFC107" }}
+                  className="mt-0.5 shrink-0 text-[#FFC107]"
                 />
                 <div>
-                  <p
-                    className="text-[11px] font-body font-semibold uppercase tracking-wider mb-0.5"
-                    style={{ color: "#888888" }}
-                  >
+                  <p className="text-[11px] font-body font-semibold uppercase tracking-wider mb-0.5 text-[#888888]">
                     Phone / WhatsApp
                   </p>
                   <a
                     href={PHONE_HREF}
-                    className="text-[13px] font-body text-white hover:text-[#FFC107] transition-colors"
+                    className="text-[13px] font-body text-[#1A1A1A] hover:text-[#FFC107] transition-colors"
                   >
                     {PHONE_DISPLAY}
                   </a>
@@ -273,28 +261,21 @@ export function Footer() {
                     )}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[13px] font-body text-white/60 hover:text-[#FFC107] transition-colors"
+                    className="text-[13px] font-body text-[#555555] hover:text-[#FFC107] transition-colors"
                   >
                     {WHATSAPP_DISPLAY}
                   </a>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <Mail
-                  size={14}
-                  className="mt-0.5 shrink-0"
-                  style={{ color: "#FFC107" }}
-                />
+                <Mail size={14} className="mt-0.5 shrink-0 text-[#FFC107]" />
                 <div>
-                  <p
-                    className="text-[11px] font-body font-semibold uppercase tracking-wider mb-0.5"
-                    style={{ color: "#888888" }}
-                  >
+                  <p className="text-[11px] font-body font-semibold uppercase tracking-wider mb-0.5 text-[#888888]">
                     Email
                   </p>
                   <a
                     href={CONTACT_EMAIL_HREF}
-                    className="text-[13px] font-body text-white hover:text-[#FFC107] transition-colors"
+                    className="text-[13px] font-body text-[#1A1A1A] hover:text-[#FFC107] transition-colors"
                   >
                     {CONTACT_EMAIL}
                   </a>
@@ -303,20 +284,13 @@ export function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin
                   size={14}
-                  className="mt-0.5 shrink-0"
-                  style={{ color: "#FFC107" }}
+                  className="mt-0.5 shrink-0 text-[#FFC107]"
                 />
                 <div>
-                  <p
-                    className="text-[11px] font-body font-semibold uppercase tracking-wider mb-0.5"
-                    style={{ color: "#888888" }}
-                  >
+                  <p className="text-[11px] font-body font-semibold uppercase tracking-wider mb-0.5 text-[#888888]">
                     Office
                   </p>
-                  <span
-                    className="text-[13px] font-body"
-                    style={{ color: "#AAAAAA" }}
-                  >
+                  <span className="text-[13px] font-body text-[#555555]">
                     17, Rajpur Road, Near ONGC Chowk,
                     <br />
                     Dehradun, Uttarakhand 248001
@@ -325,53 +299,41 @@ export function Footer() {
               </li>
             </ul>
             <div
-              className="mt-6 p-3 rounded-lg border border-white/10"
-              style={{ backgroundColor: "rgba(255,255,255,0.04)" }}
+              className="mt-6 p-3 rounded-lg border"
+              style={{ borderColor: "#E8E8E8", backgroundColor: "#F7F7F7" }}
             >
-              <p
-                className="text-[11px] font-body font-semibold uppercase tracking-wider mb-2"
-                style={{ color: "#888888" }}
-              >
+              <p className="text-[11px] font-body font-semibold uppercase tracking-wider mb-2 text-[#888888]">
                 Office Hours
               </p>
-              <p className="text-[12px] font-body" style={{ color: "#AAAAAA" }}>
+              <p className="text-[12px] font-body text-[#555555]">
                 Mon–Sat: 9:00 AM – 7:00 PM IST
               </p>
-              <p className="text-[12px] font-body" style={{ color: "#AAAAAA" }}>
+              <p className="text-[12px] font-body text-[#555555]">
                 Sun: 10:00 AM – 4:00 PM IST
               </p>
             </div>
           </div>
 
           <div>
-            <h4
-              className="font-body text-[11px] font-semibold uppercase tracking-widest mb-5"
-              style={{ color: "#FFC107" }}
-            >
+            <h4 className="font-body text-[11px] font-semibold uppercase tracking-widest mb-5 text-[#1A1A1A]">
               Trust & Certifications
             </h4>
             <div className="space-y-3">
               {TRUST_BADGES.map(({ icon, label }) => (
                 <div
                   key={label}
-                  className="flex items-center gap-3 px-3.5 py-3 rounded-lg border border-white/10"
-                  style={{ backgroundColor: "rgba(255,255,255,0.04)" }}
+                  className="flex items-center gap-3 px-3.5 py-3 rounded-lg border"
+                  style={{ borderColor: "#E8E8E8", backgroundColor: "#FAFAFA" }}
                 >
                   <span className="text-[18px] shrink-0">{icon}</span>
-                  <span
-                    className="text-[12px] font-body font-medium"
-                    style={{ color: "#AAAAAA" }}
-                  >
+                  <span className="text-[12px] font-body font-medium text-[#555555]">
                     {label}
                   </span>
                 </div>
               ))}
             </div>
             <div className="mt-6">
-              <h4
-                className="font-body text-[11px] font-semibold uppercase tracking-widest mb-3"
-                style={{ color: "#FFC107" }}
-              >
+              <h4 className="font-body text-[11px] font-semibold uppercase tracking-widest mb-3 text-[#1A1A1A]">
                 Payment Methods
               </h4>
               <div className="flex flex-wrap gap-2">
@@ -379,18 +341,15 @@ export function Footer() {
                   (method) => (
                     <span
                       key={method}
-                      className="px-2.5 py-1 rounded text-[11px] font-body font-medium border border-white/15"
-                      style={{ color: "#888888" }}
+                      className="px-2.5 py-1 rounded text-[11px] font-body font-medium border text-[#555555]"
+                      style={{ borderColor: "#E0E0E0" }}
                     >
                       {method}
                     </span>
                   ),
                 )}
               </div>
-              <p
-                className="mt-3 text-[11px] font-body"
-                style={{ color: "#666666" }}
-              >
+              <p className="mt-3 text-[11px] font-body text-[#888888]">
                 Trusted Himalayan travel experts. Reach us anytime via WhatsApp
                 or phone for bookings and trip planning.
               </p>
@@ -399,9 +358,9 @@ export function Footer() {
         </div>
       </div>
 
-      <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+      <div style={{ borderTop: "1px solid #E8E8E8" }}>
         <div className="max-w-[1400px] mx-auto px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="text-[12px] font-body" style={{ color: "#666666" }}>
+          <p className="text-[12px] font-body text-[#888888]">
             © {year} TrekRoots. All rights reserved.
           </p>
           <div className="flex items-center gap-5">
@@ -414,8 +373,7 @@ export function Footer() {
               <Link
                 key={label}
                 href={to}
-                className="text-[12px] font-body transition-opacity hover:opacity-70"
-                style={{ color: "#666666" }}
+                className="text-[12px] font-body text-[#888888] transition-colors hover:text-[#1A1A1A]"
               >
                 {label}
               </Link>
