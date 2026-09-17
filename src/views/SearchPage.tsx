@@ -9,6 +9,14 @@ import { searchAll } from "@/data";
 import { Search, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
+const SUGGESTIONS = [
+  "Kedarkantha",
+  "Char Dham",
+  "Honeymoon",
+  "Garhwal",
+  "Spiti Valley",
+] as const;
+
 export default function SearchPage() {
   const [term, setTerm] = useState("");
   const [activeTab, setActiveTab] = useState<
@@ -49,149 +57,135 @@ export default function SearchPage() {
     (data?.stays.length ?? 0) > 0;
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
-      {/* Hero */}
+    <div className="min-h-screen bg-white">
       <section
         className="relative overflow-hidden"
-        style={{ background: "var(--brand-primary)" }}
+        style={{
+          background:
+            "linear-gradient(165deg, #FFC107 0%, #FFB300 55%, #FFA000 100%)",
+        }}
       >
         <div
-          className="absolute inset-0 opacity-10"
+          className="pointer-events-none absolute inset-0 opacity-[0.18]"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 30% 50%, var(--brand-gold) 0%, transparent 55%), radial-gradient(circle at 80% 20%, var(--brand-secondary) 0%, transparent 45%)",
+              "radial-gradient(circle at 18% 20%, #fff 0%, transparent 42%), radial-gradient(circle at 88% 70%, #FFE082 0%, transparent 40%)",
           }}
         />
-        <div className="relative container mx-auto px-6 pt-20 pb-16 text-center">
-          <h1
-            className="font-display text-5xl md:text-7xl font-bold leading-[0.95] tracking-tight mb-4"
-            style={{ color: "#fff" }}
-          >
-            Find Your
+        <div className="relative mx-auto max-w-[900px] px-5 pt-14 pb-12 md:pt-20 md:pb-16 text-center">
+          <p className="mb-3 font-body text-[11px] font-semibold uppercase tracking-[0.2em] text-[#1A1A1A]/90">
+            Search TrekRoots
+          </p>
+          <h1 className="font-display text-[2rem] md:text-5xl font-bold leading-[1.1] tracking-tight text-[#1A1A1A]">
+            Find your Himalayan
             <br />
-            <span style={{ color: "var(--brand-gold)" }}>
-              Himalayan Adventure
-            </span>
+            adventure
           </h1>
-          <div
-            className="w-16 h-0.5 mx-auto mt-5 mb-8 rounded-full"
-            style={{ background: "var(--brand-gold)" }}
-          />
+          <div className="mx-auto mt-4 mb-8 h-1 w-12 rounded-full bg-[#1A1A1A]/80" />
 
-          {/* Large Search Input */}
-          <div className="max-w-2xl mx-auto">
-            <div
-              className="relative flex items-center rounded-2xl overflow-hidden"
-              style={{
-                background: "rgba(255,255,255,0.12)",
-                border: "1px solid rgba(255,255,255,0.2)",
-                backdropFilter: "blur(12px)",
-              }}
-            >
+          <div className="mx-auto max-w-xl">
+            <label className="sr-only" htmlFor="site-search">
+              Search treks, yatras, packages, and stays
+            </label>
+            <div className="relative flex items-center rounded-xl bg-white shadow-[0_8px_28px_rgba(0,0,0,0.12)] ring-1 ring-black/5">
               <Search
-                size={22}
-                className="absolute left-5 shrink-0"
-                style={{ color: "var(--brand-gold)" }}
+                size={20}
+                className="pointer-events-none absolute left-4 shrink-0 text-[#888888]"
+                aria-hidden
               />
               <input
+                id="site-search"
                 type="search"
+                autoFocus
+                autoComplete="off"
                 data-ocid="search.input"
-                placeholder="Search treks, yatras, packages, stays\u2026"
+                placeholder="Search treks, yatras, packages, stays…"
                 value={term}
                 onChange={(e) => setTerm(e.target.value)}
-                className="w-full pl-14 pr-6 py-5 bg-transparent font-body text-lg outline-none placeholder:opacity-50"
-                style={{ color: "#fff" }}
+                className="w-full rounded-xl bg-transparent py-4 pl-12 pr-12 font-body text-[15px] text-[#1A1A1A] outline-none placeholder:text-[#888888] md:py-[1.15rem] md:text-base"
               />
-              {term && (
+              {term ? (
                 <button
                   type="button"
                   onClick={() => setTerm("")}
-                  className="absolute right-5 flex items-center justify-center w-6 h-6 rounded-full"
-                  style={{ background: "rgba(255,255,255,0.2)", color: "#fff" }}
+                  className="absolute right-3 flex h-8 w-8 items-center justify-center rounded-full text-[#555555] transition-colors hover:bg-[#F0F0F0]"
                   data-ocid="search.clear_button"
+                  aria-label="Clear search"
                 >
-                  ×
+                  <X size={16} />
                 </button>
-              )}
+              ) : null}
             </div>
-            <p
-              className="text-xs font-body mt-3"
-              style={{ color: "rgba(255,255,255,0.45)" }}
-            >
-              Try: \u201cKedarkantha\u201d, \u201cChar Dham\u201d,
-              \u201cHoneymoon\u201d, \u201cGarhwal\u201d
-            </p>
+
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+              <span className="font-body text-[12px] font-medium text-[#1A1A1A]/70">
+                Try
+              </span>
+              {SUGGESTIONS.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setTerm(s)}
+                  data-ocid={`search.suggestion.${s.toLowerCase().replace(/\s+/g, "-")}`}
+                  className="rounded-full border border-[#1A1A1A]/15 bg-white/55 px-3 py-1 font-body text-[12px] font-medium text-[#1A1A1A] backdrop-blur-sm transition-colors hover:border-[#1A1A1A]/35 hover:bg-white"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Results area */}
-      <section className="container mx-auto px-6 py-12">
-        {/* Category Tabs (visible when results exist) */}
+      <section className="mx-auto max-w-[1400px] px-5 py-10 md:px-6 md:py-12">
         {hasResults && (
-          <div
-            className="flex gap-2 flex-wrap mb-10 pb-6 border-b"
-            style={{ borderColor: "var(--border-light)" }}
-          >
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                type="button"
-                data-ocid={`search.tab.${tab.key}`}
-                onClick={() => setActiveTab(tab.key)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-body font-medium transition-all duration-200"
-                style={{
-                  background:
-                    activeTab === tab.key
-                      ? "var(--brand-primary)"
-                      : "var(--bg-tertiary)",
-                  color:
-                    activeTab === tab.key ? "#fff" : "var(--text-secondary)",
-                  border:
-                    activeTab === tab.key
-                      ? "1px solid var(--brand-primary)"
-                      : "1px solid var(--border-light)",
-                }}
-              >
-                {tab.label}
-                {tab.count !== undefined && tab.count > 0 && (
-                  <span
-                    className="text-[11px] px-1.5 py-0.5 rounded-full font-semibold"
-                    style={{
-                      background:
-                        activeTab === tab.key
-                          ? "rgba(255,255,255,0.2)"
-                          : "var(--brand-gold)",
-                      color:
-                        activeTab === tab.key ? "#fff" : "var(--brand-primary)",
-                    }}
-                  >
-                    {tab.count}
-                  </span>
-                )}
-              </button>
-            ))}
+          <div className="mb-8 flex flex-wrap gap-2 border-b border-[#E8E8E8] pb-5 md:mb-10 md:pb-6">
+            {tabs.map((tab) => {
+              const active = activeTab === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  type="button"
+                  data-ocid={`search.tab.${tab.key}`}
+                  onClick={() => setActiveTab(tab.key)}
+                  className="flex items-center gap-1.5 rounded-full px-4 py-2 font-body text-sm font-medium transition-colors"
+                  style={{
+                    background: active ? "#1A1A1A" : "#F5F5F5",
+                    color: active ? "#FFFFFF" : "#555555",
+                    border: active ? "1px solid #1A1A1A" : "1px solid #E8E8E8",
+                  }}
+                >
+                  {tab.label}
+                  {tab.count !== undefined && tab.count > 0 && (
+                    <span
+                      className="rounded-full px-1.5 py-0.5 text-[11px] font-semibold"
+                      style={{
+                        background: active ? "rgba(255,255,255,0.18)" : "#FFC107",
+                        color: active ? "#fff" : "#1A1A1A",
+                      }}
+                    >
+                      {tab.count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         )}
 
-        {/* Loading state */}
         {isLoading && (
           <div className="space-y-10" data-ocid="search.loading_state">
             {["Treks", "Yatras"].map((section) => (
               <div key={section}>
-                <div
-                  className="h-7 w-32 rounded-lg mb-4"
-                  style={{ background: "var(--bg-tertiary)" }}
-                />
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="mb-4 h-7 w-32 rounded-lg bg-[#EEEEEE]" />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                   {[1, 2, 3, 4].map((n) => (
                     <div
                       key={n}
-                      className="rounded-2xl overflow-hidden"
-                      style={{ background: "var(--bg-secondary)" }}
+                      className="overflow-hidden rounded-2xl bg-[#F5F5F5]"
                     >
                       <Skeleton className="h-44 w-full" />
-                      <div className="p-4 space-y-2">
+                      <div className="space-y-2 p-4">
                         <Skeleton className="h-4 w-3/4" />
                         <Skeleton className="h-3 w-1/2" />
                       </div>
@@ -203,94 +197,60 @@ export default function SearchPage() {
           </div>
         )}
 
-        {/* Empty state */}
         {noResults && (
           <div
-            className="flex flex-col items-center justify-center py-24 rounded-2xl"
+            className="flex flex-col items-center justify-center rounded-2xl border border-[#E8E8E8] bg-[#F7F7F7] py-20"
             data-ocid="search.empty_state"
-            style={{ background: "var(--bg-secondary)" }}
           >
-            <div
-              className="w-20 h-20 rounded-full flex items-center justify-center mb-6"
-              style={{
-                background: "var(--bg-tertiary)",
-                border: "1px solid var(--border-light)",
-              }}
-            >
-              <Search size={32} style={{ color: "var(--brand-gold)" }} />
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-[#E8E8E8] bg-white">
+              <Search size={28} className="text-[#FFC107]" />
             </div>
-            <h3
-              className="font-display text-2xl font-bold mb-2"
-              style={{ color: "var(--brand-primary)" }}
-            >
-              No results for \u201c{term}\u201d
+            <h3 className="mb-2 font-display text-2xl font-bold text-[#1A1A1A]">
+              No results for “{term}”
             </h3>
-            <p
-              className="font-body text-sm mb-6 max-w-sm text-center"
-              style={{ color: "var(--text-muted)" }}
-            >
-              Try different keywords — like a trek name, region, or travel
-              style.
+            <p className="mb-6 max-w-sm text-center font-body text-sm text-[#666666]">
+              Try a trek name, region, or travel style — or pick a suggestion
+              below.
             </p>
-            <div className="flex flex-wrap gap-2 justify-center">
-              {["Kedarkantha", "Char Dham", "Spiti Valley", "Garhwal"].map(
-                (s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => setTerm(s)}
-                    data-ocid={`search.suggestion.${s.toLowerCase().replace(/\s+/g, "-")}`}
-                    className="px-4 py-1.5 rounded-full text-xs font-body font-medium transition-all duration-200 hover:opacity-80"
-                    style={{
-                      background: "var(--bg-tertiary)",
-                      color: "var(--text-secondary)",
-                      border: "1px solid var(--border-light)",
-                    }}
-                  >
-                    {s}
-                  </button>
-                ),
-              )}
+            <div className="flex flex-wrap justify-center gap-2">
+              {SUGGESTIONS.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setTerm(s)}
+                  data-ocid={`search.empty_suggestion.${s.toLowerCase().replace(/\s+/g, "-")}`}
+                  className="rounded-full border border-[#E0E0E0] bg-white px-4 py-1.5 font-body text-xs font-medium text-[#555555] transition-colors hover:border-[#FFC107] hover:text-[#1A1A1A]"
+                >
+                  {s}
+                </button>
+              ))}
             </div>
           </div>
         )}
 
-        {/* Idle state (no query yet) */}
         {!term && !isLoading && (
-          <div className="text-center py-16">
-            <p
-              className="font-body text-base"
-              style={{ color: "var(--text-muted)" }}
-            >
+          <div className="mx-auto max-w-lg py-10 text-center md:py-14">
+            <p className="font-body text-base text-[#666666]">
               Start typing to explore treks, yatras, packages, and stays across
               the Himalayas.
             </p>
           </div>
         )}
 
-        {/* Results */}
+        {term.length === 1 && !isLoading && (
+          <div className="py-10 text-center">
+            <p className="font-body text-sm text-[#888888]">
+              Type at least 2 characters to search.
+            </p>
+          </div>
+        )}
+
         {data && !isLoading && (
           <div className="space-y-14">
             {showTreks && (
               <section>
-                <div className="flex items-center gap-3 mb-6">
-                  <h2
-                    className="font-display text-2xl font-bold"
-                    style={{ color: "var(--brand-primary)" }}
-                  >
-                    Treks
-                  </h2>
-                  <span
-                    className="text-xs font-body font-semibold px-2.5 py-1 rounded-full"
-                    style={{
-                      background: "var(--brand-gold)",
-                      color: "var(--brand-primary)",
-                    }}
-                  >
-                    {data.treks.length}
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <SectionHeading label="Treks" count={data.treks.length} />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                   {data.treks.map((t, i) => (
                     <TrekCard key={String(t.id)} trek={t} index={i} />
                   ))}
@@ -299,24 +259,8 @@ export default function SearchPage() {
             )}
             {showYatras && (
               <section>
-                <div className="flex items-center gap-3 mb-6">
-                  <h2
-                    className="font-display text-2xl font-bold"
-                    style={{ color: "var(--brand-primary)" }}
-                  >
-                    Yatras
-                  </h2>
-                  <span
-                    className="text-xs font-body font-semibold px-2.5 py-1 rounded-full"
-                    style={{
-                      background: "var(--brand-gold)",
-                      color: "var(--brand-primary)",
-                    }}
-                  >
-                    {data.yatras.length}
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <SectionHeading label="Yatras" count={data.yatras.length} />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {data.yatras.map((y, i) => (
                     <YatraCard key={String(y.id)} yatra={y} index={i} />
                   ))}
@@ -325,24 +269,8 @@ export default function SearchPage() {
             )}
             {showPackages && (
               <section>
-                <div className="flex items-center gap-3 mb-6">
-                  <h2
-                    className="font-display text-2xl font-bold"
-                    style={{ color: "var(--brand-primary)" }}
-                  >
-                    Packages
-                  </h2>
-                  <span
-                    className="text-xs font-body font-semibold px-2.5 py-1 rounded-full"
-                    style={{
-                      background: "var(--brand-gold)",
-                      color: "var(--brand-primary)",
-                    }}
-                  >
-                    {data.packages.length}
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <SectionHeading label="Packages" count={data.packages.length} />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {data.packages.map((p, i) => (
                     <PackageCard key={String(p.id)} pkg={p} index={i} />
                   ))}
@@ -351,24 +279,8 @@ export default function SearchPage() {
             )}
             {showStays && (
               <section>
-                <div className="flex items-center gap-3 mb-6">
-                  <h2
-                    className="font-display text-2xl font-bold"
-                    style={{ color: "var(--brand-primary)" }}
-                  >
-                    Stays
-                  </h2>
-                  <span
-                    className="text-xs font-body font-semibold px-2.5 py-1 rounded-full"
-                    style={{
-                      background: "var(--brand-gold)",
-                      color: "var(--brand-primary)",
-                    }}
-                  >
-                    {data.stays.length}
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <SectionHeading label="Stays" count={data.stays.length} />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {data.stays.map((s, i) => (
                     <StayCard key={String(s.id)} stay={s} index={i} />
                   ))}
@@ -378,6 +290,17 @@ export default function SearchPage() {
           </div>
         )}
       </section>
+    </div>
+  );
+}
+
+function SectionHeading({ label, count }: { label: string; count: number }) {
+  return (
+    <div className="mb-6 flex items-center gap-3">
+      <h2 className="font-display text-2xl font-bold text-[#1A1A1A]">{label}</h2>
+      <span className="rounded-full bg-[#FFC107] px-2.5 py-1 font-body text-xs font-semibold text-[#1A1A1A]">
+        {count}
+      </span>
     </div>
   );
 }
