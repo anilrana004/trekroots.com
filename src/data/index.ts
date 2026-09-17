@@ -26,6 +26,7 @@ export {
 export type { FacetGroup, FacetItem } from './trek-facets'
 export { getTrekFacts } from './trek-facts'
 export type { TrekFact } from './trek-facts'
+export { getYatraFacts } from './yatra-facts'
 export {
   CONTACT_EMAIL,
   CONTACT_EMAIL_HREF,

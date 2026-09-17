@@ -19,6 +19,7 @@
   :root {
     --font-display: "Plus Jakarta Sans";
     --font-body: "Plus Jakarta Sans";
+    --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
     --font-mono: JetBrains Mono;
     --radius: 0.5rem;
 

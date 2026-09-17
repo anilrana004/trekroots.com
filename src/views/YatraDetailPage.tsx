@@ -2,18 +2,24 @@
 
 import {
   getYatraBySlug,
+  getYatraFacts,
   getYatraHeroImages,
-  PHONE_DISPLAY,
-  PHONE_HREF,
   whatsappLink,
 } from "@/data";
-import { tripPrice } from "@/lib/price";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
-import { HeroCarousel } from "@/components/HeroCarousel";
+import { AdvantageGrid } from "@/components/home/AdvantageGrid";
+import { TreksByCategory } from "@/components/home/TreksByCategory";
+import { DetailFeePanel } from "@/components/detail/DetailFeePanel";
+import { DetailFactsGrid } from "@/components/detail/DetailFactsGrid";
+import { DetailHero } from "@/components/detail/DetailHero";
+import { DetailMobileBar } from "@/components/detail/DetailMobileBar";
+import { DetailSectionNav } from "@/components/detail/DetailSectionNav";
 import {
-  Calendar,
+  Activity,
+  Backpack,
+  BarChart3,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
@@ -23,16 +29,36 @@ import {
   Heart,
   HeartHandshake,
   Info,
+  Luggage,
   MapPin,
   MessageCircle,
+  Mountain,
+  Package,
   Phone,
-  Shield,
+  RotateCcw,
+  RotateCw,
   Star,
+  Tent,
+  Timer,
   Users,
-  XCircle,
+  type LucideIcon,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { TripCostCalculator } from "@/components/TripCostCalculator";
+import { useRef, useState } from "react";
+
+const YATRA_FACT_ICONS: Record<string, LucideIcon> = {
+  difficulty: BarChart3,
+  duration: Timer,
+  altitude: Mountain,
+  suitableFor: Users,
+  basecamp: MapPin,
+  accommodation: Tent,
+  fitness: Activity,
+  pickup: RotateCw,
+  dropoff: RotateCcw,
+  packing: Backpack,
+  cloakroom: Luggage,
+  offloading: Package,
+};
 
 // ─── Static per-yatra enrichment data ────────────────────────────────────────
 type YatraEnrichment = {
@@ -930,7 +956,21 @@ const SECTIONS = [
   "Helicopter",
   "Reviews",
   "FAQ",
-];
+] as const;
+
+const SECTION_TABS = SECTIONS.map((s) => ({
+  id: s,
+  label:
+    s === "Spiritual"
+      ? "Spiritual Story"
+      : s === "Puja"
+        ? "Puja & Rituals"
+        : s === "Timings"
+          ? "Temple Timings"
+          : s === "FAQ"
+            ? "FAQs"
+            : s,
+}));
 
 export default function YatraDetailPage() {
   const params = useParams();
@@ -941,8 +981,6 @@ export default function YatraDetailPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeSection, setActiveSection] = useState("Overview");
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
-  const navRef = useRef<HTMLDivElement>(null);
-  const [navSticky, setNavSticky] = useState(false);
   const enrichmentKey =
     {
       "char-dham": "char-dham-yatra",
@@ -958,19 +996,8 @@ export default function YatraDetailPage() {
     ...(yatra?.imageUrl ? { coverImage: yatra.imageUrl } : {}),
   };
 
-  // Scroll spy for sticky nav
-  useEffect(() => {
-    const hero = document.querySelector("[data-hero]");
-    const observer = new IntersectionObserver(
-      ([entry]) => setNavSticky(!entry.isIntersecting),
-      { threshold: 0, rootMargin: "-68px 0px 0px 0px" },
-    );
-    if (hero) observer.observe(hero);
-    return () => observer.disconnect();
-  }, []);
-
   const scrollToSection = (section: string) => {
-    const el = sectionRefs.current[section];
+    const el = sectionRefs.current[section] ?? document.getElementById(`section-${section}`);
     if (el) {
       const headerOffset =
         Number.parseInt(
@@ -1061,8 +1088,10 @@ export default function YatraDetailPage() {
     yatra.imageUrl ||
     "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1400&q=80";
   const heroImages = getYatraHeroImages(yatra.slug, heroImage);
-  const priceMin = Number(yatra.priceRange.minINR).toLocaleString("en-IN");
-  const price = tripPrice(yatra.priceRange);
+  const templeCount = yatra.temples?.length ?? 0;
+  const registrationShort = (yatra.registration || "Required")
+    .split(/[.,]/)[0]
+    .trim();
   const faqs =
     enrichment.faqs.length > 0
       ? enrichment.faqs
@@ -1080,142 +1109,46 @@ export default function YatraDetailPage() {
         ];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#FFFFFF" }}>
-      {/* ── Hero ──────────────────────────────────────────── */}
-      <div data-hero className="relative h-[80vh] overflow-hidden">
-        <HeroCarousel images={heroImages} alt={yatra.name} />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 100%)",
-          }}
-        />
-        <div className="absolute bottom-0 left-0 right-0 px-6 pb-14 md:px-16">
-          <div className="max-w-[1400px] mx-auto">
-            {/* Breadcrumb */}
-            <nav
-              className="flex items-center gap-1.5 text-xs font-body mb-5"
-              style={{ color: "rgba(255,255,255,0.65)" }}
-              aria-label="Breadcrumb"
-            >
-              <Link href="/" className="hover:text-white transition-colors">
-                Home
-              </Link>
-              <span>/</span>
-              <Link href="/yatra" className="hover:text-white transition-colors">
-                Yatra
-              </Link>
-              <span>/</span>
-              <span style={{ color: "#FFE082" }}>{yatra.name}</span>
-            </nav>
-            {/* Tagline */}
-            <p
-              className="font-body text-xs font-semibold tracking-[0.2em] uppercase mb-3"
-              style={{ color: "#FFE082" }}
-            >
-              Sacred Pilgrimage · Uttarakhand
-            </p>
-            <h1 className="font-display italic text-4xl md:text-6xl lg:text-7xl text-white leading-tight mb-4 max-w-3xl">
-              {yatra.name}
-            </h1>
-            <p
-              className="font-body text-base mb-8 max-w-xl"
-              style={{ color: "rgba(255,255,255,0.8)" }}
-            >
-              {enrichment.tagline}
-            </p>
-            {/* Quick stats */}
-            <div className="flex flex-wrap gap-2">
-              {[
-                {
-                  icon: <Clock className="w-3.5 h-3.5" />,
-                  label: yatra.duration,
-                },
-                {
-                  icon: <Calendar className="w-3.5 h-3.5" />,
-                  label: yatra.season,
-                },
-                {
-                  icon: <MapPin className="w-3.5 h-3.5" />,
-                  label: enrichment.altitudeM,
-                },
-                {
-                  icon: <Shield className="w-3.5 h-3.5" />,
-                  label: enrichment.difficulty,
-                },
-              ].map((s) => (
-                <span
-                  key={s.label}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-body font-medium text-white"
-                  style={{
-                    backgroundColor: "rgba(255,255,255,0.15)",
-                    backdropFilter: "blur(8px)",
-                    border: "1px solid rgba(255,255,255,0.2)",
-                  }}
-                >
-                  {s.icon}
-                  {s.label}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="bg-white min-h-screen pb-28 lg:pb-0">
+      <DetailHero
+        images={heroImages}
+        title={yatra.name}
+        tagline={enrichment.tagline}
+        primaryHref={`/booking/yatra-${slug}`}
+        primaryLabel="View Yatra Dates"
+        primaryOcid="yatra.hero_book"
+        secondaryLabel="Download Itinerary"
+        secondaryOcid="yatra.hero_itinerary"
+        onSecondary={() => window.print()}
+      />
 
-      {/* ── Sticky section nav ────────────────────────────── */}
-      <div
-        ref={navRef}
-        className={`detail-section-nav hide-scrollbar overflow-x-auto ${navSticky ? "shadow-md" : ""}`}
-        data-ocid="yatra.section_nav"
-        style={{
-          backgroundColor: "#FFFFFF",
-          borderBottom: "1px solid #E8E8E8",
-        }}
-      >
-        <div className="max-w-[1400px] mx-auto px-6">
-          <div className="flex gap-2 py-2.5 min-w-max">
-            {SECTIONS.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => scrollToSection(s)}
-                data-ocid={`yatra.nav_tab.${s.toLowerCase()}`}
-                className="px-3.5 py-2 text-xs font-body font-semibold tracking-wide uppercase whitespace-nowrap bg-white"
-                style={{
-                  color: activeSection === s ? "#FFC107" : "#555555",
-                }}
-              >
-                {s === "Spiritual"
-                  ? "Spiritual Story"
-                  : s === "Puja"
-                    ? "Puja & Rituals"
-                    : s === "Timings"
-                      ? "Temple Timings"
-                      : s === "FAQ"
-                        ? "FAQs"
-                        : s}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+      <DetailFactsGrid
+        facts={getYatraFacts(yatra)}
+        icons={YATRA_FACT_ICONS}
+        ocid="yatra.facts"
+      />
+
+      <DetailSectionNav
+        tabs={SECTION_TABS}
+        activeId={activeSection}
+        onSelect={scrollToSection}
+        ocidPrefix="yatra"
+      />
 
       {/* ── Main layout ───────────────────────────────────── */}
-      <div className="max-w-[1400px] mx-auto px-6 py-14 grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-14">
+      <div className="max-w-[1400px] mx-auto px-6 py-14 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-14">
         {/* LEFT */}
         <div className="space-y-16 min-w-0">
           {/* Overview */}
           <section
+            id="section-Overview"
+            className="scroll-mt-36"
             ref={(el) => {
               sectionRefs.current.Overview = el;
             }}
           >
             <SectionLabel>Overview</SectionLabel>
-            <h2
-              className="font-display text-3xl md:text-4xl mb-6"
-              style={{ color: "#1A1A1A" }}
-            >
+            <h2 className="font-serif italic text-2xl md:text-[28px] text-[#1A1A1A] mb-6">
               About {yatra.name}
             </h2>
             <p
@@ -1261,15 +1194,14 @@ export default function YatraDetailPage() {
 
           {/* Itinerary */}
           <section
+            id="section-Itinerary"
+            className="scroll-mt-36"
             ref={(el) => {
               sectionRefs.current.Itinerary = el;
             }}
           >
             <SectionLabel>Day-by-Day Itinerary</SectionLabel>
-            <h2
-              className="font-display text-3xl mb-6"
-              style={{ color: "#1A1A1A" }}
-            >
+            <h2 className="font-serif italic text-2xl md:text-[28px] text-[#1A1A1A] mb-6">
               Complete Journey Plan
             </h2>
             {itinerary && itinerary.length > 0 ? (
@@ -1407,15 +1339,14 @@ export default function YatraDetailPage() {
 
           {/* Spiritual Significance */}
           <section
+            id="section-Spiritual"
+            className="scroll-mt-36"
             ref={(el) => {
               sectionRefs.current.Spiritual = el;
             }}
           >
             <SectionLabel>Spiritual Story</SectionLabel>
-            <h2
-              className="font-display text-3xl mb-6"
-              style={{ color: "#1A1A1A" }}
-            >
+            <h2 className="font-serif italic text-2xl md:text-[28px] text-[#1A1A1A] mb-6">
               Sacred Significance
             </h2>
             <div className="space-y-4">
@@ -1452,15 +1383,14 @@ export default function YatraDetailPage() {
 
           {/* Puja & Rituals */}
           <section
+            id="section-Puja"
+            className="scroll-mt-36"
             ref={(el) => {
               sectionRefs.current.Puja = el;
             }}
           >
             <SectionLabel>Puja & Rituals</SectionLabel>
-            <h2
-              className="font-display text-3xl mb-6"
-              style={{ color: "#1A1A1A" }}
-            >
+            <h2 className="font-serif italic text-2xl md:text-[28px] text-[#1A1A1A] mb-6">
               Rituals, Offerings & Costs
             </h2>
             <div className="space-y-3">
@@ -1504,15 +1434,14 @@ export default function YatraDetailPage() {
 
           {/* Temple Timings */}
           <section
+            id="section-Timings"
+            className="scroll-mt-36"
             ref={(el) => {
               sectionRefs.current.Timings = el;
             }}
           >
             <SectionLabel>Temple Timings</SectionLabel>
-            <h2
-              className="font-display text-3xl mb-6"
-              style={{ color: "#1A1A1A" }}
-            >
+            <h2 className="font-serif italic text-2xl md:text-[28px] text-[#1A1A1A] mb-6">
               Opening Hours & Aarti Schedule
             </h2>
             <div
@@ -1581,15 +1510,14 @@ export default function YatraDetailPage() {
 
           {/* Registration */}
           <section
+            id="section-Registration"
+            className="scroll-mt-36"
             ref={(el) => {
               sectionRefs.current.Registration = el;
             }}
           >
             <SectionLabel>Registration</SectionLabel>
-            <h2
-              className="font-display text-3xl mb-6"
-              style={{ color: "#1A1A1A" }}
-            >
+            <h2 className="font-serif italic text-2xl md:text-[28px] text-[#1A1A1A] mb-6">
               Documents & Registration Requirements
             </h2>
             <div className="space-y-2.5 mb-6">
@@ -1624,15 +1552,14 @@ export default function YatraDetailPage() {
 
           {/* Medical */}
           <section
+            id="section-Medical"
+            className="scroll-mt-36"
             ref={(el) => {
               sectionRefs.current.Medical = el;
             }}
           >
             <SectionLabel>Medical Advisory</SectionLabel>
-            <h2
-              className="font-display text-3xl mb-6"
-              style={{ color: "#1A1A1A" }}
-            >
+            <h2 className="font-serif italic text-2xl md:text-[28px] text-[#1A1A1A] mb-6">
               Health, Fitness & AMS Awareness
             </h2>
             <div className="space-y-3">
@@ -1679,15 +1606,14 @@ export default function YatraDetailPage() {
 
           {/* Helicopter */}
           <section
+            id="section-Helicopter"
+            className="scroll-mt-36"
             ref={(el) => {
               sectionRefs.current.Helicopter = el;
             }}
           >
             <SectionLabel>Helicopter</SectionLabel>
-            <h2
-              className="font-display text-3xl mb-6"
-              style={{ color: "#1A1A1A" }}
-            >
+            <h2 className="font-serif italic text-2xl md:text-[28px] text-[#1A1A1A] mb-6">
               Helicopter Services
             </h2>
             {enrichment.helicopterDetails ? (
@@ -1804,15 +1730,14 @@ export default function YatraDetailPage() {
 
           {/* Reviews */}
           <section
+            id="section-Reviews"
+            className="scroll-mt-36"
             ref={(el) => {
               sectionRefs.current.Reviews = el;
             }}
           >
             <SectionLabel>Reviews</SectionLabel>
-            <h2
-              className="font-display text-3xl mb-2"
-              style={{ color: "#1A1A1A" }}
-            >
+            <h2 className="font-serif italic text-2xl md:text-[28px] text-[#1A1A1A] mb-2">
               What Pilgrims Say
             </h2>
             <div className="flex items-center gap-3 mb-8">
@@ -1915,15 +1840,14 @@ export default function YatraDetailPage() {
 
           {/* FAQ */}
           <section
+            id="section-FAQ"
+            className="scroll-mt-36"
             ref={(el) => {
               sectionRefs.current.FAQ = el;
             }}
           >
             <SectionLabel>FAQs</SectionLabel>
-            <h2
-              className="font-display text-3xl mb-6"
-              style={{ color: "#1A1A1A" }}
-            >
+            <h2 className="font-serif italic text-2xl md:text-[28px] text-[#1A1A1A] mb-6">
               Frequently Asked Questions
             </h2>
             <div className="space-y-2">
@@ -1987,10 +1911,7 @@ export default function YatraDetailPage() {
           {/* Related Yatras */}
           <section>
             <SectionLabel>Related</SectionLabel>
-            <h2
-              className="font-display text-3xl mb-6"
-              style={{ color: "#1A1A1A" }}
-            >
+            <h2 className="font-serif italic text-2xl md:text-[28px] text-[#1A1A1A] mb-6">
               You Might Also Consider
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 overflow-x-auto pb-2">
@@ -2053,275 +1974,45 @@ export default function YatraDetailPage() {
           </section>
         </div>
 
-        {/* RIGHT — sticky booking widget */}
-        <div className="lg:col-span-1">
-          <div className="sticky top-[130px] space-y-4">
-            {/* Price card */}
-            <div
-              className="rounded-2xl overflow-hidden"
-              style={{ border: "1px solid #E8E8E8", backgroundColor: "white" }}
-            >
-              <div className="px-6 pt-6 pb-4">
-                <p
-                  className="font-body text-xs font-semibold uppercase tracking-widest mb-1"
-                  style={{ color: "#666666" }}
-                >
-                  Price per person
-                </p>
-                <div className="flex items-baseline gap-2">
-                  <p
-                    className="font-mono text-3xl font-bold"
-                    style={{ color: "#1A1A1A" }}
-                  >
-                    {price.label}
-                  </p>
-                  {price.original && (
-                    <span
-                      className="font-mono text-base line-through"
-                      style={{ color: "#666666" }}
-                    >
-                      {price.original}
-                    </span>
-                  )}
-                </div>
-                <p className="font-mono text-sm" style={{ color: "#666666" }}>
-                  {price.discountPercent ? (
-                    <span style={{ color: "#16A34A" }}>
-                      Save {price.discountPercent}%{" · "}
-                    </span>
-                  ) : null}
-                  <span className="text-xs">*GST applicable</span>
-                </p>
-              </div>{" "}
-              <div className="px-6 pb-4">
-                <TripCostCalculator
-                  tripName={yatra.name || "Yatra"}
-                  baseDurationDays={Number.parseInt(yatra.duration) || 7}
-                  pricePerPersonBudget={
-                    Math.round(Number(yatra.priceRange?.minINR) * 0.8) || 8000
-                  }
-                  pricePerPersonStandard={
-                    Math.round(Number(yatra.priceRange?.minINR)) || 10000
-                  }
-                  pricePerPersonPremium={
-                    Math.round(Number(yatra.priceRange?.maxINR)) || 18000
-                  }
-                  tripType="yatra"
-                />
-              </div>
-              <div className="px-6 pb-6 space-y-3">
-                {/* Book Now CTA */}
-                <Link
-                  href={`/booking/yatra-${slug}`}
-                  className="block w-full text-center py-3.5 rounded-xl font-body text-sm font-semibold text-white transition-colors"
-                  style={{ backgroundColor: "#F7F7F7" }}
-                  data-ocid="yatra.book_button"
-                >
-                  Book This Yatra
-                </Link>
-
-                {/* Convenience Buttons */}
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    data-ocid="yatra.wishlist_button"
-                    onClick={() => alert("Added to wishlist!")}
-                    className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold font-body transition-colors"
-                    style={{
-                      border: "1px solid #E8E8E8",
-                      color: "#1A1A1A",
-                      background: "#FDFAF6",
-                    }}
-                  >
-                    <Heart className="w-3 h-3" /> Wishlist
-                  </button>
-                  <button
-                    type="button"
-                    data-ocid="yatra.share_button"
-                    onClick={async () => {
-                      if (navigator.share) {
-                        await navigator
-                          .share({
-                            title: yatra.name,
-                            url: window.location.href,
-                          })
-                          .catch(() => {});
-                      } else {
-                        await navigator.clipboard.writeText(
-                          window.location.href,
-                        );
-                        alert("Link copied!");
-                      }
-                    }}
-                    className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold font-body transition-colors"
-                    style={{
-                      border: "1px solid #E8E8E8",
-                      color: "#1A1A1A",
-                      background: "#FDFAF6",
-                    }}
-                  >
-                    <MessageCircle className="w-3 h-3" /> Share
-                  </button>
-                  <button
-                    type="button"
-                    data-ocid="yatra.download_itinerary_button"
-                    onClick={() => window.print()}
-                    className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold font-body transition-colors"
-                    style={{
-                      border: "1px solid #E8E8E8",
-                      color: "#1A1A1A",
-                      background: "#FDFAF6",
-                    }}
-                  >
-                    <ExternalLink className="w-3 h-3" /> Itinerary
-                  </button>
-                  <a
-                    href={whatsappLink(
-                      `Hi! I'm interested in ${yatra.name}. Can you help me plan?`,
-                    )}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-ocid="yatra.whatsapp_button"
-                    className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold font-body text-white transition-colors"
-                    style={{ backgroundColor: "#25D366" }}
-                  >
-                    <Phone className="w-3 h-3" /> WhatsApp
-                  </a>
-                </div>
-
-                {/* Call Now */}
-                <a
-                  href={PHONE_HREF}
-                  data-ocid="yatra.call_button"
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg text-xs font-semibold font-body transition-colors"
-                  style={{
-                    border: "1px solid #E8E8E8",
-                    color: "#FFC107",
-                    background: "#FDFAF6",
-                  }}
-                >
-                  <Phone className="w-3.5 h-3.5" style={{ color: "#FFC107" }} />
-                  Call Now: {PHONE_DISPLAY}
-                </a>
-              </div>
-            </div>
-
-            {/* Trust Badge Grid */}
-            <div
-              className="p-5 rounded-2xl"
-              style={{
-                backgroundColor: "#F5F5F5",
-                border: "1px solid #E8E8E8",
-              }}
-            >
-              <p
-                className="font-body text-xs font-semibold uppercase tracking-widest mb-3"
-                style={{ color: "#666666" }}
-              >
-                Why Book with Manya
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  {
-                    icon: (
-                      <Shield
-                        className="w-4 h-4"
-                        style={{ color: "#FFC107" }}
-                      />
-                    ),
-                    label: "Secure Payment",
-                  },
-                  {
-                    icon: (
-                      <CheckCircle2
-                        className="w-4 h-4"
-                        style={{ color: "#FFC107" }}
-                      />
-                    ),
-                    label: "Certified Guides",
-                  },
-                  {
-                    icon: (
-                      <Phone className="w-4 h-4" style={{ color: "#FFC107" }} />
-                    ),
-                    label: "24/7 Support",
-                  },
-                  {
-                    icon: (
-                      <Heart className="w-4 h-4" style={{ color: "#FFC107" }} />
-                    ),
-                    label: "Best Price Guarantee",
-                  },
-                ].map(({ icon, label }) => (
-                  <div
-                    key={label}
-                    className="flex items-center gap-2 p-2 rounded-lg"
-                    style={{ background: "white", border: "1px solid #E8E8E8" }}
-                  >
-                    {icon}
-                    <span
-                      className="text-[10px] font-semibold font-body leading-tight"
-                      style={{ color: "#1A1A1A" }}
-                    >
-                      {label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* Quick stats */}
-            <div
-              className="p-5 rounded-2xl"
-              style={{ backgroundColor: "#F7F7F7" }}
-            >
-              <p
-                className="font-body text-xs font-semibold uppercase tracking-widest mb-4"
-                style={{ color: "#FFE082" }}
-              >
-                Quick Facts
-              </p>
-              <div className="space-y-2.5">
-                {[
-                  { label: "Duration", value: yatra.duration },
-                  { label: "Season", value: yatra.season },
-                  { label: "Max Altitude", value: enrichment.altitudeM },
-                  { label: "Difficulty", value: enrichment.difficulty },
-                ].map(({ label, value }) => (
-                  <div
-                    key={label}
-                    className="flex items-center justify-between"
-                  >
-                    <span
-                      className="font-body text-xs"
-                      style={{ color: "rgba(255,255,255,0.6)" }}
-                    >
-                      {label}
-                    </span>
-                    <span
-                      className="font-body text-xs font-semibold"
-                      style={{ color: "white" }}
-                    >
-                      {value}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+        {/* RIGHT — fee panel */}
+        <div className="hidden lg:block">
+          <DetailFeePanel
+            name={yatra.name}
+            priceRange={yatra.priceRange}
+            bookHref={`/booking/yatra-${slug}`}
+            bookLabel="Register for this yatra"
+            bookOcid="yatra.book_button"
+            routeLine={yatra.route}
+            kind="yatra"
+            facts={[
+              { label: "Duration", value: yatra.duration },
+              { label: "Season", value: yatra.season },
+              {
+                label: "Temples",
+                value:
+                  templeCount > 0
+                    ? `${templeCount} sacred shrine${templeCount === 1 ? "" : "s"}`
+                    : "As per itinerary",
+              },
+              { label: "Registration", value: registrationShort },
+              { label: "Difficulty", value: enrichment.difficulty },
+            ]}
+            enquiryMessage={`Hi! I'm interested in the ${yatra.name}. Please share dates and the itinerary.`}
+          />
         </div>
       </div>
+
+      <AdvantageGrid />
+      <TreksByCategory />
 
       {/* ── Bottom CTA ────────────────────────────────────── */}
       <div className="py-16" style={{ backgroundColor: "#F7F7F7" }}>
         <div className="max-w-[1400px] mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <h2 className="font-display italic text-3xl text-white mb-2">
+            <h2 className="font-display italic text-3xl text-[#1A1A1A] mb-2">
               Begin Your Sacred Journey
             </h2>
-            <p
-              className="font-body text-sm"
-              style={{ color: "rgba(255,255,255,0.7)" }}
-            >
+            <p className="font-body text-sm text-[#666666]">
               Let our experienced team guide every step of this transformative
               pilgrimage.
             </p>
@@ -2333,8 +2024,8 @@ export default function YatraDetailPage() {
               )}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-5 py-3 rounded-full font-body text-sm font-semibold text-white transition-colors"
-              style={{ border: "1.5px solid rgba(255,255,255,0.3)" }}
+              className="flex items-center gap-2 px-5 py-3 rounded-full font-body text-sm font-semibold text-[#1A1A1A] transition-colors"
+              style={{ border: "1.5px solid #D0D0D0" }}
               data-ocid="yatra.bottom_whatsapp_button"
             >
               <Phone className="w-4 h-4" /> WhatsApp Us
@@ -2351,30 +2042,14 @@ export default function YatraDetailPage() {
         </div>
       </div>
 
-      {/* Mobile sticky book button */}
-      <div className="fixed bottom-14 left-0 right-0 z-40 px-4 md:hidden flex gap-2">
-        <Link
-          href={`/booking/yatra-${slug}`}
-          className="flex-1 block text-center py-4 rounded-xl font-body text-sm font-semibold text-black shadow-lg"
-          style={{ backgroundColor: "#FFC107" }}
-          data-ocid="yatra.mobile_book_button"
-        >
-          Book This Yatra — From ₹{priceMin}
-        </Link>
-        <a
-          href={whatsappLink(
-            `Hi! I'm interested in ${yatra.name}. Can you help me plan?`,
-          )}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="no-retro px-4 py-4 rounded-xl flex items-center justify-center"
-          style={{ backgroundColor: "#25D366", color: "#fff" }}
-          data-ocid="yatra.mobile_whatsapp_button"
-          aria-label="Chat on WhatsApp"
-        >
-          <Phone className="w-5 h-5" />
-        </a>
-      </div>
+      <DetailMobileBar
+        bookHref={`/booking/yatra-${slug}`}
+        bookOcid="yatra.mobile_book"
+        priceINR={Number(yatra.priceRange.minINR) || 0}
+        enquiryMessage={`Hi! I'm interested in ${yatra.name}. Can you help me plan?`}
+        waOcid="yatra.mobile_whatsapp"
+        label="Book This Yatra"
+      />
     </div>
   );
 }
