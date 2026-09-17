@@ -13,6 +13,16 @@ export {
   TREK_HERO_GALLERIES,
   YATRA_HERO_GALLERIES,
 } from './media'
+export {
+  DURATION_BUCKETS,
+  matchesDuration,
+  matchesSeason,
+  popularTreks,
+  SEASON_BUCKETS,
+  trekFacetGroups,
+  treksForMonth,
+} from './trek-facets'
+export type { FacetGroup, FacetItem } from './trek-facets'
 export { getTrekFacts } from './trek-facts'
 export type { TrekFact } from './trek-facts'
 export {

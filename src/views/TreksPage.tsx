@@ -1,10 +1,18 @@
 "use client";
 
 import type { Trek } from "@/data";
-import { getAllTreks } from "@/data";
+import {
+  DURATION_BUCKETS,
+  getAllTreks,
+  matchesDuration,
+  matchesSeason,
+  SEASON_BUCKETS,
+} from "@/data";
 import { SectionHeader } from "@/components/SectionHeader";
 import { TrekCard } from "@/components/TrekCard";
-import { useMemo, useState } from "react";
+import { X } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 const STATES = ["All", "Uttarakhand", "Himachal Pradesh", "Maharashtra"];
 const DIFFICULTIES = ["All", "Easy", "Moderate", "Difficult", "Extreme"];
@@ -20,10 +28,21 @@ const SKELETON_TREKS = [1, 2, 3, 4, 5, 6, 7, 8];
 export default function TreksPage() {
   const treks = getAllTreks();
   const isLoading = false;
+  const params = useSearchParams();
   const [stateFilter, setStateFilter] = useState("All");
   const [diffFilter, setDiffFilter] = useState("All");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("popularity");
+  // Set by the "All Treks" menu; these two have no chips in the filter bar.
+  const [duration, setDuration] = useState("");
+  const [season, setSeason] = useState("");
+
+  useEffect(() => {
+    setStateFilter(params.get("state") ?? "All");
+    setDiffFilter(params.get("difficulty") ?? "All");
+    setDuration(params.get("duration") ?? "");
+    setSeason(params.get("season") ?? "");
+  }, [params]);
 
   const filtered = useMemo(() => {
     let result: Trek[] = treks;
@@ -33,6 +52,8 @@ export default function TreksPage() {
       result = result.filter((t) =>
         t.difficulty.toLowerCase().includes(diffFilter.toLowerCase()),
       );
+    if (duration) result = result.filter((t) => matchesDuration(t, duration));
+    if (season) result = result.filter((t) => matchesSeason(t, season));
     if (search.trim()) {
       const q = search.toLowerCase();
       result = result.filter(
@@ -50,7 +71,20 @@ export default function TreksPage() {
         return Number(a.durationDays) - Number(b.durationDays);
       return 0;
     });
-  }, [treks, stateFilter, diffFilter, search, sort]);
+  }, [treks, stateFilter, diffFilter, duration, season, search, sort]);
+
+  const appliedFacets: { label: string; clear: () => void }[] = [];
+  const durationLabel = DURATION_BUCKETS.find((b) => b.key === duration)?.label;
+  if (durationLabel) {
+    appliedFacets.push({
+      label: durationLabel,
+      clear: () => setDuration(""),
+    });
+  }
+  const seasonLabel = SEASON_BUCKETS.find((b) => b.key === season)?.label;
+  if (seasonLabel) {
+    appliedFacets.push({ label: seasonLabel, clear: () => setSeason("") });
+  }
 
   return (
     <div className="bg-background min-h-screen">
@@ -176,6 +210,8 @@ export default function TreksPage() {
                 setStateFilter("All");
                 setDiffFilter("All");
                 setSearch("");
+                setDuration("");
+                setSeason("");
               }}
               className="mt-4 px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md font-body"
             >
@@ -184,11 +220,24 @@ export default function TreksPage() {
           </div>
         ) : (
           <>
-            <p className="text-sm text-muted-foreground font-body mb-4">
-              Showing {filtered.length} trek{filtered.length !== 1 ? "s" : ""}
-            </p>
+            <div className="flex flex-wrap items-center gap-2 mb-4">
+              <p className="text-sm text-muted-foreground font-body">
+                Showing {filtered.length} trek{filtered.length !== 1 ? "s" : ""}
+              </p>
+              {appliedFacets.map(({ label, clear }) => (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={clear}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium font-body hover:bg-primary/20 transition-colors"
+                >
+                  {label}
+                  <X size={12} />
+                </button>
+              ))}
+            </div>
             <div
-              key={`${stateFilter}|${diffFilter}|${search}|${sort}`}
+              key={`${stateFilter}|${diffFilter}|${duration}|${season}|${search}|${sort}`}
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
             >
               {filtered.map((trek, i) => (
