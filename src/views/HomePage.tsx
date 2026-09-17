@@ -15,6 +15,10 @@ import { motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FeaturedCardCarousel } from "@/components/FeaturedCardCarousel";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { Advantage } from "@/components/home/Advantage";
+import { HomeFaq } from "@/components/home/HomeFaq";
+import { PromiseSection } from "@/components/home/PromiseSection";
+import { SeasonalTreks } from "@/components/home/SeasonalTreks";
 import { MEDIA, mediaUrl } from "@/lib/cloudinary";
 import { sendEnquiry } from "@/lib/enquiry";
 import {
@@ -494,6 +498,9 @@ export default function HomePage() {
     <div className="bg-white">
       <HeroCarousel />
 
+      {/* ── In-Season Picks ──────────────────────────────────────────────── */}
+      <SeasonalTreks />
+
       {/* ── How It Works ─────────────────────────────────────────────────── */}
       <section data-ocid="how_it_works.section" className="lux-section-white">
         <div className="lux-container">
@@ -639,6 +646,25 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── Why Us ───────────────────────────────────────────────────── */}
+      <Advantage />
+
+      {/* ── Safety Promise ───────────────────────────────────────────── */}
+      <PromiseSection
+        ocid="safety.section"
+        label="Our safety promise"
+        heading="What safety means to us"
+        body="Altitude and weather do not negotiate, so our safety process is not a document — it is what the trek leader carries up the mountain."
+        points={[
+          "Oximeters and twice-daily health checks at every camp above 9,000 feet",
+          "Bottled oxygen, a stretcher and a first-aid kit on every departure",
+          "Trek leaders certified in wilderness first aid, with evacuation plans mapped per campsite",
+          "A documented turn-back time on every summit day, called by the leader",
+        ]}
+        image={getTrekCoverImage("brahmatal")}
+        imageAlt="Trek leader checking on trekkers at a high-altitude camp"
+      />
+
       {/* ── Stats ─────────────────────────────────────────────────────── */}
       <section data-ocid="stats.section" className="lux-section-dark py-16 md:py-20">
         <div className="lux-container">
@@ -730,6 +756,26 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Sustainability Promise ───────────────────────────────────── */}
+      <PromiseSection
+        ocid="sustainability.section"
+        label="Our green promise"
+        heading="We carry our trash back down"
+        body="A trail only stays worth walking if every batch leaves it cleaner than it found it. This part is not optional on our treks."
+        points={[
+          "Every group carries down its own waste, plus whatever earlier groups left behind",
+          "No single-use plastic on the trail — we hand out refillable bottles at basecamp",
+          "Camps are pitched on designated ground and rotated to let meadows recover",
+          "Local guides, cooks and porters are hired from the villages at the trailhead",
+        ]}
+        image={getTrekCoverImage("valley-of-flowers")}
+        imageAlt="Alpine meadow on the Valley of Flowers trail"
+        reverse
+      />
+
+      {/* ── FAQ ──────────────────────────────────────────────────────── */}
+      <HomeFaq />
 
       {/* ── Trust Badges ─────────────────────────────────────────────── */}
       <section
