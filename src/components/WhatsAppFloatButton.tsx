@@ -2,6 +2,8 @@
 
 import { usePathname } from "next/navigation";
 
+import { whatsappLink } from "@/data/contact";
+
 /** Paths where page content already has WhatsApp CTAs / sticky book bars */
 function isDetailPage(pathname: string) {
   if (/^\/treks\/[^/]+$/.test(pathname)) return true;
@@ -15,12 +17,11 @@ export function WhatsAppFloatButton() {
   const pathname = usePathname();
   if (isDetailPage(pathname)) return null;
 
-  const message = encodeURIComponent(
-    "Hi TrekRoots! I'm interested in your Himalayan journeys. Can you help me plan?",
-  );
   return (
     <a
-      href={`https://wa.me/919999999999?text=${message}`}
+      href={whatsappLink(
+        "Hi TrekRoots! I'm interested in your Himalayan journeys. Can you help me plan?",
+      )}
       target="_blank"
       rel="noopener noreferrer"
       data-ocid="whatsapp.button"

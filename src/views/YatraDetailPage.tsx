@@ -1,6 +1,12 @@
 "use client";
 
-import { getYatraBySlug, getYatraHeroImages } from "@/data";
+import {
+  getYatraBySlug,
+  getYatraHeroImages,
+  PHONE_DISPLAY,
+  PHONE_HREF,
+  whatsappLink,
+} from "@/data";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
@@ -2154,7 +2160,9 @@ export default function YatraDetailPage() {
                     <ExternalLink className="w-3 h-3" /> Itinerary
                   </button>
                   <a
-                    href={`https://wa.me/919876543210?text=${encodeURIComponent(`Hi! I'm interested in ${yatra.name}. Can you help me plan?`)}`}
+                    href={whatsappLink(
+                      `Hi! I'm interested in ${yatra.name}. Can you help me plan?`,
+                    )}
                     target="_blank"
                     rel="noopener noreferrer"
                     data-ocid="yatra.whatsapp_button"
@@ -2167,7 +2175,7 @@ export default function YatraDetailPage() {
 
                 {/* Call Now */}
                 <a
-                  href="tel:+919876543210"
+                  href={PHONE_HREF}
                   data-ocid="yatra.call_button"
                   className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg text-xs font-semibold font-body transition-colors"
                   style={{
@@ -2177,7 +2185,7 @@ export default function YatraDetailPage() {
                   }}
                 >
                   <Phone className="w-3.5 h-3.5" style={{ color: "#FFC107" }} />
-                  Call Now: +91-98765-43210
+                  Call Now: {PHONE_DISPLAY}
                 </a>
               </div>
             </div>
@@ -2304,7 +2312,9 @@ export default function YatraDetailPage() {
           </div>
           <div className="flex items-center gap-3 shrink-0">
             <a
-              href={`https://wa.me/919999999999?text=Hi%20TrekRoots!%20I'd%20like%20to%20plan%20${encodeURIComponent(yatra.name)}.`}
+              href={whatsappLink(
+                `Hi TrekRoots! I'd like to plan ${yatra.name}.`,
+              )}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-5 py-3 rounded-full font-body text-sm font-semibold text-white transition-colors"
@@ -2336,7 +2346,9 @@ export default function YatraDetailPage() {
           Book This Yatra — From ₹{priceMin}
         </Link>
         <a
-          href={`https://wa.me/919876543210?text=${encodeURIComponent(`Hi! I'm interested in ${yatra.name}. Can you help me plan?`)}`}
+          href={whatsappLink(
+            `Hi! I'm interested in ${yatra.name}. Can you help me plan?`,
+          )}
           target="_blank"
           rel="noopener noreferrer"
           className="no-retro px-4 py-4 rounded-xl flex items-center justify-center"

@@ -9,13 +9,12 @@ import {
   getStayBySlug,
   getTrekBySlug,
   getYatraBySlug,
+  whatsappLink,
 } from "@/data";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, MessageCircle, Mountain, Users } from "lucide-react";
 import { useMemo, useState } from "react";
-
-const WA_NUMBER = "919999999999";
 
 function resolveTrip(id: string): { name: string; type: string; slug: string } | null {
   if (!id) return null;
@@ -95,8 +94,7 @@ export default function BookingPage() {
       `Group size: ${groupSize}`,
       message ? `Message: ${message}` : null,
     ].filter(Boolean);
-    const text = encodeURIComponent(lines.join("\n"));
-    window.open(`https://wa.me/${WA_NUMBER}?text=${text}`, "_blank");
+    window.open(whatsappLink(lines.join("\n")), "_blank");
   };
 
   return (

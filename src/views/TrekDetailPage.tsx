@@ -1,7 +1,14 @@
 "use client";
 
 import type { DayItinerary, Trek } from "@/data";
-import { getAllTreks, getTrekBySlug, getTrekHeroImages } from "@/data";
+import {
+  getAllTreks,
+  getTrekBySlug,
+  getTrekHeroImages,
+  PHONE_DISPLAY,
+  PHONE_HREF,
+  whatsappLink,
+} from "@/data";
 import { TrekCard } from "@/components/TrekCard";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
 import { HeroCarousel } from "@/components/HeroCarousel";
@@ -417,7 +424,9 @@ function BookingWidget({ trek }: { trek: Trek }) {
           Itinerary
         </button>
         <a
-          href={`https://wa.me/919876543210?text=${encodeURIComponent(`Hi! I'm interested in ${trek.name}. Can you help me plan?`)}`}
+          href={whatsappLink(
+            `Hi! I'm interested in ${trek.name}. Can you help me plan?`,
+          )}
           target="_blank"
           rel="noopener noreferrer"
           data-ocid="trek.whatsapp_button"
@@ -441,7 +450,7 @@ function BookingWidget({ trek }: { trek: Trek }) {
 
       {/* Call Now */}
       <a
-        href="tel:+919876543210"
+        href={PHONE_HREF}
         data-ocid="trek.call_button"
         className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-border text-xs font-semibold font-body text-foreground hover:bg-muted/40 transition-colors mb-4"
       >
@@ -459,7 +468,7 @@ function BookingWidget({ trek }: { trek: Trek }) {
         >
           <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.7h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 10.1a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 17.55z" />
         </svg>
-        <span style={{ color: "#FFC107" }}>Call Now: +91-98765-43210</span>
+        <span style={{ color: "#FFC107" }}>Call Now: {PHONE_DISPLAY}</span>
       </a>
 
       {/* Trust Badge Grid */}
@@ -1268,7 +1277,9 @@ export default function TrekDetailPage() {
           {Number(trek.priceRange.minINR).toLocaleString("en-IN")}
         </Link>
         <a
-          href={`https://wa.me/919876543210?text=${encodeURIComponent(`Hi! I'm interested in ${trek.name}. Can you help me plan?`)}`}
+          href={whatsappLink(
+            `Hi! I'm interested in ${trek.name}. Can you help me plan?`,
+          )}
           target="_blank"
           rel="noopener noreferrer"
           className="no-retro px-4 py-3 bg-[#25D366] text-white font-body text-sm font-semibold rounded-lg flex items-center justify-center"

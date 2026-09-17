@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRight, Menu, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { whatsappLink } from "@/data/contact";
 import { LOGO_URL } from "@/lib/cloudinary";
 
 const NAV_LINKS = [
@@ -158,7 +159,7 @@ export function Navbar() {
             Plan Your Trip <ArrowRight size={15} />
           </Link>
           <a
-            href="https://wa.me/919999999999?text=Hi%20TrekRoots!%20I'd%20like%20to%20plan%20a%20trip."
+            href={whatsappLink("Hi TrekRoots! I'd like to plan a trip.")}
             target="_blank"
             rel="noopener noreferrer"
             data-ocid="navbar.mobile_whatsapp"

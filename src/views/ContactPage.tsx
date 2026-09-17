@@ -3,12 +3,14 @@
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { useState } from "react";
 
+import { PHONE_DISPLAY, PHONE_HREF, whatsappLink } from "@/data/contact";
+
 const CONTACT_INFO = [
   {
     icon: Phone,
     label: "Phone",
-    value: "+91 99999 99999",
-    href: "tel:+919999999999",
+    value: PHONE_DISPLAY,
+    href: PHONE_HREF,
   },
   {
     icon: Mail,
@@ -20,7 +22,9 @@ const CONTACT_INFO = [
     icon: MessageCircle,
     label: "WhatsApp",
     value: "Chat with an Expert",
-    href: "https://wa.me/919999999999?text=Hi%20TrekRoots!%20I%20am%20interested%20in%20planning%20a%20Himalayan%20journey.",
+    href: whatsappLink(
+      "Hi TrekRoots! I am interested in planning a Himalayan journey.",
+    ),
   },
   {
     icon: MapPin,

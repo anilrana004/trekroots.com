@@ -1,6 +1,6 @@
 "use client";
 
-import { getAllStays } from "@/data";
+import { getAllStays, whatsappLink } from "@/data";
 import { StayCard } from "@/components/StayCard";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -457,7 +457,7 @@ export default function StaysPage() {
             camp.
           </p>
           <a
-            href="https://wa.me/919999999999?text=Hi TrekRoots! I need help choosing a stay."
+            href={whatsappLink("Hi TrekRoots! I need help choosing a stay.")}
             target="_blank"
             rel="noopener noreferrer"
             data-ocid="stay.consult_cta"

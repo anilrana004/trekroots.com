@@ -12,6 +12,13 @@ import {
   Youtube,
 } from "lucide-react";
 import { useState } from "react";
+import {
+  PHONE_DISPLAY,
+  PHONE_HREF,
+  WHATSAPP_DISPLAY,
+  WHATSAPP_NUMBER,
+  whatsappLink,
+} from "@/data/contact";
 import { LOGO_URL } from "@/lib/cloudinary";
 
 const EXPLORE_LINKS = [
@@ -172,7 +179,7 @@ export function Footer() {
                 </a>
               ))}
               <a
-                href="https://wa.me/919999999999"
+                href={`https://wa.me/${WHATSAPP_NUMBER}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Chat on WhatsApp"
@@ -250,17 +257,21 @@ export function Footer() {
                     Phone / WhatsApp
                   </p>
                   <a
-                    href="tel:+919876543210"
+                    href={PHONE_HREF}
                     className="text-[13px] font-body text-white hover:text-[#FFC107] transition-colors"
                   >
-                    +91 98765 43210
+                    {PHONE_DISPLAY}
                   </a>
                   <br />
                   <a
-                    href="tel:+911352345678"
+                    href={whatsappLink(
+                      "Hi TrekRoots! I'd like to plan a Himalayan trip.",
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-[13px] font-body text-white/60 hover:text-[#FFC107] transition-colors"
                   >
-                    +91 1352 345678
+                    {WHATSAPP_DISPLAY}
                   </a>
                 </div>
               </li>

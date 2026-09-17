@@ -1,6 +1,11 @@
 "use client";
 
-import { getPackageBySlug } from "@/data";
+import {
+  getPackageBySlug,
+  PHONE_DISPLAY,
+  PHONE_HREF,
+  whatsappLink,
+} from "@/data";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
@@ -1227,7 +1232,7 @@ export default function PackageDetailPage() {
                     Book This Package <ArrowRight size={16} />
                   </Link>
                   <a
-                    href={`https://wa.me/919999999999?text=Hi%20TrekRoots!%20I'm%20interested%20in%20the%20${encodeURIComponent(pkg.name)}%20package.`}
+                    href={whatsappLink(`Hi TrekRoots! I'm interested in the ${pkg.name} package.`)}
                     target="_blank"
                     rel="noopener noreferrer"
                     data-ocid="package.whatsapp_button"
@@ -1367,7 +1372,7 @@ export default function PackageDetailPage() {
                   Book This Package
                 </Link>
                 <a
-                  href={`https://wa.me/919999999999?text=Hi%20TrekRoots!%20I'm%20interested%20in%20the%20${encodeURIComponent(pkg.name)}%20package.`}
+                  href={whatsappLink(`Hi TrekRoots! I'm interested in the ${pkg.name} package.`)}
                   target="_blank"
                   rel="noopener noreferrer"
                   data-ocid="package.sidebar_whatsapp_button"
@@ -1451,7 +1456,7 @@ export default function PackageDetailPage() {
                 </p>
                 <div className="space-y-2 text-sm font-body">
                   <a
-                    href="tel:+919999999999"
+                    href={PHONE_HREF}
                     className="flex items-center gap-2 transition-colors"
                     style={{ color: "var(--text-secondary)" }}
                   >
@@ -1459,7 +1464,7 @@ export default function PackageDetailPage() {
                       size={15}
                       style={{ color: "var(--brand-primary)" }}
                     />{" "}
-                    +91 99999 99999
+                    {PHONE_DISPLAY}
                   </a>
                   <a
                     href="mailto:hello@trekroots.com"
@@ -1501,7 +1506,7 @@ export default function PackageDetailPage() {
               Book Now
             </Link>
             <a
-              href={`https://wa.me/919999999999?text=Hi%20TrekRoots!%20I'm%20interested%20in%20the%20${encodeURIComponent(pkg.name)}%20package.`}
+              href={whatsappLink(`Hi TrekRoots! I'm interested in the ${pkg.name} package.`)}
               target="_blank"
               rel="noopener noreferrer"
               data-ocid="package.bottom_cta_whatsapp"

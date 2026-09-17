@@ -20,7 +20,10 @@ import {
   getTrekCoverImage,
   getTrekHeroImages,
   getYatraCoverImage,
+  PHONE_DISPLAY,
+  PHONE_HREF,
   trekSlugFromPath,
+  whatsappLink,
 } from "@/data";
 
 // ─── Carousel Data ────────────────────────────────────────────────────────────
@@ -857,14 +860,16 @@ export default function HomePage() {
               </p>
               <div className="flex flex-col gap-3">
                 <a
-                  href="tel:+919999999999"
+                  href={PHONE_HREF}
                   data-ocid="newsletter.call_button"
                   className="lux-btn-accent"
                 >
-                  Call +91 99999 99999
+                  Call {PHONE_DISPLAY}
                 </a>
                 <a
-                  href="https://wa.me/919999999999?text=Hi%20TrekRoots!%20I'd%20like%20to%20plan%20a%20Himalayan%20trip."
+                  href={whatsappLink(
+                    "Hi TrekRoots! I'd like to plan a Himalayan trip.",
+                  )}
                   target="_blank"
                   rel="noopener noreferrer"
                   data-ocid="newsletter.whatsapp_button"

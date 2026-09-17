@@ -1,6 +1,6 @@
 "use client";
 
-import { getStayBySlug } from "@/data";
+import { getStayBySlug, whatsappLink } from "@/data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -857,7 +857,7 @@ export default function StayDetailPage() {
                   Check Availability &amp; Book
                 </button>
                 <a
-                  href={`https://wa.me/919999999999?text=Hi TrekRoots! I'm interested in staying at ${encodeURIComponent(stay.name)}.`}
+                  href={whatsappLink(`Hi TrekRoots! I'm interested in staying at ${stay.name}.`)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl text-sm font-semibold font-body transition-colors"
@@ -912,7 +912,7 @@ export default function StayDetailPage() {
             </div>
             <div className="flex items-center gap-3">
               <a
-                href={`https://wa.me/919999999999?text=Hi TrekRoots! I'm interested in staying at ${encodeURIComponent(stay.name)}.`}
+                href={whatsappLink(`Hi TrekRoots! I'm interested in staying at ${stay.name}.`)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold font-body transition-colors"

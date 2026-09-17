@@ -15,6 +15,14 @@ export {
 } from './media'
 export { getTrekFacts } from './trek-facts'
 export type { TrekFact } from './trek-facts'
+export {
+  PHONE_DISPLAY,
+  PHONE_HREF,
+  PHONE_NUMBER,
+  WHATSAPP_DISPLAY,
+  WHATSAPP_NUMBER,
+  whatsappLink,
+} from './contact'
 
 import type { SearchResults, Trek, Yatra } from './types'
 import { treks } from './treks'
