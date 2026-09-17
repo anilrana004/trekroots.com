@@ -183,7 +183,7 @@ function FeaturedSlide({
             <span className="font-body text-xs text-muted-foreground truncate">
               {item.region}
             </span>
-            <span className="font-body text-[10px] px-2 py-0.5 bg-canvas text-muted-foreground uppercase tracking-wide shrink-0">
+            <span className="font-body text-[10px] px-2 py-0.5 bg-[#F5F5F5] text-muted-foreground uppercase tracking-wide shrink-0">
               {item.season}
             </span>
           </div>

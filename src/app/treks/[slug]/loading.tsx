@@ -1,7 +1,7 @@
 export default function TreksLoading() {
   return (
     <div className="min-h-[60vh] bg-background">
-      <div className="h-[calc(100dvh-68px)] min-h-[420px] animate-pulse bg-muted" />
+      <div className="h-[calc(100dvh-var(--site-chrome-h))] min-h-[420px] animate-pulse bg-muted" />
       <div className="container mx-auto px-4 py-8 space-y-4">
         <div className="h-8 w-2/3 max-w-md rounded-md bg-muted animate-pulse" />
         <div className="h-4 w-full max-w-2xl rounded-md bg-muted animate-pulse" />

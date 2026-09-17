@@ -360,7 +360,7 @@ function HeroCarousel() {
   return (
     <section
       data-ocid="carousel.section"
-      className="relative h-[calc(100dvh-68px)] min-h-[600px] overflow-hidden"
+      className="relative h-[calc(100dvh-var(--site-chrome-h))] min-h-[600px] overflow-hidden"
     >
       {CAROUSEL_ITEMS.map((slide, i) => (
         <div
@@ -772,6 +772,7 @@ export default function HomePage() {
         image={getTrekCoverImage("valley-of-flowers")}
         imageAlt="Alpine meadow on the Valley of Flowers trail"
         reverse
+        tone="muted"
       />
 
       {/* ── FAQ ──────────────────────────────────────────────────────── */}
@@ -780,7 +781,7 @@ export default function HomePage() {
       {/* ── Trust Badges ─────────────────────────────────────────────── */}
       <section
         data-ocid="trust.section"
-        className="py-12 md:py-16 bg-canvas border-y border-border"
+        className="py-12 md:py-16 bg-[#F5F5F5] border-y border-border"
       >
         <div className="lux-container">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-px bg-border">

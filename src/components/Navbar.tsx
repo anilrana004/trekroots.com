@@ -221,7 +221,7 @@ function MobileDrawer({
                   type="button"
                   aria-expanded={isOpen}
                   onClick={() => setExpanded(isOpen ? null : group.title)}
-                  className="w-full flex items-center justify-between px-4 py-3.5 text-[14px] font-body font-medium"
+                  className="no-retro w-full flex items-center justify-between px-4 py-3.5 text-[14px] font-body font-medium"
                   style={{ color: "#1A1A1A" }}
                 >
                   {group.title}
@@ -414,7 +414,7 @@ export function Navbar() {
                 aria-expanded={megaOpen}
                 aria-controls={megaId}
                 onClick={() => setMegaOpen((v) => !v)}
-                className="flex items-center gap-1 px-3.5 py-1.5 text-[13px] font-body font-medium tracking-wide rounded transition-colors"
+                className="no-retro flex items-center gap-1 px-3.5 py-1.5 text-[13px] font-body font-medium tracking-wide rounded transition-colors"
                 style={{
                   color: treksActive || megaOpen ? "#FFC107" : "#555555",
                   fontWeight: treksActive ? 600 : undefined,

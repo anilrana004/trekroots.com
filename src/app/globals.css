@@ -169,6 +169,21 @@
   }
 }
 
+/*
+ * Total chrome above the page: the sticky bar alone on phones, plus the
+ * utility row that only shows from lg up. Declared in CSS rather than measured
+ * so full-height heroes do not shift once JS runs.
+ */
+:root {
+  --site-chrome-h: 60px;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --site-chrome-h: 104px;
+  }
+}
+
 /* Jump-to-section: under header, or flush top when header hidden */
 .detail-section-nav {
   position: sticky;

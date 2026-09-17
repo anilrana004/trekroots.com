@@ -14,7 +14,8 @@ type PromiseSectionProps = {
   imageAlt: string;
   /** Puts the image on the left so two stacked promises alternate. */
   reverse?: boolean;
-  dark?: boolean;
+  /** Keeps the page alternating when a promise follows another pale section. */
+  tone?: "white" | "muted";
 };
 
 export function PromiseSection({
@@ -26,12 +27,12 @@ export function PromiseSection({
   image,
   imageAlt,
   reverse = false,
-  dark = false,
+  tone = "white",
 }: PromiseSectionProps) {
   return (
     <section
       data-ocid={ocid}
-      className={dark ? "lux-section-dark" : "lux-section-white"}
+      className={tone === "muted" ? "lux-section-muted" : "lux-section-white"}
     >
       <div className="lux-container">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
@@ -68,16 +69,8 @@ export function PromiseSection({
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             <p className="lux-label mb-4">{label}</p>
-            <h2
-              className={`lux-heading-lg mb-5 ${dark ? "text-white" : "text-[#1A1A1A]"}`}
-            >
-              {heading}
-            </h2>
-            <p
-              className={`lux-body text-base mb-7 ${dark ? "text-white/60" : ""}`}
-            >
-              {body}
-            </p>
+            <h2 className="lux-heading-lg mb-5 text-[#1A1A1A]">{heading}</h2>
+            <p className="lux-body text-base mb-7">{body}</p>
             <ul className="space-y-3.5">
               {points.map((point) => (
                 <li key={point} className="flex items-start gap-3">
@@ -87,11 +80,7 @@ export function PromiseSection({
                   >
                     <Check size={12} className="text-[#1A1A1A]" />
                   </span>
-                  <span
-                    className={`lux-body text-sm ${dark ? "text-white/70" : ""}`}
-                  >
-                    {point}
-                  </span>
+                  <span className="lux-body text-sm">{point}</span>
                 </li>
               ))}
             </ul>

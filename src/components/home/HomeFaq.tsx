@@ -36,7 +36,7 @@ export function HomeFaq() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section data-ocid="faq.section" className="lux-section-muted">
+    <section data-ocid="faq.section" className="lux-section-white">
       <div className="lux-container">
         <div className="grid grid-cols-1 lg:grid-cols-[0.75fr_1.25fr] gap-10 lg:gap-16">
           <motion.div
@@ -55,24 +55,28 @@ export function HomeFaq() {
             </p>
             <Link
               href="/contact"
-              data-ocid="faq.contact_link"
+              data-ocid="faq.contact"
               className="inline-flex items-center gap-1.5 text-sm font-body font-semibold text-[#1A1A1A] hover:gap-2.5 transition-all"
             >
               Talk to an expert <ArrowRight size={15} />
             </Link>
           </motion.div>
 
-          <div className="divide-y" style={{ borderColor: "#E0E0E0" }}>
+          <div>
             {FAQS.map((faq, i) => {
               const isOpen = open === i;
               return (
-                <div key={faq.q} className="border-t first:border-t-0" style={{ borderColor: "#E0E0E0" }}>
+                <div
+                  key={faq.q}
+                  className="border-t first:border-t-0"
+                  style={{ borderColor: "#E0E0E0" }}
+                >
                   <button
                     type="button"
                     aria-expanded={isOpen}
                     onClick={() => setOpen(isOpen ? null : i)}
                     data-ocid={`faq.item.${i + 1}`}
-                    className="w-full flex items-start justify-between gap-5 py-5 text-left"
+                    className="no-retro w-full flex items-start justify-between gap-5 py-5 text-left"
                   >
                     <span className="font-display text-base md:text-lg text-[#1A1A1A] leading-snug">
                       {faq.q}

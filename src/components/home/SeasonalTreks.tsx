@@ -35,7 +35,7 @@ export function SeasonalTreks() {
   if (picks.length === 0) return null;
 
   return (
-    <section data-ocid="seasonal.section" className="lux-section-white">
+    <section data-ocid="seasonal.section" className="lux-section-muted">
       <div className="lux-container">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -57,14 +57,14 @@ export function SeasonalTreks() {
           <Link
             href="/treks"
             data-ocid="seasonal.view_all"
-            className="hidden md:inline-flex items-center gap-1.5 text-sm font-body font-semibold text-[#1A1A1A] hover:gap-2.5 transition-all"
+            className="hidden lg:inline-flex items-center gap-1.5 text-sm font-body font-semibold text-[#1A1A1A] hover:gap-2.5 transition-all"
           >
             View all treks <ArrowRight size={15} />
           </Link>
         </motion.div>
 
-        {/* Swipeable on phones, a row of cards from tablet up */}
-        <div className="flex gap-4 overflow-x-auto hide-scrollbar snap-x snap-mandatory md:grid md:grid-cols-3 lg:grid-cols-5 md:overflow-visible">
+        {/* Swipeable until there is room for all five across, to avoid an orphan row */}
+        <div className="flex gap-4 overflow-x-auto hide-scrollbar snap-x snap-mandatory lg:grid lg:grid-cols-5 lg:overflow-visible">
           {picks.map((trek, i) => {
             const price = tripPrice(trek.priceRange);
             return (
@@ -74,7 +74,7 @@ export function SeasonalTreks() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.07 }}
-                className="min-w-[78%] sm:min-w-[45%] md:min-w-0 snap-start"
+                className="min-w-[78%] sm:min-w-[45%] md:min-w-[31%] lg:min-w-0 snap-start"
               >
                 <Link
                   href={`/treks/${trek.slug}`}
@@ -144,7 +144,7 @@ export function SeasonalTreks() {
 
         <Link
           href="/treks"
-          className="md:hidden mt-6 inline-flex items-center gap-1.5 text-sm font-body font-semibold text-[#1A1A1A]"
+          className="lg:hidden mt-6 inline-flex items-center gap-1.5 text-sm font-body font-semibold text-[#1A1A1A]"
         >
           View all treks <ArrowRight size={15} />
         </Link>

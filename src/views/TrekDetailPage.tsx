@@ -672,7 +672,7 @@ export default function TrekDetailPage() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero — full viewport below sticky navbar */}
-      <div className="relative h-[calc(100dvh-68px)] min-h-[520px] overflow-hidden bg-muted">
+      <div className="relative h-[calc(100dvh-var(--site-chrome-h))] min-h-[520px] overflow-hidden bg-muted">
         <HeroCarousel images={heroImages} alt={trek.name} />
         <div className="absolute inset-0 z-[3] bg-gradient-to-t from-black/75 via-black/40 to-black/25 pointer-events-none" />
         <div className="absolute inset-0 z-[4] flex flex-col items-center justify-center px-4 md:px-8 pointer-events-none">

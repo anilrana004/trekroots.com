@@ -48,7 +48,7 @@ export function Advantage() {
             </p>
             <Link
               href="/about"
-              data-ocid="advantage.about_link"
+              data-ocid="advantage.about"
               className="inline-flex items-center gap-1.5 text-sm font-body font-semibold text-[#1A1A1A] hover:gap-2.5 transition-all"
             >
               Read our story <ArrowRight size={15} />
