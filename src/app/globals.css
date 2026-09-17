@@ -204,9 +204,9 @@ button:not(:disabled):not([aria-hidden="true"]):not(.no-retro):not([data-ocid*="
 .lux-btn-primary,
 .lux-btn-accent,
 .lux-btn-outline,
-a[data-ocid*="cta"],
-a[data-ocid*="button"],
-a[data-ocid*="_link"]:not([data-ocid*="view_all"]),
+a[data-ocid*="cta"]:not(.no-retro),
+a[data-ocid*="button"]:not(.no-retro),
+a[data-ocid*="_link"]:not([data-ocid*="view_all"]):not(.no-retro),
 input[type="submit"],
 input[type="button"] {
   border: 2px solid var(--retro-shadow-color);
@@ -227,8 +227,8 @@ button:not(:disabled):not([aria-hidden="true"]):not(.no-retro):not([data-ocid*="
 .lux-btn-primary:hover,
 .lux-btn-accent:hover,
 .lux-btn-outline:hover,
-a[data-ocid*="cta"]:hover,
-a[data-ocid*="button"]:hover,
+a[data-ocid*="cta"]:not(.no-retro):hover,
+a[data-ocid*="button"]:not(.no-retro):hover,
 input[type="submit"]:hover,
 input[type="button"]:hover {
   transform: translate(var(--retro-offset-hover), var(--retro-offset-hover));
@@ -242,8 +242,8 @@ button:not(:disabled):not([aria-hidden="true"]):not(.no-retro):not([data-ocid*="
 .lux-btn-primary:active,
 .lux-btn-accent:active,
 .lux-btn-outline:active,
-a[data-ocid*="cta"]:active,
-a[data-ocid*="button"]:active,
+a[data-ocid*="cta"]:not(.no-retro):active,
+a[data-ocid*="button"]:not(.no-retro):active,
 input[type="submit"]:active,
 input[type="button"]:active {
   transform: translate(var(--retro-offset), var(--retro-offset));

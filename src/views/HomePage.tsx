@@ -1,37 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import {
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle2,
-  MapPin,
-  Mountain,
-  Shield,
-  Star,
-  Users,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FeaturedCardCarousel } from "@/components/FeaturedCardCarousel";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
-import { Advantage } from "@/components/home/Advantage";
+import { AdvantageGrid } from "@/components/home/AdvantageGrid";
+import { ExpertBand } from "@/components/home/ExpertBand";
+import { GoogleRating } from "@/components/home/GoogleRating";
 import { HomeFaq } from "@/components/home/HomeFaq";
-import { PromiseSection } from "@/components/home/PromiseSection";
+import { PromoBanner } from "@/components/home/PromoBanner";
+import { Reasons } from "@/components/home/Reasons";
+import { SacredYatras } from "@/components/home/SacredYatras";
+import { SafetyFeature } from "@/components/home/SafetyFeature";
 import { SeasonalTreks } from "@/components/home/SeasonalTreks";
-import { MEDIA, mediaUrl } from "@/lib/cloudinary";
-import { sendEnquiry } from "@/lib/enquiry";
-import {
-  getTrekCoverImage,
-  getTrekHeroImages,
-  getYatraCoverImage,
-  PHONE_DISPLAY,
-  PHONE_HREF,
-  trekSlugFromPath,
-  whatsappLink,
-} from "@/data";
+import { TreksByCategory } from "@/components/home/TreksByCategory";
+import { TrekkerStories } from "@/components/home/TrekkerStories";
+import { TrustedBy } from "@/components/home/TrustedBy";
+import { getTrekCoverImage, getYatraCoverImage } from "@/data";
 
-// ─── Carousel Data ────────────────────────────────────────────────────────────
+// ─── Hero Slides ──────────────────────────────────────────────────────────────
 
 const CAROUSEL_ITEMS = [
   {
@@ -91,239 +79,7 @@ const CAROUSEL_ITEMS = [
   },
 ];
 
-// ─── Trek Data ────────────────────────────────────────────────────────────────
-
-const FEATURED_TREKS = [
-  {
-    id: 1,
-    slug: "/treks/kedarkantha",
-    name: "Kedarkantha Trek",
-    region: "Uttarakhand",
-    difficulty: "Easy–Moderate",
-    difficultyColor: "#5A8A6A",
-    duration: "6 Days",
-    altitude: "3,811 m",
-    price: "₹3,999",
-    image: getTrekCoverImage("kedarkantha"),
-    season: "Nov–Mar",
-  },
-  {
-    id: 2,
-    slug: "/treks/valley-of-flowers",
-    name: "Valley of Flowers",
-    region: "Uttarakhand",
-    difficulty: "Moderate",
-    difficultyColor: "#3D7A8A",
-    duration: "6 Days",
-    altitude: "3,962 m",
-    price: "₹6,500",
-    image: mediaUrl(MEDIA.home.trekValleyFlowers, {
-      width: 800,
-      height: 600,
-      crop: "fill",
-    }),
-    season: "Jul–Sep",
-  },
-  {
-    id: 3,
-    slug: "/treks/chopta-tungnath",
-    name: "Chopta Tungnath Trek",
-    region: "Uttarakhand",
-    difficulty: "Easy–Moderate",
-    difficultyColor: "#5A8A6A",
-    duration: "3 Days",
-    altitude: "12,083 ft",
-    price: "₹6,500",
-    image: mediaUrl(MEDIA.home.trekChopta, {
-      width: 800,
-      height: 600,
-      crop: "fill",
-    }),
-    season: "Dec–Feb",
-  },
-  {
-    id: 4,
-    slug: "/treks/hampta-pass",
-    name: "Hampta Pass",
-    region: "Himachal Pradesh",
-    difficulty: "Moderate",
-    difficultyColor: "#3D7A8A",
-    duration: "5 Days",
-    altitude: "14,100 ft",
-    price: "₹5,999",
-    image: mediaUrl(MEDIA.home.trekHampta, {
-      width: 800,
-      height: 600,
-      crop: "fill",
-    }),
-    season: "Jun–Sep",
-  },
-];
-
-// ─── Yatra Data ───────────────────────────────────────────────────────────────
-
-const FEATURED_YATRAS = [
-  {
-    id: 1,
-    slug: "/yatra/char-dham",
-    name: "Char Dham Yatra",
-    region: "Uttarakhand",
-    type: "Grand Pilgrimage",
-    typeColor: "#C9973A",
-    duration: "12 Days",
-    temples: "4 Sacred Shrines",
-    price: "₹19,999",
-    image: getYatraCoverImage("char-dham"),
-    season: "May–Nov",
-  },
-  {
-    id: 2,
-    slug: "/yatra/kedarnath",
-    name: "Kedarnath Yatra",
-    region: "Uttarakhand",
-    type: "Jyotirlinga",
-    typeColor: "#FFC107",
-    duration: "4 Days",
-    temples: "1 Jyotirlinga",
-    price: "₹9,499",
-    image: getYatraCoverImage("kedarnath"),
-    season: "May–Nov",
-  },
-  {
-    id: 3,
-    slug: "/yatra/do-dham-yatra",
-    name: "Do Dham Yatra",
-    region: "Uttarakhand",
-    type: "Char Dham",
-    typeColor: "#C9973A",
-    duration: "6 Days",
-    temples: "Kedar + Badri",
-    price: "₹13,499",
-    image: mediaUrl(MEDIA.home.yatraCharDham, {
-      width: 800,
-      height: 600,
-      crop: "fill",
-    }),
-    season: "May–Nov",
-  },
-  {
-    id: 4,
-    slug: "/yatra/adi-kailash-om-parvat",
-    name: "Adi Kailash & Om Parvat",
-    region: "Uttarakhand",
-    type: "Sacred Yatra",
-    typeColor: "#5A8A6A",
-    duration: "6 Days",
-    temples: "Adi Kailash + Om Parvat",
-    price: "₹36,999",
-    image: mediaUrl(MEDIA.home.yatraCharDham, {
-      width: 800,
-      height: 600,
-      crop: "fill",
-    }),
-    season: "May–Oct",
-  },
-];
-
-const PAGE_STATS = [
-  { value: "50+", label: "Himalayan Treks" },
-  { value: "12+", label: "Sacred Yatras" },
-  { value: "10,000+", label: "Happy Travellers" },
-  { value: "6", label: "Owned Homestays" },
-];
-
-const STEPS = [
-  {
-    num: "01",
-    title: "Choose Your Adventure",
-    desc: "Browse our curated treks, yatras, and packages. Filter by difficulty, region, or season to find your perfect journey.",
-  },
-  {
-    num: "02",
-    title: "Pick Dates & Group",
-    desc: "Select your departure dates from available slots and tell us your group size. Group discounts from 6+ people.",
-  },
-  {
-    num: "03",
-    title: "Customize Add-ons",
-    desc: "Add helicopter transfers, travel insurance, airport pickups, or photography packages to complete your experience.",
-  },
-  {
-    num: "04",
-    title: "Confirm & Pay",
-    desc: "Secure your spot with a 30% advance. Pay the balance 30 days before departure. Full refund guarantee.",
-  },
-];
-
-const REVIEWS = [
-  {
-    id: 1,
-    quote:
-      "Every detail was handled with such care. The Kedarkantha summit at sunrise, surrounded by snow-laden pines, is a memory I'll carry forever.",
-    name: "Arjun Mehta",
-    location: "Mumbai, Maharashtra",
-    trip: "Kedarkantha Trek",
-    rating: 5,
-  },
-  {
-    id: 2,
-    quote:
-      "The Char Dham Yatra with TrekRoots was transcendent. Their expert guides made the spiritual journey as smooth as it was profound.",
-    name: "Priya Sharma",
-    location: "Bengaluru, Karnataka",
-    trip: "Char Dham Yatra",
-    rating: 5,
-  },
-  {
-    id: 3,
-    quote:
-      "Spiti Valley left me speechless. TrekRoots' local knowledge opened doors — remote monasteries, hidden villages — that no other operator offered.",
-    name: "Vikram Nair",
-    location: "Delhi, NCR",
-    trip: "Spiti Valley Expedition",
-    rating: 5,
-  },
-];
-
-const ARTICLES = [
-  {
-    slug: "/blog/kedarkantha-complete-guide",
-    category: "Trekking Guide",
-    title: "Complete Guide to Kedarkantha Trek 2025–26",
-    excerpt:
-      "Everything you need — gear, fitness prep, itinerary, what to expect on the summit.",
-    readTime: "8 min read",
-    image: getTrekCoverImage("kedarkantha"),
-  },
-  {
-    slug: "/blog/char-dham-yatra-guide",
-    category: "Yatra Guide",
-    title: "Char Dham Yatra: Registration & Planning Guide",
-    excerpt:
-      "How to register, what to carry, which season to go, and how to make the most of your pilgrimage.",
-    readTime: "10 min read",
-    image: mediaUrl(MEDIA.home.yatraCharDham, {
-      width: 800,
-      height: 600,
-      crop: "fill",
-    }),
-  },
-  {
-    slug: "/blog/spiti-valley-itinerary",
-    category: "Destination Guide",
-    title: "Spiti Valley Road Trip: The Complete Itinerary",
-    excerpt:
-      "Monasteries, permits, road conditions, best stays — a practical guide to the cold desert.",
-    readTime: "12 min read",
-    image: mediaUrl(MEDIA.home.packageSpiti, {
-      width: 800,
-      height: 600,
-      crop: "fill",
-    }),
-  },
-];
-
-// ─── Hero Carousel ────────────────────────────────────────────────────────────
+// ─── Hero ─────────────────────────────────────────────────────────────────────
 
 function HeroCarousel() {
   const [current, setCurrent] = useState(0);
@@ -356,11 +112,12 @@ function HeroCarousel() {
   }, [goNext]);
 
   const item = CAROUSEL_ITEMS[current];
+  const isYatra = item.category === "YATRA";
 
   return (
     <section
       data-ocid="carousel.section"
-      className="relative h-[calc(100dvh-var(--site-chrome-h))] min-h-[600px] overflow-hidden"
+      className="relative h-[460px] md:h-[560px] overflow-hidden"
     >
       {CAROUSEL_ITEMS.map((slide, i) => (
         <div
@@ -386,55 +143,48 @@ function HeroCarousel() {
               quality: "auto:good",
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/5 to-black/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-black/10" />
         </div>
       ))}
 
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pb-16 md:pb-20">
-        <div className="lux-container flex justify-center">
+      <div className="absolute inset-0 z-10 flex items-center">
+        <div className="lux-container">
           <motion.div
             key={current}
-            initial={{ opacity: 0, y: 28 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, ease: "easeOut" }}
-            className="max-w-2xl w-full text-center"
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="max-w-xl"
           >
-            <div className="flex items-center justify-center gap-4 mb-5 flex-wrap">
-              <span className="lux-label text-[#FFC107]">Featured</span>
-              <span className="w-px h-3 bg-white/30" aria-hidden />
-              <span className="lux-label text-white/50">
-                {item.category}
-              </span>
-              <span className="hidden sm:inline lux-label text-white/40">
-                {item.duration} · {item.altitude}
-              </span>
-            </div>
-
-            <h1 className="lux-heading-xl text-white mb-5 text-balance">
+            <h1 className="font-display text-3xl md:text-4xl lg:text-[44px] leading-tight text-white mb-4">
               {item.name}
             </h1>
 
-            <p className="lux-body text-white/80 text-sm md:text-base max-w-lg mx-auto mb-8">
+            <p className="font-body text-[13px] md:text-sm text-white/85 mb-6 max-w-md">
               {item.tagline}
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href={item.slug}
+              data-ocid={`carousel.explore.${current + 1}`}
+              className="no-retro inline-flex items-center px-5 py-2.5 font-body text-xs font-bold text-[#1A1A1A]"
+              style={{ backgroundColor: "#FFC107" }}
+            >
+              Explore The {isYatra ? "Yatra" : "Trek"}
+            </Link>
+
+            <p className="font-body text-[11.5px] text-white/70 mt-5">
+              {item.duration} · {item.altitude} · Registered with Uttarakhand
+              Tourism. See every departure under{" "}
               <Link
-                href={item.slug}
-                data-ocid={`carousel.explore_button.${current + 1}`}
-                className="lux-btn-primary"
+                href={isYatra ? "/yatra" : "/treks"}
+                data-ocid="carousel.browse_all"
+                className="no-retro font-semibold text-white underline underline-offset-2"
               >
-                Explore {item.category === "YATRA" ? "Yatra" : "Trek"}
-                <ArrowRight size={14} />
+                {isYatra ? "sacred yatras" : "all treks"}
               </Link>
-              <Link
-                href={item.category === "YATRA" ? "/yatra" : "/treks"}
-                data-ocid="carousel.view_all_button"
-                className="lux-btn-outline"
-              >
-                View All Journeys
-              </Link>
-            </div>
+              .
+            </p>
           </motion.div>
         </div>
       </div>
@@ -443,33 +193,32 @@ function HeroCarousel() {
         type="button"
         onClick={goPrev}
         data-ocid="carousel.prev_button"
-        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center border border-white/25 bg-white/10 backdrop-blur-sm text-white transition-all duration-300 hover:bg-white/20"
+        className="no-retro absolute left-3 md:left-5 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-sm text-white transition-colors hover:bg-white/30"
         aria-label="Previous slide"
       >
-        <ArrowLeft size={16} />
+        <ChevronLeft size={18} />
       </button>
       <button
         type="button"
         onClick={goNext}
         data-ocid="carousel.next_button"
-        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center border border-white/25 bg-white/10 backdrop-blur-sm text-white transition-all duration-300 hover:bg-white/20"
+        className="no-retro absolute right-3 md:right-5 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-sm text-white transition-colors hover:bg-white/30"
         aria-label="Next slide"
       >
-        <ArrowRight size={16} />
+        <ChevronRight size={18} />
       </button>
 
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
-        {CAROUSEL_ITEMS.map((_, i) => (
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+        {CAROUSEL_ITEMS.map((slide, i) => (
           <button
-            // biome-ignore lint/suspicious/noArrayIndexKey: fixed carousel dot order
-            key={`dot-${i}`}
+            key={`dot-${slide.id}`}
             type="button"
             onClick={() => goTo(i)}
             data-ocid={`carousel.dot.${i + 1}`}
-            className={`transition-all duration-300 ${
+            className={`no-retro transition-all duration-300 ${
               i === current
-                ? "w-7 h-1 bg-[#FFE082]"
-                : "w-1.5 h-1.5 bg-white/40 hover:bg-white/60"
+                ? "w-6 h-1 bg-[#FFC107]"
+                : "w-1.5 h-1.5 rounded-full bg-white/50 hover:bg-white/70"
             }`}
             aria-label={`Go to slide ${i + 1}`}
           />
@@ -479,535 +228,59 @@ function HeroCarousel() {
   );
 }
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
+// ─── Notice Strip ─────────────────────────────────────────────────────────────
+
+function NoticeStrip() {
+  return (
+    <div
+      data-ocid="notice.strip"
+      className="py-2.5 border-b"
+      style={{ backgroundColor: "#FDF8E7", borderColor: "#F0E3B8" }}
+    >
+      <div className="lux-container text-center">
+        <p className="font-body text-[11.5px] text-[#1A1A1A]">
+          Booking a trek for the first time? Start with our{" "}
+          <Link
+            href="/treks?difficulty=Easy"
+            data-ocid="notice.easy_treks"
+            className="no-retro font-semibold text-[#1A73E8] hover:underline"
+          >
+            easy Himalayan treks
+          </Link>{" "}
+          or read the{" "}
+          <Link
+            href="/blog"
+            data-ocid="notice.guides"
+            className="no-retro font-semibold text-[#1A73E8] hover:underline"
+          >
+            trekking guides
+          </Link>
+          .
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim()) return;
-    const result = await sendEnquiry({ kind: "newsletter", email });
-    if (!result.ok) return;
-    setSubscribed(true);
-    setEmail("");
-  };
-
   return (
     <div className="bg-white">
       <HeroCarousel />
-
-      {/* ── In-Season Picks ──────────────────────────────────────────────── */}
+      <NoticeStrip />
+      <SafetyFeature />
+      <TrekkerStories />
       <SeasonalTreks />
-
-      {/* ── How It Works ─────────────────────────────────────────────────── */}
-      <section data-ocid="how_it_works.section" className="lux-section-white">
-        <div className="lux-container">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-14 md:mb-16"
-          >
-            <p className="lux-label mb-4">Simple Process</p>
-            <h2 className="lux-heading-lg text-[#1A1A1A] mb-5">How It Works</h2>
-            <p className="lux-body text-base max-w-md mx-auto">
-              From choosing your adventure to summiting the peak — we handle
-              every detail.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-border">
-            {STEPS.map((step, i) => (
-              <motion.div
-                key={step.num}
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="relative bg-white p-8 md:p-10"
-              >
-                <span className="font-display text-5xl text-[#FFC107] leading-none mb-6 block">
-                  {step.num}
-                </span>
-                <h3 className="font-display text-lg text-[#1A1A1A] mb-3 leading-snug">
-                  {step.title}
-                </h3>
-                <p className="lux-body text-sm">{step.desc}</p>
-                {i < STEPS.length - 1 && (
-                  <div
-                    className="hidden lg:flex absolute top-1/2 -translate-y-1/2 -right-3 z-10 w-6 h-6 bg-[#FFE082] items-center justify-center"
-                    aria-hidden
-                  >
-                    <ArrowRight size={12} className="text-[#1A1A1A]" />
-                  </div>
-                )}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Featured Treks ─────────────────────────────────────────────── */}
-      <section data-ocid="treks.section" className="lux-section-muted">
-        <div className="lux-container">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4"
-          >
-            <div>
-              <p className="lux-label mb-4">Curated Experiences</p>
-              <h2 className="lux-heading-lg text-[#1A1A1A] mb-3">Featured Treks</h2>
-              <div className="w-10 h-px bg-[#FFC107] mb-4" />
-              <p className="lux-body text-sm max-w-md">
-                Snow-dusted winter trails, monsoon meadows, and granite
-                ridgelines — the finest Himalayan treks, curated for all levels.
-              </p>
-            </div>
-            <Link
-              href="/treks"
-              data-ocid="treks.view_all_link"
-              className="lux-link shrink-0"
-            >
-              View All Treks <ArrowRight size={14} />
-            </Link>
-          </motion.div>
-
-          <FeaturedCardCarousel
-            ocidPrefix="treks"
-            surface="muted"
-            items={FEATURED_TREKS.map((t) => {
-              const slug = trekSlugFromPath(t.slug);
-              const gallery = getTrekHeroImages(slug, t.image);
-              return {
-                ...t,
-                image: gallery[0] ?? t.image,
-                images: gallery.length > 1 ? gallery : undefined,
-                badge: "Trek",
-                badgeTone: "trek" as const,
-              };
-            })}
-          />
-        </div>
-      </section>
-
-      {/* ── Sacred Yatras ─────────────────────────────────────────────── */}
-      <section data-ocid="yatras.section" className="lux-section-white">
-        <div className="lux-container">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4"
-          >
-            <div>
-              <p className="lux-label mb-4">Curated Experiences</p>
-              <h2 className="lux-heading-lg text-[#1A1A1A] mb-3">Sacred Yatras</h2>
-              <div className="w-10 h-px bg-[#FFC107] mb-4" />
-              <p className="lux-body text-sm max-w-md">
-                Ancient temples, holy rivers, and divine Himalayan abodes —
-                guided pilgrimages that nourish the soul.
-              </p>
-            </div>
-            <Link
-              href="/yatra"
-              data-ocid="yatras.view_all_link"
-              className="lux-link shrink-0"
-            >
-              View All Yatras <ArrowRight size={14} />
-            </Link>
-          </motion.div>
-
-          <FeaturedCardCarousel
-            ocidPrefix="yatras"
-            surface="white"
-            items={FEATURED_YATRAS.map((y) => ({
-              id: y.id,
-              slug: y.slug,
-              name: y.name,
-              region: y.region,
-              duration: y.duration,
-              temples: y.temples,
-              price: y.price,
-              image: y.image,
-              season: y.season,
-              type: y.type,
-              typeColor: y.typeColor,
-              badge: "Yatra",
-              badgeTone: "yatra" as const,
-            }))}
-          />
-        </div>
-      </section>
-
-      {/* ── Why Us ───────────────────────────────────────────────────── */}
-      <Advantage />
-
-      {/* ── Safety Promise ───────────────────────────────────────────── */}
-      <PromiseSection
-        ocid="safety.section"
-        label="Our safety promise"
-        heading="What safety means to us"
-        body="Altitude and weather do not negotiate, so our safety process is not a document — it is what the trek leader carries up the mountain."
-        points={[
-          "Oximeters and twice-daily health checks at every camp above 9,000 feet",
-          "Bottled oxygen, a stretcher and a first-aid kit on every departure",
-          "Trek leaders certified in wilderness first aid, with evacuation plans mapped per campsite",
-          "A documented turn-back time on every summit day, called by the leader",
-        ]}
-        image={getTrekCoverImage("brahmatal")}
-        imageAlt="Trek leader checking on trekkers at a high-altitude camp"
-      />
-
-      {/* ── Stats ─────────────────────────────────────────────────────── */}
-      <section data-ocid="stats.section" className="lux-section-dark py-16 md:py-20">
-        <div className="lux-container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-0 divide-x divide-white/10">
-            {PAGE_STATS.map((s, i) => (
-              <motion.div
-                key={`stat-${s.label}`}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="text-center py-8 px-4 md:px-6"
-              >
-                <div className="font-display text-5xl md:text-6xl text-[#FFC107] leading-none mb-2">
-                  {s.value}
-                </div>
-                <div className="font-body text-[10px] md:text-xs font-medium uppercase tracking-[0.18em] text-white/50">
-                  {s.label}
-                </div>
-                <div className="w-6 h-px bg-[#FFE082]/40 mx-auto mt-4" />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Testimonials ─────────────────────────────────────────────── */}
-      <section data-ocid="testimonials.section" className="lux-section-white">
-        <div className="lux-container">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-14 md:mb-16"
-          >
-            <p className="lux-label mb-4">Voices from the Trail</p>
-            <h2 className="lux-heading-lg text-[#1A1A1A] mb-4">
-              What Our Travellers Say
-            </h2>
-            <div className="flex items-center justify-center gap-1.5">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star
-                  key={s}
-                  size={14}
-                  className="fill-sand text-[#FFC107]"
-                />
-              ))}
-              <span className="font-body text-xs text-muted-foreground ml-2">
-                4.9/5 · 2,400+ reviews
-              </span>
-            </div>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {REVIEWS.map((t, i) => (
-              <motion.div
-                key={t.id}
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.12 }}
-                className="p-8 border border-border bg-white flex flex-col"
-                data-ocid={`testimonials.item.${i + 1}`}
-              >
-                <div className="flex items-center gap-1 mb-5">
-                  {Array.from({ length: t.rating }).map((_, si) => (
-                    <Star
-                      key={`star-${t.name}-${si}`}
-                      size={12}
-                      className="fill-sand text-[#FFC107]"
-                    />
-                  ))}
-                </div>
-                <p className="font-quote text-base leading-relaxed text-[#1A1A1A] flex-1 mb-6">
-                  &ldquo;{t.quote}&rdquo;
-                </p>
-                <div className="w-8 h-px bg-[#FFE082] mb-5" />
-                <div>
-                  <p className="font-body font-semibold text-sm text-[#1A1A1A]">
-                    {t.name}
-                  </p>
-                  <p className="font-body text-xs text-muted-foreground mt-0.5">
-                    {t.location} · {t.trip}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Sustainability Promise ───────────────────────────────────── */}
-      <PromiseSection
-        ocid="sustainability.section"
-        label="Our green promise"
-        heading="We carry our trash back down"
-        body="A trail only stays worth walking if every batch leaves it cleaner than it found it. This part is not optional on our treks."
-        points={[
-          "Every group carries down its own waste, plus whatever earlier groups left behind",
-          "No single-use plastic on the trail — we hand out refillable bottles at basecamp",
-          "Camps are pitched on designated ground and rotated to let meadows recover",
-          "Local guides, cooks and porters are hired from the villages at the trailhead",
-        ]}
-        image={getTrekCoverImage("valley-of-flowers")}
-        imageAlt="Alpine meadow on the Valley of Flowers trail"
-        reverse
-        tone="muted"
-      />
-
-      {/* ── FAQ ──────────────────────────────────────────────────────── */}
       <HomeFaq />
-
-      {/* ── Trust Badges ─────────────────────────────────────────────── */}
-      <section
-        data-ocid="trust.section"
-        className="py-12 md:py-16 bg-[#F5F5F5] border-y border-border"
-      >
-        <div className="lux-container">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-px bg-border">
-            {(
-              [
-                {
-                  icon: <Mountain size={18} />,
-                  label: "Uttarakhand Tourism",
-                  sub: "Registered Operator",
-                },
-                {
-                  icon: <Shield size={18} />,
-                  label: "IMF Affiliated",
-                  sub: "Indian Mountaineering Foundation",
-                },
-                {
-                  icon: <Star size={18} />,
-                  label: "4.9 / 5 Google",
-                  sub: "2,400+ Verified Reviews",
-                },
-                {
-                  icon: <Users size={18} />,
-                  label: "10,000+ Travellers",
-                  sub: "Across 30+ Himalayan Routes",
-                },
-                {
-                  icon: <MapPin size={18} />,
-                  label: "Owned Homestays",
-                  sub: "6 Properties in Uttarakhand",
-                },
-              ] as { icon: React.ReactNode; label: string; sub: string }[]
-            ).map((badge, i) => (
-              <motion.div
-                key={badge.label}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: i * 0.07 }}
-                className="flex items-center gap-3 py-5 px-5 bg-white"
-                data-ocid={`trust.item.${i + 1}`}
-              >
-                <div className="text-[#FFC107] shrink-0">{badge.icon}</div>
-                <div>
-                  <p className="font-body font-semibold text-xs text-[#1A1A1A]">
-                    {badge.label}
-                  </p>
-                  <p className="font-body text-[10px] text-muted-foreground mt-0.5">
-                    {badge.sub}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Newsletter CTA ────────────────────────────────────────────── */}
-      <section data-ocid="newsletter.section" className="lux-section-dark">
-        <div className="lux-container">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -24 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <p className="lux-label text-[#FFC107] mb-4">Stay Informed</p>
-              <h2 className="lux-heading-lg text-white mb-4">
-                Plan Your Himalayan Journey
-              </h2>
-              <p className="lux-body text-sm text-white/60 mb-8">
-                Get seasonal trek updates, yatra opening dates, weather
-                advisories and exclusive early-bird deals.
-              </p>
-              {subscribed ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  data-ocid="newsletter.success_state"
-                  className="flex items-center gap-3 px-5 py-4 border border-sienna/30 bg-[#FFC107]/10"
-                >
-                  <CheckCircle2 size={16} className="text-[#FFC107] shrink-0" />
-                  <span className="font-body text-sm text-[#FFC107]">
-                    You're in! Watch your inbox for Himalayan updates.
-                  </span>
-                </motion.div>
-              ) : (
-                <form
-                  onSubmit={handleSubscribe}
-                  className="flex flex-col sm:flex-row gap-3"
-                >
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email address"
-                    data-ocid="newsletter.input"
-                    required
-                    className="flex-1 px-5 py-3.5 font-body text-sm bg-white/5 border border-white/20 text-white placeholder:text-white/30 focus:outline-none focus:border-[#FFC107] transition-colors"
-                  />
-                  <button
-                    type="submit"
-                    data-ocid="newsletter.submit_button"
-                    className="lux-btn-accent shrink-0"
-                  >
-                    Subscribe
-                  </button>
-                </form>
-              )}
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 24 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="p-8 border border-white/10 bg-white/5"
-            >
-              <h3 className="font-display text-xl text-white mb-3">
-                Need Help Planning?
-              </h3>
-              <p className="lux-body text-sm text-white/55 mb-6">
-                Talk to a Himalayan travel expert. Free 30-minute consultation —
-                no commitment required.
-              </p>
-              <div className="flex flex-col gap-3">
-                <a
-                  href={PHONE_HREF}
-                  data-ocid="newsletter.call_button"
-                  className="lux-btn-accent"
-                >
-                  Call {PHONE_DISPLAY}
-                </a>
-                <a
-                  href={whatsappLink(
-                    "Hi TrekRoots! I'd like to plan a Himalayan trip.",
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-ocid="newsletter.whatsapp_button"
-                  className="lux-btn-outline"
-                >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                  </svg>
-                  Chat on WhatsApp
-                </a>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Blog Teaser ───────────────────────────────────────────────── */}
-      <section data-ocid="blog.section" className="lux-section-white">
-        <div className="lux-container">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4"
-          >
-            <div>
-              <p className="lux-label mb-4">Stories from the Mountains</p>
-              <h2 className="lux-heading-lg text-[#1A1A1A]">
-                Travel Guides &amp; Insights
-              </h2>
-            </div>
-            <Link
-              href="/blog"
-              data-ocid="blog.view_all_link"
-              className="lux-link shrink-0"
-            >
-              All Articles <ArrowRight size={14} />
-            </Link>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {ARTICLES.map((post, i) => (
-              <motion.article
-                key={post.slug}
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                data-ocid={`blog.item.${i + 1}`}
-              >
-                <Link href={post.slug} className="group block">
-                  <div className="lux-editorial-card mb-5">
-                    <div className="relative h-[240px]">
-                      <CloudinaryImage
-                        src={post.image}
-                        alt={post.title}
-                        width={800}
-                        height={240}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                        transform={{ width: 800, height: 240, crop: "fill" }}
-                      />
-                      <div className="lux-editorial-overlay opacity-60" />
-                      <div className="absolute top-4 left-4 z-10">
-                        <span className="lux-label text-[9px] tracking-[0.18em] px-2.5 py-1 bg-[#FFE082]/90 text-[#1A1A1A]">
-                          {post.category}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <h3 className="font-display text-lg text-[#1A1A1A] leading-snug mb-2 group-hover:text-[#FFC107] transition-colors duration-300">
-                    {post.title}
-                  </h3>
-                  <p className="lux-body text-sm mb-3">{post.excerpt}</p>
-                  <span className="lux-label text-[10px] text-[#FFC107]">
-                    {post.readTime}
-                  </span>
-                </Link>
-              </motion.article>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Reasons />
+      <PromoBanner />
+      <GoogleRating />
+      <SacredYatras />
+      <AdvantageGrid />
+      <TrustedBy />
+      <TreksByCategory />
+      <ExpertBand />
     </div>
   );
 }

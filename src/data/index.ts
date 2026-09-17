@@ -9,6 +9,7 @@ export {
   getTrekCoverImage,
   getYatraHeroImages,
   getYatraCoverImage,
+  hasTrekGallery,
   trekSlugFromPath,
   TREK_HERO_GALLERIES,
   YATRA_HERO_GALLERIES,

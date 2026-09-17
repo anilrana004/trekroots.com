@@ -84,11 +84,48 @@ function heroImages(
   return fallback ? [fallback] : []
 }
 
+/**
+ * Generic Himalayan frames from our own shoots. Several catalog entries still
+ * carry a shared stock photo — in a few cases of the wrong subject entirely —
+ * so anything without its own gallery borrows one of these instead.
+ */
+const GENERIC_TREK_FRAMES = [
+  "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789464455/view-of-mountain.jpg",
+  "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789464458/beautiful-mountains-3.jpg",
+  "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789589376/pexels-tobiandchris-27114089.jpg",
+  "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789589709/pexels-ikbalphoto-7421349.jpg",
+  "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789589100/ashwini-chaudhary-monty-bsVt1_On_gk-unsplash.jpg",
+  "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789590254/pexels-suju-38276373.jpg",
+]
+
+/** Stock hosts we treat as "no real photo yet". */
+function isStockImage(url: string): boolean {
+  return /images\.unsplash\.com/i.test(url)
+}
+
+/** Stable per-slug pick, so a trek keeps the same frame between renders. */
+function genericFrame(slug: string): string {
+  let hash = 0
+  for (const char of slug) {
+    hash = (hash * 31 + char.charCodeAt(0)) >>> 0
+  }
+  return GENERIC_TREK_FRAMES[hash % GENERIC_TREK_FRAMES.length]
+}
+
+/** True when we have our own photography for this trek, not just a stock fallback. */
+export function hasTrekGallery(slug: string): boolean {
+  return Boolean(TREK_HERO_GALLERIES[slug]?.length)
+}
+
 export function getTrekHeroImages(
   slug: string,
   fallback?: string | null,
 ): string[] {
-  return heroImages(TREK_HERO_GALLERIES, slug, fallback)
+  const images = heroImages(TREK_HERO_GALLERIES, slug, fallback)
+  if (images.length === 1 && isStockImage(images[0])) {
+    return [genericFrame(slug)]
+  }
+  return images
 }
 
 export function getYatraHeroImages(
