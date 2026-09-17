@@ -4,23 +4,40 @@ export { yatras } from './yatras'
 export { packages } from './packages'
 export { stays } from './stays'
 export { blogPosts } from './blog'
-export { getTrekHeroImages, getTrekCoverImage, trekSlugFromPath, TREK_HERO_GALLERIES } from './trek-media'
+export {
+  getTrekHeroImages,
+  getTrekCoverImage,
+  getYatraHeroImages,
+  getYatraCoverImage,
+  trekSlugFromPath,
+  TREK_HERO_GALLERIES,
+  YATRA_HERO_GALLERIES,
+} from './media'
 export { getTrekFacts } from './trek-facts'
 export type { TrekFact } from './trek-facts'
 
-import type { SearchResults, Trek } from './types'
+import type { SearchResults, Trek, Yatra } from './types'
 import { treks } from './treks'
 import { yatras } from './yatras'
 import { packages } from './packages'
 import { stays } from './stays'
 import { blogPosts } from './blog'
-import { getTrekHeroImages } from './trek-media'
+import { getTrekHeroImages, getYatraHeroImages } from './media'
 
 function withTrekMedia(trek: Trek): Trek {
   const heroes = getTrekHeroImages(trek.slug, trek.imageUrl)
   if (!heroes.length) return trek
   return {
     ...trek,
+    imageUrl: heroes[0],
+  }
+}
+
+function withYatraMedia(yatra: Yatra): Yatra {
+  const heroes = getYatraHeroImages(yatra.slug, yatra.imageUrl)
+  if (!heroes.length) return yatra
+  return {
+    ...yatra,
     imageUrl: heroes[0],
   }
 }
@@ -37,10 +54,11 @@ export function getTreksByState(state: string) {
 }
 
 export function getAllYatras() {
-  return yatras
+  return yatras.map(withYatraMedia)
 }
 export function getYatraBySlug(slug: string) {
-  return yatras.find((y) => y.slug === slug) ?? null
+  const yatra = yatras.find((y) => y.slug === slug) ?? null
+  return yatra ? withYatraMedia(yatra) : null
 }
 
 export function getAllPackages() {
@@ -73,7 +91,9 @@ export function searchAll(term: string): SearchResults {
         (t) => match(t.name) || match(t.region) || match(t.description),
       )
       .map(withTrekMedia),
-    yatras: yatras.filter((y) => match(y.name) || match(y.description)),
+    yatras: yatras
+      .filter((y) => match(y.name) || match(y.description))
+      .map(withYatraMedia),
     packages: packages.filter((p) => match(p.name) || match(p.description)),
     stays: stays.filter(
       (s) => match(s.name) || match(s.location) || match(s.description),

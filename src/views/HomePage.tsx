@@ -19,6 +19,7 @@ import { MEDIA, mediaUrl } from "@/lib/cloudinary";
 import {
   getTrekCoverImage,
   getTrekHeroImages,
+  getYatraCoverImage,
   trekSlugFromPath,
 } from "@/data";
 
@@ -67,11 +68,7 @@ const CAROUSEL_ITEMS = [
     altitude: "3,583 m",
     tagline:
       "Walk the four sacred shrines of Uttarakhand — a journey of a lifetime.",
-    image: mediaUrl(MEDIA.home.carouselCharDham, {
-      width: 1920,
-      height: 900,
-      crop: "fill",
-    }),
+    image: getYatraCoverImage("char-dham"),
   },
   {
     id: 5,
@@ -82,11 +79,7 @@ const CAROUSEL_ITEMS = [
     altitude: "3,583 m",
     tagline:
       "Lord Shiva's high abode — one of the 12 Jyotirlingas in the Himalayas.",
-    image: mediaUrl(MEDIA.home.carouselKedarnath, {
-      width: 1920,
-      height: 900,
-      crop: "fill",
-    }),
+    image: getYatraCoverImage("kedarnath"),
   },
 ];
 
@@ -172,11 +165,7 @@ const FEATURED_YATRAS = [
     duration: "12 Days",
     temples: "4 Sacred Shrines",
     price: "₹19,999",
-    image: mediaUrl(MEDIA.home.yatraCharDham, {
-      width: 800,
-      height: 600,
-      crop: "fill",
-    }),
+    image: getYatraCoverImage("char-dham"),
     season: "May–Nov",
   },
   {
@@ -189,11 +178,7 @@ const FEATURED_YATRAS = [
     duration: "4 Days",
     temples: "1 Jyotirlinga",
     price: "₹9,499",
-    image: mediaUrl(MEDIA.home.yatraKedarnath, {
-      width: 800,
-      height: 600,
-      crop: "fill",
-    }),
+    image: getYatraCoverImage("kedarnath"),
     season: "May–Nov",
   },
   {

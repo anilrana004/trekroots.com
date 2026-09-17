@@ -1,9 +1,10 @@
 "use client";
 
-import { getYatraBySlug } from "@/data";
+import { getYatraBySlug, getYatraHeroImages } from "@/data";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { HeroCarousel } from "@/components/HeroCarousel";
 import {
   Calendar,
   CheckCircle2,
@@ -1052,6 +1053,7 @@ export default function YatraDetailPage() {
     enrichment.coverImage ||
     yatra.imageUrl ||
     "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1400&q=80";
+  const heroImages = getYatraHeroImages(yatra.slug, heroImage);
   const priceMin = Number(yatra.priceRange.minINR).toLocaleString("en-IN");
   const priceMax = Number(yatra.priceRange.maxINR).toLocaleString("en-IN");
   const faqs =
@@ -1074,22 +1076,7 @@ export default function YatraDetailPage() {
     <div className="min-h-screen" style={{ backgroundColor: "#FFFFFF" }}>
       {/* ── Hero ──────────────────────────────────────────── */}
       <div data-hero className="relative h-[80vh] overflow-hidden">
-        <CloudinaryImage
-          src={heroImage}
-          alt={yatra.name}
-          width={1920}
-          height={1080}
-          priority
-          sizes="100vw"
-          className="w-full h-full object-cover"
-          transform={{
-            width: 1920,
-            height: 1080,
-            crop: "fill",
-            gravity: "auto",
-            quality: "auto:good",
-          }}
-        />
+        <HeroCarousel images={heroImages} alt={yatra.name} />
         <div
           className="absolute inset-0"
           style={{

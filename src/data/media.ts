@@ -1,4 +1,4 @@
-/** Per-trek Cloudinary hero / gallery assets */
+/** Per-item Cloudinary hero / gallery assets, keyed by catalog slug. */
 
 export const TREK_HERO_GALLERIES: Record<string, string[]> = {
   kedarkantha: [
@@ -53,13 +53,49 @@ export const TREK_HERO_GALLERIES: Record<string, string[]> = {
   ],
 }
 
+export const YATRA_HERO_GALLERIES: Record<string, string[]> = {
+  "char-dham": [
+    "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789611300/char_dham.webp",
+    "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789611302/pexels-indu-bikash-sarker-116278202-29375782.jpg",
+    "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789611298/Char-Dham-Yatra3.webp",
+    "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789611297/Char-Dham-Yatra8.webp",
+    "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789611305/pexels-soubhagya23-19019326.jpg",
+    "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789611306/jayanta-banerjee-4FlfsyfNqUM-unsplash.jpg",
+    "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789611312/abhay-paditkar-atrWLkNne0U-unsplash.jpg",
+    "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789611311/shivam-baraik-sfYvvhBTjS8-unsplash.jpg",
+  ],
+  kedarnath: [
+    "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789611721/akshay-syal-5vDTocCCutE-unsplash.jpg",
+    "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789611722/shikhar-sharma-Pf-rTGteWyc-unsplash.jpg",
+    "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789611722/varshit-g-cuaXhebKtnw-unsplash.jpg",
+    "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789611723/pexels-sudhanshu-sharma-1344247136-25533704.jpg",
+    "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789611726/pexels-satyabrata-maiti-258455945-18068038.jpg",
+    "https://res.cloudinary.com/cxqk8vbe/image/upload/v1789611724/pexels-ankit-rainloure-1425442-33677268.jpg",
+  ],
+}
+
+function heroImages(
+  galleries: Record<string, string[]>,
+  slug: string,
+  fallback?: string | null,
+): string[] {
+  const gallery = galleries[slug]
+  if (gallery?.length) return gallery
+  return fallback ? [fallback] : []
+}
+
 export function getTrekHeroImages(
   slug: string,
   fallback?: string | null,
 ): string[] {
-  const gallery = TREK_HERO_GALLERIES[slug]
-  if (gallery?.length) return gallery
-  return fallback ? [fallback] : []
+  return heroImages(TREK_HERO_GALLERIES, slug, fallback)
+}
+
+export function getYatraHeroImages(
+  slug: string,
+  fallback?: string | null,
+): string[] {
+  return heroImages(YATRA_HERO_GALLERIES, slug, fallback)
 }
 
 /** Primary card / listing cover (first hero frame). */
@@ -68,6 +104,13 @@ export function getTrekCoverImage(
   fallback?: string | null,
 ): string {
   return getTrekHeroImages(slug, fallback)[0] ?? fallback ?? ""
+}
+
+export function getYatraCoverImage(
+  slug: string,
+  fallback?: string | null,
+): string {
+  return getYatraHeroImages(slug, fallback)[0] ?? fallback ?? ""
 }
 
 /** Strip leading /treks/ from homepage paths when looking up media. */

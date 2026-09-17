@@ -4,7 +4,7 @@ import type { DayItinerary, Trek } from "@/data";
 import { getAllTreks, getTrekBySlug, getTrekHeroImages } from "@/data";
 import { TrekCard } from "@/components/TrekCard";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
-import { TrekHeroCarousel } from "@/components/TrekHeroCarousel";
+import { HeroCarousel } from "@/components/HeroCarousel";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
@@ -652,7 +652,7 @@ export default function TrekDetailPage() {
     <div className="bg-background min-h-screen">
       {/* Hero — full viewport below sticky navbar */}
       <div className="relative h-[calc(100dvh-68px)] min-h-[520px] overflow-hidden bg-muted">
-        <TrekHeroCarousel images={heroImages} alt={trek.name} />
+        <HeroCarousel images={heroImages} alt={trek.name} />
         <div className="absolute inset-0 z-[3] bg-gradient-to-t from-black/75 via-black/40 to-black/25 pointer-events-none" />
         <div className="absolute inset-0 z-[4] flex flex-col items-center justify-center px-4 md:px-8 pointer-events-none">
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center text-center">

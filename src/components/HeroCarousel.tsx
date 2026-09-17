@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const INTERVAL_MS = 5500;
 
-type TrekHeroCarouselProps = {
+type HeroCarouselProps = {
   images: string[];
   alt: string;
   className?: string;
@@ -21,12 +21,12 @@ function shouldMountSlide(i: number, index: number, total: number): boolean {
   return i === index || i === prev || i === next;
 }
 
-export function TrekHeroCarousel({
+export function HeroCarousel({
   images,
   alt,
   className = "",
   onIndexChange,
-}: TrekHeroCarouselProps) {
+}: HeroCarouselProps) {
   const slides = useMemo(() => images.filter(Boolean), [images]);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
