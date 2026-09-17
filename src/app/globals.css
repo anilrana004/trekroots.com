@@ -23,11 +23,6 @@
     --font-mono: JetBrains Mono;
     --radius: 0.5rem;
 
-    /* Retro offset shadow */
-    --retro-offset: 4px;
-    --retro-offset-hover: 2px;
-    --retro-shadow-color: #111111;
-
     /* Light + yellow system (TR logo accent) */
     --background: 1 0 0;
     --foreground: 0.15 0 0;
@@ -131,30 +126,6 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
-
-  .btn-retro {
-    border: 2px solid var(--retro-shadow-color) !important;
-    box-shadow: var(--retro-offset) var(--retro-offset) 0 0
-      var(--retro-shadow-color) !important;
-    transition:
-      transform 0.15s ease,
-      box-shadow 0.15s ease,
-      filter 0.15s ease !important;
-  }
-
-  .btn-retro:hover {
-    transform: translate(
-      var(--retro-offset-hover),
-      var(--retro-offset-hover)
-    );
-    box-shadow: var(--retro-offset-hover) var(--retro-offset-hover) 0 0
-      var(--retro-shadow-color) !important;
-  }
-
-  .btn-retro:active {
-    transform: translate(var(--retro-offset), var(--retro-offset));
-    box-shadow: 0 0 0 0 var(--retro-shadow-color) !important;
-  }
 }
 
 /* Site header: phone — hide on scroll down, show on scroll up */
@@ -196,92 +167,6 @@
 
 html {
   scroll-padding-top: calc(var(--site-header-offset, 68px) + 56px);
-}
-
-/* Retro Offset Shadow — all interactive buttons & CTA links */
-button:not(:disabled):not([aria-hidden="true"]):not(.no-retro):not([data-ocid*="itinerary"]),
-[role="button"]:not([aria-disabled="true"]):not(.no-retro):not([data-ocid*="itinerary"]),
-.lux-btn,
-.lux-btn-primary,
-.lux-btn-accent,
-.lux-btn-outline,
-a[data-ocid*="cta"]:not(.no-retro),
-a[data-ocid*="button"]:not(.no-retro),
-a[data-ocid*="_link"]:not([data-ocid*="view_all"]):not(.no-retro),
-input[type="submit"],
-input[type="button"] {
-  border: 2px solid var(--retro-shadow-color);
-  box-shadow: var(--retro-offset) var(--retro-offset) 0 0
-    var(--retro-shadow-color);
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease,
-    filter 0.15s ease,
-    background-color 0.15s ease,
-    color 0.15s ease,
-    opacity 0.15s ease;
-}
-
-button:not(:disabled):not([aria-hidden="true"]):not(.no-retro):not([data-ocid*="itinerary"]):hover,
-[role="button"]:not([aria-disabled="true"]):not(.no-retro):not([data-ocid*="itinerary"]):hover,
-.lux-btn:hover,
-.lux-btn-primary:hover,
-.lux-btn-accent:hover,
-.lux-btn-outline:hover,
-a[data-ocid*="cta"]:not(.no-retro):hover,
-a[data-ocid*="button"]:not(.no-retro):hover,
-input[type="submit"]:hover,
-input[type="button"]:hover {
-  transform: translate(var(--retro-offset-hover), var(--retro-offset-hover));
-  box-shadow: var(--retro-offset-hover) var(--retro-offset-hover) 0 0
-    var(--retro-shadow-color);
-}
-
-button:not(:disabled):not([aria-hidden="true"]):not(.no-retro):not([data-ocid*="itinerary"]):active,
-[role="button"]:not([aria-disabled="true"]):not(.no-retro):not([data-ocid*="itinerary"]):active,
-.lux-btn:active,
-.lux-btn-primary:active,
-.lux-btn-accent:active,
-.lux-btn-outline:active,
-a[data-ocid*="cta"]:not(.no-retro):active,
-a[data-ocid*="button"]:not(.no-retro):active,
-input[type="submit"]:active,
-input[type="button"]:active {
-  transform: translate(var(--retro-offset), var(--retro-offset));
-  box-shadow: 0 0 0 0 var(--retro-shadow-color);
-}
-
-/* Explicit opt-out for itinerary / accordion rows */
-button.no-retro,
-button[data-ocid*="itinerary"],
-.no-retro {
-  border: none !important;
-  box-shadow: none !important;
-  transform: none !important;
-}
-
-button.no-retro:hover,
-button[data-ocid*="itinerary"]:hover,
-.no-retro:hover,
-button.no-retro:active,
-button[data-ocid*="itinerary"]:active,
-.no-retro:active {
-  border: none !important;
-  box-shadow: none !important;
-  transform: none !important;
-}
-
-/* Keep ghost/icon-only controls light but still offset */
-button.p-2:not(.no-retro):not([data-ocid*="itinerary"]),
-a.p-2 {
-  border-width: 1.5px;
-  box-shadow: 3px 3px 0 0 var(--retro-shadow-color);
-}
-
-button.p-2:not(.no-retro):not([data-ocid*="itinerary"]):hover,
-a.p-2:hover {
-  transform: translate(1.5px, 1.5px);
-  box-shadow: 1.5px 1.5px 0 0 var(--retro-shadow-color);
 }
 
 @layer components {
