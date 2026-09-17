@@ -208,7 +208,7 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-1.5">
                 <span>📅</span>
-                <span>Operating since 2012</span>
+                <span>Operating since 2018</span>
               </div>
             </div>
           </div>

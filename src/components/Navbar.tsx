@@ -53,7 +53,7 @@ function UtilityBar() {
           <Star size={12} style={{ color: "#FFC107" }} fill="#FFC107" />
           <span>4.9/5 from 800+ trekkers</span>
           <span className="text-white/25">·</span>
-          <span>Operating since 2012</span>
+          <span>Operating since 2018</span>
         </div>
         <div className="flex items-center gap-5">
           {UTILITY_LINKS.map(({ label, to }) => (
