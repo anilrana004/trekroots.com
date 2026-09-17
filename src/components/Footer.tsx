@@ -23,6 +23,7 @@ import {
 } from "@/data/contact";
 import { LOGO_URL } from "@/lib/cloudinary";
 import { sendEnquiry } from "@/lib/enquiry";
+import { PaymentMethodIcons } from "@/components/PaymentMethodIcons";
 
 const EXPLORE_LINKS = [
   { label: "Treks", to: "/treks" },
@@ -336,19 +337,7 @@ export function Footer() {
               <h4 className="font-body text-[11px] font-semibold uppercase tracking-widest mb-3 text-[#1A1A1A]">
                 Payment Methods
               </h4>
-              <div className="flex flex-wrap gap-2">
-                {["UPI", "VISA", "Mastercard", "Net Banking", "EMI"].map(
-                  (method) => (
-                    <span
-                      key={method}
-                      className="px-2.5 py-1 rounded text-[11px] font-body font-medium border text-[#555555]"
-                      style={{ borderColor: "#E0E0E0" }}
-                    >
-                      {method}
-                    </span>
-                  ),
-                )}
-              </div>
+              <PaymentMethodIcons />
               <p className="mt-3 text-[11px] font-body text-[#888888]">
                 Trusted Himalayan travel experts. Reach us anytime via WhatsApp
                 or phone for bookings and trip planning.
