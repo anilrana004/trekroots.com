@@ -16,6 +16,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FeaturedCardCarousel } from "@/components/FeaturedCardCarousel";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
 import { MEDIA, mediaUrl } from "@/lib/cloudinary";
+import { sendEnquiry } from "@/lib/enquiry";
 import {
   getTrekCoverImage,
   getTrekHeroImages,
@@ -480,12 +481,13 @@ export default function HomePage() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email.trim()) {
-      setSubscribed(true);
-      setEmail("");
-    }
+    if (!email.trim()) return;
+    const result = await sendEnquiry({ kind: "newsletter", email });
+    if (!result.ok) return;
+    setSubscribed(true);
+    setEmail("");
   };
 
   return (

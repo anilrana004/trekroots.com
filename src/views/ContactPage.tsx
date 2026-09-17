@@ -3,7 +3,14 @@
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { useState } from "react";
 
-import { PHONE_DISPLAY, PHONE_HREF, whatsappLink } from "@/data/contact";
+import {
+  CONTACT_EMAIL,
+  CONTACT_EMAIL_HREF,
+  PHONE_DISPLAY,
+  PHONE_HREF,
+  whatsappLink,
+} from "@/data/contact";
+import { sendEnquiry } from "@/lib/enquiry";
 
 const CONTACT_INFO = [
   {
@@ -15,8 +22,8 @@ const CONTACT_INFO = [
   {
     icon: Mail,
     label: "Email",
-    value: "hello@trekroots.com",
-    href: "mailto:hello@trekroots.com",
+    value: CONTACT_EMAIL,
+    href: CONTACT_EMAIL_HREF,
   },
   {
     icon: MessageCircle,
@@ -43,6 +50,8 @@ export default function ContactPage() {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function handleChange(
     e: React.ChangeEvent<
@@ -52,9 +61,14 @@ export default function ContactPage() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setSubmitted(true);
+    setSending(true);
+    setError(null);
+    const result = await sendEnquiry({ kind: "contact", ...form });
+    setSending(false);
+    if (result.ok) setSubmitted(true);
+    else setError(result.error);
   }
 
   return (
@@ -249,12 +263,33 @@ export default function ContactPage() {
                     className="w-full px-3 py-2 text-sm border border-input rounded-md bg-background font-body focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary resize-none"
                   />
                 </div>
+                {error ? (
+                  <p className="text-xs font-body text-destructive">
+                    {error} You can also reach us on{" "}
+                    <a
+                      href={whatsappLink(
+                        "Hi TrekRoots! I'd like to plan a Himalayan journey.",
+                      )}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline"
+                    >
+                      WhatsApp
+                    </a>{" "}
+                    or at{" "}
+                    <a href={CONTACT_EMAIL_HREF} className="underline">
+                      {CONTACT_EMAIL}
+                    </a>
+                    .
+                  </p>
+                ) : null}
                 <button
                   type="submit"
+                  disabled={sending}
                   data-ocid="contact.submit_button"
-                  className="w-full py-3 px-4 rounded-md font-semibold font-body text-sm text-primary-foreground bg-primary hover:bg-primary/90 transition-colors"
+                  className="w-full py-3 px-4 rounded-md font-semibold font-body text-sm text-primary-foreground bg-primary hover:bg-primary/90 transition-colors disabled:opacity-60"
                 >
-                  Send Message
+                  {sending ? "Sending…" : "Send Message"}
                 </button>
                 <p className="text-xs text-muted-foreground font-body text-center">
                   Typically replies within 24 hours · Enquire securely via

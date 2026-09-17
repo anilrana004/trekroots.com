@@ -1,4 +1,9 @@
-/** Single source of truth for the numbers customers reach us on. */
+/** Single source of truth for the ways customers reach us. */
+
+/** Where every enquiry form lands, and the address shown across the site. */
+export const CONTACT_EMAIL = "info@trekroots.com";
+export const CONTACT_EMAIL_HREF = `mailto:${CONTACT_EMAIL}`;
+
 
 /** Digits only with country code — the format wa.me expects in its path. */
 export const WHATSAPP_NUMBER = "916398286006";

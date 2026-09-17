@@ -11,6 +11,7 @@ import {
   getYatraBySlug,
   whatsappLink,
 } from "@/data";
+import { sendEnquiry } from "@/lib/enquiry";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, MessageCircle, Mountain, Users } from "lucide-react";
@@ -94,7 +95,21 @@ export default function BookingPage() {
       `Group size: ${groupSize}`,
       message ? `Message: ${message}` : null,
     ].filter(Boolean);
+
+    // Opened before the request so the browser still credits the click and
+    // allows the popup.
     window.open(whatsappLink(lines.join("\n")), "_blank");
+
+    void sendEnquiry({
+      kind: "booking",
+      trip: trip ? `${tripLabel} (${trip.type})` : tripLabel,
+      name,
+      phone,
+      email,
+      travelDates,
+      groupSize,
+      message,
+    });
   };
 
   return (

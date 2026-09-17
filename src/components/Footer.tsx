@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import {
+  CONTACT_EMAIL,
+  CONTACT_EMAIL_HREF,
   PHONE_DISPLAY,
   PHONE_HREF,
   WHATSAPP_DISPLAY,
@@ -20,6 +22,7 @@ import {
   whatsappLink,
 } from "@/data/contact";
 import { LOGO_URL } from "@/lib/cloudinary";
+import { sendEnquiry } from "@/lib/enquiry";
 
 const EXPLORE_LINKS = [
   { label: "Treks", to: "/treks" },
@@ -66,12 +69,13 @@ export function Footer() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email.trim()) {
-      setSubscribed(true);
-      setEmail("");
-    }
+    if (!email.trim()) return;
+    const result = await sendEnquiry({ kind: "newsletter", email });
+    if (!result.ok) return;
+    setSubscribed(true);
+    setEmail("");
   };
 
   return (
@@ -289,17 +293,10 @@ export function Footer() {
                     Email
                   </p>
                   <a
-                    href="mailto:info@trekroots.com"
+                    href={CONTACT_EMAIL_HREF}
                     className="text-[13px] font-body text-white hover:text-[#FFC107] transition-colors"
                   >
-                    info@trekroots.com
-                  </a>
-                  <br />
-                  <a
-                    href="mailto:bookings@trekroots.com"
-                    className="text-[13px] font-body text-white/60 hover:text-[#FFC107] transition-colors"
-                  >
-                    bookings@trekroots.com
+                    {CONTACT_EMAIL}
                   </a>
                 </div>
               </li>
