@@ -83,7 +83,7 @@ export function SeasonalTreks() {
                 >
                   <div className="relative aspect-[4/5] overflow-hidden">
                     <CloudinaryImage
-                      src={getTrekCoverImage(trek.slug)}
+                      src={getTrekCoverImage(trek.slug, trek.imageUrl)}
                       alt={trek.name}
                       width={480}
                       height={600}

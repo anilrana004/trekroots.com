@@ -159,7 +159,9 @@ const SRCSET_WIDTHS = [480, 640, 828, 1080, 1280, 1600, 1920, 2560]
  */
 export function buildCldSrcSet(src: string, base: CldTransform): string {
   const layoutWidth = base.width
-  if (!layoutWidth) return ""
+  // An empty src would yield candidates like " 480w", which the browser parses
+  // as a request for /480w.
+  if (!src || !layoutWidth) return ""
 
   const aspect = base.height ? base.height / layoutWidth : undefined
   const maxWidth = layoutWidth * 2

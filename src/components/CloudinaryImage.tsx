@@ -66,6 +66,12 @@ export function CloudinaryImage({
 
   const finalSrc = failed ? src : resolved || src;
 
+  // An empty src makes the browser re-request the current page as an image, so
+  // hold the box with a neutral block instead.
+  if (!finalSrc) {
+    return <div aria-hidden className={className} />;
+  }
+
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
