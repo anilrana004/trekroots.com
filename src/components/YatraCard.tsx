@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Calendar, ChevronRight, Clock, MapPin } from "lucide-react";
 import { ZoomInCard } from "@/components/ZoomInCard";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { tripPrice } from "@/lib/price";
 
 interface YatraCardProps {
   yatra: Yatra;
@@ -83,7 +84,7 @@ function GaneshWatermark() {
 }
 
 export function YatraCard({ yatra, index = 0 }: YatraCardProps) {
-  const minPrice = Number(yatra.priceRange.minINR).toLocaleString("en-IN");
+  const price = tripPrice(yatra.priceRange);
   const startPoint = yatra.route.split("→")[0]?.trim() ?? "";
   const templeCount = yatra.temples.length;
 
@@ -182,11 +183,18 @@ export function YatraCard({ yatra, index = 0 }: YatraCardProps) {
             <p className="text-xs text-muted-foreground font-body">
               Starting from
             </p>
-            <p
-              className="text-lg font-bold font-body"
-              style={{ color: "#FFC107" }}
-            >
-              ₹{minPrice}
+            <p className="flex items-baseline gap-1.5">
+              <span
+                className="text-lg font-bold font-body"
+                style={{ color: "#FFC107" }}
+              >
+                {price.label}
+              </span>
+              {price.original && (
+                <span className="text-xs font-body text-muted-foreground line-through">
+                  {price.original}
+                </span>
+              )}
             </p>
             <p className="text-xs text-muted-foreground font-body">
               per person

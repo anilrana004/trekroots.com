@@ -9,6 +9,7 @@ import {
   PHONE_HREF,
   whatsappLink,
 } from "@/data";
+import { tripPrice } from "@/lib/price";
 import { TrekCard } from "@/components/TrekCard";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
 import { HeroCarousel } from "@/components/HeroCarousel";
@@ -288,11 +289,7 @@ function DayBlock({ day }: { day: DayItinerary }) {
 }
 
 function BookingWidget({ trek }: { trek: Trek }) {
-  const min = Number(trek.priceRange.minINR);
-  const max = Number(trek.priceRange.maxINR);
-  const minPrice = min.toLocaleString("en-IN");
-  const maxPrice = max.toLocaleString("en-IN");
-  const onRequest = min <= 0;
+  const price = tripPrice(trek.priceRange);
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -314,13 +311,28 @@ function BookingWidget({ trek }: { trek: Trek }) {
       <p className="text-xs text-muted-foreground font-body mb-1">
         Starting from
       </p>
-      <p className="font-mono text-3xl font-bold text-primary mb-0.5">
-        {onRequest ? "On Request" : `₹${minPrice}`}
-      </p>
+      <div className="flex items-baseline gap-2 mb-0.5">
+        <p className="font-mono text-3xl font-bold text-primary">
+          {price.label}
+        </p>
+        {price.original && (
+          <span className="font-mono text-base text-muted-foreground line-through">
+            {price.original}
+          </span>
+        )}
+      </div>
+      {price.discountPercent ? (
+        <p
+          className="text-xs font-body font-semibold mb-1"
+          style={{ color: "#16A34A" }}
+        >
+          Save {price.discountPercent}% · limited batches
+        </p>
+      ) : null}
       <p className="text-xs text-muted-foreground font-body mb-4">
-        {onRequest
+        {price.onRequest
           ? "Contact us for current batch pricing · per person"
-          : `Up to ₹${maxPrice} · per person · 5% GST extra`}
+          : "per person · 5% GST extra"}
       </p>
 
       <TripCostCalculator

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Calendar, ChevronRight, Clock, Mountain } from "lucide-react";
 import { ZoomInCard } from "@/components/ZoomInCard";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { tripPrice } from "@/lib/price";
 import { useEffect, useState } from "react";
 
 const DIFFICULTY_CONFIG: Record<
@@ -40,9 +41,7 @@ export function TrekCard({ trek, index = 0 }: TrekCardProps) {
     text: "text-muted-foreground",
     dot: "bg-muted-foreground",
   };
-  const min = Number(trek.priceRange.minINR);
-  const minPrice =
-    min <= 0 ? "On Request" : `₹${min.toLocaleString("en-IN")}`;
+  const price = tripPrice(trek.priceRange);
   const altitudeFt = Number(trek.maxAltitudeFt).toLocaleString("en-IN");
   const firstHighlight = trek.highlights[0] ?? "";
   const secondHighlight = trek.highlights[1] ?? "";
@@ -173,11 +172,18 @@ export function TrekCard({ trek, index = 0 }: TrekCardProps) {
               <p className="text-xs text-muted-foreground font-body">
                 Starting from
               </p>
-              <p
-                className="text-lg font-bold font-body"
-                style={{ color: "#FFC107" }}
-              >
-                {minPrice}
+              <p className="flex items-baseline gap-1.5">
+                <span
+                  className="text-lg font-bold font-body"
+                  style={{ color: "#FFC107" }}
+                >
+                  {price.label}
+                </span>
+                {price.original && (
+                  <span className="text-xs font-body text-muted-foreground line-through">
+                    {price.original}
+                  </span>
+                )}
               </p>
               <p className="text-xs text-muted-foreground font-body">
                 per person

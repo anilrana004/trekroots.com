@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Clock, Users } from "lucide-react";
 import { ZoomInCard } from "@/components/ZoomInCard";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { tripPrice } from "@/lib/price";
 
 interface PackageCardProps {
   pkg: Package;
@@ -26,14 +27,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export function PackageCard({ pkg, index = 0 }: PackageCardProps) {
-  const min = Number(pkg.priceRange.minINR);
-  const max = Number(pkg.priceRange.maxINR);
-  const priceLabel =
-    min <= 0
-      ? "On Request"
-      : max > min
-        ? `₹${min.toLocaleString("en-IN")}–₹${max.toLocaleString("en-IN")}`
-        : `₹${min.toLocaleString("en-IN")}`;
+  const price = tripPrice(pkg.priceRange);
   const catClass =
     CATEGORY_COLORS[pkg.category] || "bg-muted text-muted-foreground";
 
@@ -90,8 +84,13 @@ export function PackageCard({ pkg, index = 0 }: PackageCardProps) {
               From
             </span>
             <span className="ml-1 text-sm font-semibold text-foreground font-mono">
-              {priceLabel}
+              {price.label}
             </span>
+            {price.original && (
+              <span className="ml-1.5 text-xs font-mono text-muted-foreground line-through">
+                {price.original}
+              </span>
+            )}
           </div>
           <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary font-body group-hover:gap-2 transition-all">
             View Package <ArrowRight size={13} />

@@ -15,6 +15,8 @@ export interface DayItinerary {
 export interface PriceRange {
   minINR: number
   maxINR: number
+  /** List price before the current discount. Omitted when a trip is not on offer. */
+  originalINR?: number
 }
 
 export interface FaqItem {

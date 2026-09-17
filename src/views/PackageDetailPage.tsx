@@ -1,11 +1,14 @@
 "use client";
 
 import {
+  CONTACT_EMAIL,
+  CONTACT_EMAIL_HREF,
   getPackageBySlug,
   PHONE_DISPLAY,
   PHONE_HREF,
   whatsappLink,
 } from "@/data";
+import { tripPrice } from "@/lib/price";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
@@ -173,6 +176,7 @@ export default function PackageDetailPage() {
   const minPrice = min.toLocaleString("en-IN");
   const maxPrice = max.toLocaleString("en-IN");
   const onRequest = min <= 0;
+  const price = tripPrice(pkg.priceRange);
   const hasTiers = pkg.tiers && pkg.tiers.length > 0;
   const faqItems = pkg.faqs && pkg.faqs.length > 0 ? pkg.faqs : SAMPLE_FAQS;
   const packingSections = pkg.packing ?? [];
@@ -1266,17 +1270,35 @@ export default function PackageDetailPage() {
                 >
                   Starting From
                 </p>
-                <p
-                  className="font-mono text-3xl font-bold"
-                  style={{ color: "var(--brand-secondary)" }}
-                >
-                  {onRequest ? "On Request" : `₹${minPrice}`}
-                </p>
+                <div className="flex items-baseline gap-2">
+                  <p
+                    className="font-mono text-3xl font-bold"
+                    style={{ color: "var(--brand-secondary)" }}
+                  >
+                    {price.label}
+                  </p>
+                  {price.original && (
+                    <span
+                      className="font-mono text-base line-through"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      {price.original}
+                    </span>
+                  )}
+                </div>
+                {price.discountPercent ? (
+                  <p
+                    className="text-xs font-body font-semibold mt-0.5"
+                    style={{ color: "#16A34A" }}
+                  >
+                    Save {price.discountPercent}% · limited batches
+                  </p>
+                ) : null}
                 <p
                   className="text-xs font-body mt-0.5"
                   style={{ color: "var(--text-muted)" }}
                 >
-                  {onRequest
+                  {price.onRequest
                     ? "Contact for current pricing"
                     : "per person · 5% GST extra"}
                 </p>
@@ -1467,12 +1489,12 @@ export default function PackageDetailPage() {
                     {PHONE_DISPLAY}
                   </a>
                   <a
-                    href="mailto:hello@trekroots.com"
+                    href={CONTACT_EMAIL_HREF}
                     className="flex items-center gap-2 transition-colors"
                     style={{ color: "var(--text-secondary)" }}
                   >
                     <Mail size={15} style={{ color: "var(--brand-primary)" }} />{" "}
-                    hello@trekroots.com
+                    {CONTACT_EMAIL}
                   </a>
                 </div>
               </div>

@@ -7,6 +7,7 @@ import {
   PHONE_HREF,
   whatsappLink,
 } from "@/data";
+import { tripPrice } from "@/lib/price";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
@@ -1061,7 +1062,7 @@ export default function YatraDetailPage() {
     "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1400&q=80";
   const heroImages = getYatraHeroImages(yatra.slug, heroImage);
   const priceMin = Number(yatra.priceRange.minINR).toLocaleString("en-IN");
-  const priceMax = Number(yatra.priceRange.maxINR).toLocaleString("en-IN");
+  const price = tripPrice(yatra.priceRange);
   const faqs =
     enrichment.faqs.length > 0
       ? enrichment.faqs
@@ -2067,14 +2068,29 @@ export default function YatraDetailPage() {
                 >
                   Price per person
                 </p>
-                <p
-                  className="font-mono text-3xl font-bold"
-                  style={{ color: "#1A1A1A" }}
-                >
-                  ₹{priceMin}
-                </p>
+                <div className="flex items-baseline gap-2">
+                  <p
+                    className="font-mono text-3xl font-bold"
+                    style={{ color: "#1A1A1A" }}
+                  >
+                    {price.label}
+                  </p>
+                  {price.original && (
+                    <span
+                      className="font-mono text-base line-through"
+                      style={{ color: "#666666" }}
+                    >
+                      {price.original}
+                    </span>
+                  )}
+                </div>
                 <p className="font-mono text-sm" style={{ color: "#666666" }}>
-                  – ₹{priceMax} <span className="text-xs">*GST applicable</span>
+                  {price.discountPercent ? (
+                    <span style={{ color: "#16A34A" }}>
+                      Save {price.discountPercent}%{" · "}
+                    </span>
+                  ) : null}
+                  <span className="text-xs">*GST applicable</span>
                 </p>
               </div>{" "}
               <div className="px-6 pb-4">
