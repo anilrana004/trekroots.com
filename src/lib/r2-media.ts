@@ -10,6 +10,8 @@ export const R2_VIDEOS = {
   intro: `${R2_MEDIA_HOST}/intro/still%20on%20my%20mind_2160p.mp4`,
   "valley-of-flowers":
     `${R2_MEDIA_HOST}/uttarakhand/valley%20of%20flower/vidssave.com%20Into%20The%20%27Valley%20Of%20Flowers%27%20-%20Cinematic%20Travel%20Film%20720P.mp4`,
+  kedarkantha:
+    `${R2_MEDIA_HOST}/uttarakhand/kedarkantha%20trek/KEDARKANTHA%20TREK%20INDIA%20__%20CINEMATIC%20VIDEO%20BY%20SNAP%20SHOOTERS%202024_1080p.mp4`,
 } as const;
 
 export type R2VideoSlug = keyof typeof R2_VIDEOS;

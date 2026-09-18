@@ -63,7 +63,8 @@ const CAROUSEL_ITEMS: CarouselItem[] = [
     altitude: "3,811 m",
     tagline:
       "India's finest winter trek — a snow-clad summit at sunrise above the clouds.",
-    image: getTrekCoverImage("kedarkantha"),
+    video: r2VideoUrl("kedarkantha"),
+    poster: getTrekCoverImage("kedarkantha"),
   },
   {
     id: 3,
