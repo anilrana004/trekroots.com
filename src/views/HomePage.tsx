@@ -239,7 +239,7 @@ function HeroCarousel() {
   return (
     <section
       data-ocid="carousel.section"
-      className="relative h-[min(72vh,560px)] min-h-[460px] md:h-[560px] overflow-hidden bg-black"
+      className="relative h-[min(78svh,640px)] min-h-[520px] md:h-[560px] overflow-hidden bg-[#0a0a0a]"
     >
       {CAROUSEL_ITEMS.map((slide, i) => {
         if (!shouldMountHeroSlide(i, current, CAROUSEL_ITEMS.length)) {
@@ -248,8 +248,8 @@ function HeroCarousel() {
         const active = i === current;
         return (
           <div
-            key={slide.video ? `video-${slide.id}-${active ? "on" : "off"}` : slide.id}
-            className={`absolute inset-0 bg-black transition-opacity duration-500 ${
+            key={slide.video ? `video-${slide.id}` : slide.id}
+            className={`absolute inset-0 bg-[#0a0a0a] transition-opacity duration-500 ${
               active ? "opacity-100 z-[1]" : "opacity-0 z-0"
             }`}
             aria-hidden={!active}
@@ -259,8 +259,9 @@ function HeroCarousel() {
                 ref={videoRef}
                 key={slide.video}
                 src={slide.video}
-                className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-500 ${
-                  videoReady ? "opacity-100" : "opacity-0"
+                className={`absolute left-1/2 top-1/2 h-full w-full max-w-none -translate-x-1/2 -translate-y-1/2 object-cover object-center transition-opacity duration-700 will-change-transform ${
+                  /* Cinematic MP4s ship with letterbox bars — zoom past them on phone + desktop */
+                  videoReady ? "opacity-100 scale-[1.48] sm:scale-[1.32] md:scale-[1.18]" : "opacity-0 scale-[1.48] sm:scale-[1.32] md:scale-[1.18]"
                 }`}
                 autoPlay
                 muted={muted}
@@ -270,6 +271,7 @@ function HeroCarousel() {
                 disablePictureInPicture
                 preload="auto"
                 onEnded={goNext}
+                onLoadedData={() => setVideoReady(true)}
                 onPlaying={() => setVideoReady(true)}
                 aria-label={`${slide.name} cinematic film`}
               />
@@ -282,22 +284,22 @@ function HeroCarousel() {
                 priority={active}
                 sizes="100vw"
                 lazy={!active}
-                className="w-full h-full object-cover object-center"
+                className="h-full w-full object-cover object-center"
                 transform={{
                   width: 1600,
                   height: 900,
                   crop: "fill",
                   gravity: "auto",
-                  quality: active ? "auto:eco" : "auto:eco",
+                  quality: "auto:eco",
                   format: "auto",
                 }}
               />
             ) : null}
             <div
-              className="absolute inset-0"
+              className="pointer-events-none absolute inset-0"
               style={{
                 background:
-                  "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0.72) 100%)",
+                  "linear-gradient(180deg, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.22) 40%, rgba(0,0,0,0.55) 100%)",
               }}
             />
           </div>
