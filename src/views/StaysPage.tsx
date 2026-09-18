@@ -24,7 +24,8 @@ import {
   ThumbsUp,
 } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 function StayCardItem({
   stay,
@@ -77,9 +78,15 @@ function regionOf(stay: Stay): string {
 
 export default function StaysPage() {
   const stays = getAllStays();
+  const params = useSearchParams();
   const [search, setSearch] = useState("");
   const [region, setRegion] = useState("All");
   const [stayType, setStayType] = useState("All");
+
+  useEffect(() => {
+    setRegion(params.get("region") ?? "All");
+    setStayType(params.get("type") ?? "All");
+  }, [params]);
 
   const types = useMemo(
     () => [...new Set(stays.map((s) => s.stayType))].sort(),

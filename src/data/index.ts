@@ -24,6 +24,18 @@ export {
   treksForMonth,
 } from './trek-facets'
 export type { FacetGroup, FacetItem } from './trek-facets'
+export {
+  packageFacetGroups,
+  packageMegaMenu,
+  popularPackages,
+  popularStays,
+  popularYatras,
+  stayFacetGroups,
+  stayMegaMenu,
+  yatraFacetGroups,
+  yatraMegaMenu,
+} from './nav-menus'
+export type { MegaMenuConfig, MegaPopularItem } from './nav-menus'
 export { getTrekFacts } from './trek-facts'
 export type { TrekFact } from './trek-facts'
 export { getYatraFacts } from './yatra-facts'

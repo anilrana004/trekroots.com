@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import PackagesPage from "@/views/PackagesPage";
 import { JsonLd } from "@/components/JsonLd";
 import { buildPageMetadata } from "@/lib/seo";
@@ -23,7 +24,9 @@ export default function Page() {
         id="schema-packages-breadcrumb"
         data={breadcrumbSchema(CRUMBS)}
       />
-      <PackagesPage />
+      <Suspense fallback={<div className="min-h-[40vh] bg-white" />}>
+        <PackagesPage />
+      </Suspense>
     </>
   );
 }

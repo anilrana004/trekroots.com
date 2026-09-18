@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import StaysPage from "@/views/StaysPage";
 import { JsonLd } from "@/components/JsonLd";
 import { buildPageMetadata } from "@/lib/seo";
@@ -20,7 +21,9 @@ export default function Page() {
   return (
     <>
       <JsonLd id="schema-stays-breadcrumb" data={breadcrumbSchema(CRUMBS)} />
-      <StaysPage />
+      <Suspense fallback={<div className="min-h-[40vh] bg-white" />}>
+        <StaysPage />
+      </Suspense>
     </>
   );
 }

@@ -24,7 +24,8 @@ import {
   Wallet,
 } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 function PackageCardItem({
   pkg,
@@ -62,9 +63,15 @@ function PackageCardItem({
 
 export default function PackagesPage() {
   const packages = getAllPackages();
+  const params = useSearchParams();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [durationKey, setDurationKey] = useState("All");
+
+  useEffect(() => {
+    setCategory(params.get("category") ?? "All");
+    setDurationKey(params.get("duration") ?? "All");
+  }, [params]);
 
   const categories = useMemo(
     () => [...new Set(packages.map((p) => p.category))].sort(),

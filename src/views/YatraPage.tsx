@@ -29,7 +29,8 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 function YatraCardItem({
   yatra,
@@ -67,9 +68,20 @@ function YatraCardItem({
 
 export default function YatraPage() {
   const yatras = getAllYatras();
+  const params = useSearchParams();
   const [search, setSearch] = useState("");
   const [season, setSeason] = useState("All");
   const [focus, setFocus] = useState("All");
+
+  useEffect(() => {
+    setSeason(params.get("season") ?? "All");
+    const circuit = params.get("circuit");
+    if (circuit === "Char & Do Dham") setFocus("Char Dham");
+    else if (circuit === "Yatra + Trek") setFocus("With Trek");
+    else if (circuit === "Kedarnath") setFocus("Kedarnath");
+    else if (circuit === "Adi Kailash") setFocus("Adi Kailash");
+    else if (!circuit) setFocus("All");
+  }, [params]);
 
   const seasons = useMemo(
     () => [...new Set(yatras.map((y) => y.season))].sort(),
@@ -80,9 +92,7 @@ export default function YatraPage() {
     let list = yatras;
     if (season !== "All") list = list.filter((y) => y.season === season);
     if (focus === "Char Dham")
-      list = list.filter((y) =>
-        /char dham|do dham|kedar|badri/i.test(y.name),
-      );
+      list = list.filter((y) => /char dham|do dham/i.test(y.name));
     if (focus === "Kedarnath")
       list = list.filter((y) => /kedarnath|kedar/i.test(y.name));
     if (focus === "Adi Kailash")

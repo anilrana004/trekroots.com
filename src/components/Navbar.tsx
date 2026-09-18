@@ -13,8 +13,14 @@ import {
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
-import type { FacetGroup } from "@/data";
-import { popularTreks, trekFacetGroups } from "@/data";
+import type { FacetGroup, MegaPopularItem } from "@/data";
+import {
+  packageMegaMenu,
+  popularTreks,
+  stayMegaMenu,
+  trekFacetGroups,
+  yatraMegaMenu,
+} from "@/data";
 import {
   PHONE_DISPLAY,
   PHONE_HREF,
@@ -30,14 +36,77 @@ const UTILITY_LINKS = [
   { label: "Contact Us", to: "/contact" },
 ] as const;
 
-const PRIMARY_LINKS = [
-  { label: "Yatra", to: "/yatra" },
-  { label: "Packages", to: "/packages" },
-  { label: "Stays", to: "/stays" },
-] as const;
+type MenuKey = "treks" | "yatra" | "packages" | "stays";
 
-const FACET_GROUPS: FacetGroup[] = trekFacetGroups();
-const POPULAR = popularTreks(6);
+type NavMega = {
+  key: MenuKey;
+  label: string;
+  href: string;
+  groups: FacetGroup[];
+  popularTitle: string;
+  popular: MegaPopularItem[];
+  footerHint: string;
+  footerCta: string;
+  pathPrefix: string;
+};
+
+const TREK_GROUPS = trekFacetGroups();
+const TREK_POPULAR: MegaPopularItem[] = popularTreks(6).map((trek) => ({
+  label: trek.name,
+  href: `/treks/${trek.slug}`,
+  meta: `${formatINR(Number(trek.priceRange.minINR))} · ${Number(trek.durationDays)} days`,
+}));
+
+const YATRA_MEGA = yatraMegaMenu();
+const PACKAGE_MEGA = packageMegaMenu();
+const STAY_MEGA = stayMegaMenu();
+
+const NAV_MEGAS: NavMega[] = [
+  {
+    key: "treks",
+    label: "All Treks",
+    href: "/treks",
+    groups: TREK_GROUPS,
+    popularTitle: "Popular treks",
+    popular: TREK_POPULAR,
+    footerHint: "Not sure which trek suits you? Talk to a trek expert.",
+    footerCta: "Browse all treks",
+    pathPrefix: "/treks",
+  },
+  {
+    key: "yatra",
+    label: "Yatra",
+    href: "/yatra",
+    groups: YATRA_MEGA.groups,
+    popularTitle: YATRA_MEGA.popularTitle,
+    popular: YATRA_MEGA.popular,
+    footerHint: YATRA_MEGA.footerHint,
+    footerCta: YATRA_MEGA.footerCta,
+    pathPrefix: "/yatra",
+  },
+  {
+    key: "packages",
+    label: "Packages",
+    href: "/packages",
+    groups: PACKAGE_MEGA.groups,
+    popularTitle: PACKAGE_MEGA.popularTitle,
+    popular: PACKAGE_MEGA.popular,
+    footerHint: PACKAGE_MEGA.footerHint,
+    footerCta: PACKAGE_MEGA.footerCta,
+    pathPrefix: "/packages",
+  },
+  {
+    key: "stays",
+    label: "Stays",
+    href: "/stays",
+    groups: STAY_MEGA.groups,
+    popularTitle: STAY_MEGA.popularTitle,
+    popular: STAY_MEGA.popular,
+    footerHint: STAY_MEGA.footerHint,
+    footerCta: STAY_MEGA.footerCta,
+    pathPrefix: "/stays",
+  },
+];
 
 function UtilityBar() {
   return (
@@ -79,15 +148,28 @@ function UtilityBar() {
   );
 }
 
-function MegaMenu({ onNavigate }: { onNavigate: () => void }) {
+function MegaMenuPanel({
+  menu,
+  onNavigate,
+}: {
+  menu: NavMega;
+  onNavigate: () => void;
+}) {
+  const cols = Math.min(menu.groups.length + 1, 5);
+
   return (
     <div
-      data-ocid="navbar.mega_menu"
+      data-ocid={`navbar.mega_menu.${menu.key}`}
       className="absolute left-0 right-0 top-full bg-white border-t shadow-xl"
       style={{ borderColor: "#E8E8E8" }}
     >
-      <div className="w-full max-w-[1400px] mx-auto px-6 py-8 grid grid-cols-5 gap-8">
-        {FACET_GROUPS.map((group) => (
+      <div
+        className="w-full max-w-[1400px] mx-auto px-6 py-8 grid gap-8"
+        style={{
+          gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+        }}
+      >
+        {menu.groups.map((group) => (
           <div key={group.title}>
             <p
               className="text-[11px] font-body font-semibold uppercase tracking-widest mb-4"
@@ -97,22 +179,24 @@ function MegaMenu({ onNavigate }: { onNavigate: () => void }) {
             </p>
             <ul className="space-y-2.5">
               {group.items.map((item) => (
-                <li key={item.href}>
+                <li key={`${group.title}-${item.href}-${item.label}`}>
                   <Link
                     href={item.href}
                     onClick={onNavigate}
                     className="group flex items-center justify-between text-[13px] font-body transition-colors"
                     style={{ color: "#555555" }}
                   >
-                    <span className="group-hover:text-[#1A1A1A]">
+                    <span className="group-hover:text-[#1A1A1A] line-clamp-1 pr-2">
                       {item.label}
                     </span>
-                    <span
-                      className="text-[11px] tabular-nums"
-                      style={{ color: "#BBBBBB" }}
-                    >
-                      {item.count}
-                    </span>
+                    {item.count > 1 ? (
+                      <span
+                        className="text-[11px] tabular-nums shrink-0"
+                        style={{ color: "#BBBBBB" }}
+                      >
+                        {item.count}
+                      </span>
+                    ) : null}
                   </Link>
                 </li>
               ))}
@@ -125,23 +209,25 @@ function MegaMenu({ onNavigate }: { onNavigate: () => void }) {
             className="text-[11px] font-body font-semibold uppercase tracking-widest mb-4"
             style={{ color: "#888888" }}
           >
-            Popular treks
+            {menu.popularTitle}
           </p>
           <ul className="space-y-2.5">
-            {POPULAR.map((trek) => (
-              <li key={trek.slug}>
+            {menu.popular.map((item) => (
+              <li key={item.href}>
                 <Link
-                  href={`/treks/${trek.slug}`}
+                  href={item.href}
                   onClick={onNavigate}
                   className="group block text-[13px] font-body"
                   style={{ color: "#555555" }}
                 >
-                  <span className="group-hover:text-[#1A1A1A]">
-                    {trek.name}
+                  <span className="group-hover:text-[#1A1A1A] line-clamp-1">
+                    {item.label}
                   </span>
-                  <span className="block text-[11px]" style={{ color: "#BBBBBB" }}>
-                    {formatINR(Number(trek.priceRange.minINR))} ·{" "}
-                    {Number(trek.durationDays)} days
+                  <span
+                    className="block text-[11px] line-clamp-1"
+                    style={{ color: "#BBBBBB" }}
+                  >
+                    {item.meta}
                   </span>
                 </Link>
               </li>
@@ -154,18 +240,18 @@ function MegaMenu({ onNavigate }: { onNavigate: () => void }) {
         className="border-t"
         style={{ backgroundColor: "#FAFAFA", borderColor: "#E8E8E8" }}
       >
-        <div className="w-full max-w-[1400px] mx-auto px-6 py-3.5 flex items-center justify-between">
+        <div className="w-full max-w-[1400px] mx-auto px-6 py-3.5 flex items-center justify-between gap-4">
           <p className="text-[12px] font-body" style={{ color: "#888888" }}>
-            Not sure which trek suits you? Talk to a trek expert.
+            {menu.footerHint}
           </p>
           <Link
-            href="/treks"
+            href={menu.href}
             onClick={onNavigate}
-            data-ocid="navbar.mega_menu.all_treks"
-            className="flex items-center gap-1.5 text-[13px] font-body font-semibold"
+            data-ocid={`navbar.mega_menu.${menu.key}.browse_all`}
+            className="flex items-center gap-1.5 text-[13px] font-body font-semibold shrink-0"
             style={{ color: "#1A1A1A" }}
           >
-            Browse all treks <ArrowRight size={13} />
+            {menu.footerCta} <ArrowRight size={13} />
           </Link>
         </div>
       </div>
@@ -180,7 +266,7 @@ function MobileDrawer({
   open: boolean;
   onNavigate: () => void;
 }) {
-  const [expanded, setExpanded] = useState<string | null>("By region");
+  const [expanded, setExpanded] = useState<string | null>("treks");
 
   return (
     <div
@@ -194,78 +280,104 @@ function MobileDrawer({
       style={{ paddingTop: "60px", borderTop: "1px solid #E8E8E8" }}
     >
       <nav className="px-5 pt-5 pb-10" aria-label="Mobile navigation">
-        <Link
-          href="/treks"
-          onClick={onNavigate}
-          data-ocid="navbar.mobile_link.all_treks"
-          className="flex items-center justify-between px-4 py-3.5 rounded-lg text-[15px] font-body font-semibold text-black"
-          style={{ backgroundColor: "#FFF8E1" }}
-        >
-          All Treks
-          <ArrowRight size={15} style={{ color: "#FFC107" }} />
-        </Link>
-
-        {/* Facet groups collapse so the drawer stays scannable on a phone */}
-        <div className="mt-3 rounded-lg border" style={{ borderColor: "#E8E8E8" }}>
-          {FACET_GROUPS.map((group, i) => {
-            const isOpen = expanded === group.title;
-            return (
-              <div
-                key={group.title}
-                className={i > 0 ? "border-t" : undefined}
-                style={i > 0 ? { borderColor: "#E8E8E8" } : undefined}
-              >
+        {NAV_MEGAS.map((menu) => {
+          const isOpen = expanded === menu.key;
+          return (
+            <div
+              key={menu.key}
+              className="mb-3 rounded-lg border overflow-hidden"
+              style={{ borderColor: "#E8E8E8" }}
+            >
+              <div className="flex items-stretch">
+                <Link
+                  href={menu.href}
+                  onClick={onNavigate}
+                  data-ocid={`navbar.mobile_link.${menu.key}`}
+                  className="flex-1 flex items-center justify-between px-4 py-3.5 text-[15px] font-body font-semibold text-black"
+                  style={{
+                    backgroundColor: isOpen ? "#FFF8E1" : undefined,
+                  }}
+                >
+                  {menu.label}
+                  <ArrowRight size={15} style={{ color: "#FFC107" }} />
+                </Link>
                 <button
                   type="button"
                   aria-expanded={isOpen}
-                  onClick={() => setExpanded(isOpen ? null : group.title)}
-                  className="no-retro w-full flex items-center justify-between px-4 py-3.5 text-[14px] font-body font-medium"
-                  style={{ color: "#1A1A1A" }}
+                  aria-label={`${isOpen ? "Collapse" : "Expand"} ${menu.label} menu`}
+                  onClick={() => setExpanded(isOpen ? null : menu.key)}
+                  className="no-retro px-3.5 border-l"
+                  style={{ borderColor: "#E8E8E8", color: "#555555" }}
                 >
-                  {group.title}
                   <ChevronDown
                     size={16}
                     className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
-                    style={{ color: "#888888" }}
                   />
                 </button>
-                {isOpen && (
-                  <ul className="pb-2">
-                    {group.items.map((item) => (
+              </div>
+
+              {isOpen ? (
+                <div className="border-t pb-2" style={{ borderColor: "#E8E8E8" }}>
+                  {menu.groups.map((group) => (
+                    <div key={group.title} className="pt-3">
+                      <p
+                        className="px-4 pb-1.5 text-[11px] font-body font-semibold uppercase tracking-widest"
+                        style={{ color: "#888888" }}
+                      >
+                        {group.title}
+                      </p>
+                      <ul>
+                        {group.items.map((item) => (
+                          <li key={`${menu.key}-${item.href}-${item.label}`}>
+                            <Link
+                              href={item.href}
+                              onClick={onNavigate}
+                              className="flex items-center justify-between pl-5 pr-4 py-2 text-[13px] font-body"
+                              style={{ color: "#555555" }}
+                            >
+                              <span className="line-clamp-1 pr-2">{item.label}</span>
+                              {item.count > 1 ? (
+                                <span style={{ color: "#BBBBBB" }}>
+                                  {item.count}
+                                </span>
+                              ) : null}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                  <p
+                    className="px-4 pt-3 pb-1.5 text-[11px] font-body font-semibold uppercase tracking-widest"
+                    style={{ color: "#888888" }}
+                  >
+                    {menu.popularTitle}
+                  </p>
+                  <ul>
+                    {menu.popular.map((item) => (
                       <li key={item.href}>
                         <Link
                           href={item.href}
                           onClick={onNavigate}
-                          className="flex items-center justify-between pl-7 pr-4 py-2.5 text-[13px] font-body"
+                          className="block pl-5 pr-4 py-2 text-[13px] font-body"
                           style={{ color: "#555555" }}
                         >
-                          {item.label}
-                          <span style={{ color: "#BBBBBB" }}>{item.count}</span>
+                          <span className="line-clamp-1">{item.label}</span>
+                          <span
+                            className="block text-[11px]"
+                            style={{ color: "#BBBBBB" }}
+                          >
+                            {item.meta}
+                          </span>
                         </Link>
                       </li>
                     ))}
                   </ul>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="mt-5 flex flex-col">
-          {PRIMARY_LINKS.map(({ label, to }) => (
-            <Link
-              key={to}
-              href={to}
-              onClick={onNavigate}
-              data-ocid={`navbar.mobile_link.${label.toLowerCase()}`}
-              className="flex items-center justify-between px-4 py-3.5 text-[15px] font-body font-medium border-b"
-              style={{ color: "#1A1A1A", borderColor: "#E8E8E8" }}
-            >
-              {label}
-              <ArrowRight size={15} style={{ color: "#FFC107", opacity: 0.8 }} />
-            </Link>
-          ))}
-        </div>
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
 
         <Link
           href="/contact"
@@ -293,15 +405,6 @@ function MobileDrawer({
           className="mt-2 flex items-center justify-center gap-2 px-4 py-3 rounded text-[14px] font-medium font-body border"
           style={{ color: "#FFC107", borderColor: "#FFC107" }}
         >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-          </svg>
           Chat on WhatsApp
         </a>
       </nav>
@@ -311,7 +414,7 @@ function MobileDrawer({
 
 export function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [megaOpen, setMegaOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState<MenuKey | null>(null);
   const pathname = usePathname();
   const megaId = useId();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -319,18 +422,18 @@ export function Navbar() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: pathname triggers close intentionally
   useEffect(() => {
     setDrawerOpen(false);
-    setMegaOpen(false);
+    setOpenMenu(null);
     document.body.style.overflow = "";
   }, [pathname]);
 
   useEffect(() => {
-    if (!megaOpen) return;
+    if (!openMenu) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMegaOpen(false);
+      if (e.key === "Escape") setOpenMenu(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [megaOpen]);
+  }, [openMenu]);
 
   const toggleDrawer = () => {
     setDrawerOpen((v) => {
@@ -344,17 +447,16 @@ export function Navbar() {
     document.body.style.overflow = "";
   }, []);
 
-  /** Small grace period so the pointer can cross the gap into the panel. */
-  const openMega = () => {
+  const openMega = (key: MenuKey) => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
-    setMegaOpen(true);
+    setOpenMenu(key);
   };
   const scheduleCloseMega = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setMegaOpen(false), 120);
+    closeTimer.current = setTimeout(() => setOpenMenu(null), 120);
   };
 
-  const treksActive = pathname.startsWith("/treks");
+  const activeMega = NAV_MEGAS.find((m) => m.key === openMenu) ?? null;
 
   return (
     <>
@@ -366,7 +468,6 @@ export function Navbar() {
         style={{ borderBottom: "1px solid #E8E8E8" }}
       >
         <div className="w-full max-w-[1400px] mx-auto px-4 lg:px-6 h-[60px] lg:h-[68px] grid grid-cols-3 items-center lg:flex lg:justify-between lg:gap-3">
-          {/* Left: hamburger (phone) / logo (desktop) */}
           <div className="flex items-center justify-start min-w-0">
             <button
               type="button"
@@ -398,7 +499,6 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Center logo — phone only, truly centered in the bar */}
           <Link
             href="/"
             data-ocid="navbar.logo.mobile"
@@ -420,46 +520,37 @@ export function Navbar() {
             className="hidden lg:flex items-center gap-0.5"
             aria-label="Main navigation"
           >
-            <div
-              onMouseEnter={openMega}
-              onMouseLeave={scheduleCloseMega}
-              className="relative"
-            >
-              <button
-                type="button"
-                data-ocid="navbar.link.all_treks"
-                aria-expanded={megaOpen}
-                aria-controls={megaId}
-                onClick={() => setMegaOpen((v) => !v)}
-                className="no-retro flex items-center gap-1 px-3.5 py-1.5 text-[13px] font-body font-medium tracking-wide rounded transition-colors"
-                style={{
-                  color: treksActive || megaOpen ? "#FFC107" : "#555555",
-                  fontWeight: treksActive ? 600 : undefined,
-                }}
-              >
-                All Treks
-                <ChevronDown
-                  size={13}
-                  className={`transition-transform ${megaOpen ? "rotate-180" : ""}`}
-                />
-              </button>
-            </div>
-
-            {PRIMARY_LINKS.map(({ label, to }) => {
-              const active = pathname.startsWith(to);
+            {NAV_MEGAS.map((menu) => {
+              const active = pathname.startsWith(menu.pathPrefix);
+              const isOpen = openMenu === menu.key;
               return (
-                <Link
-                  key={to}
-                  href={to}
-                  data-ocid={`navbar.link.${label.toLowerCase()}`}
-                  className="px-3.5 py-1.5 text-[13px] font-body font-medium tracking-wide rounded transition-colors"
-                  style={{
-                    color: active ? "#FFC107" : "#555555",
-                    fontWeight: active ? 600 : undefined,
-                  }}
+                <div
+                  key={menu.key}
+                  onMouseEnter={() => openMega(menu.key)}
+                  onMouseLeave={scheduleCloseMega}
+                  className="relative"
                 >
-                  {label}
-                </Link>
+                  <button
+                    type="button"
+                    data-ocid={`navbar.link.${menu.key}`}
+                    aria-expanded={isOpen}
+                    aria-controls={isOpen ? megaId : undefined}
+                    onClick={() =>
+                      setOpenMenu((v) => (v === menu.key ? null : menu.key))
+                    }
+                    className="no-retro flex items-center gap-1 px-3.5 py-1.5 text-[13px] font-body font-medium tracking-wide rounded transition-colors"
+                    style={{
+                      color: active || isOpen ? "#FFC107" : "#555555",
+                      fontWeight: active ? 600 : undefined,
+                    }}
+                  >
+                    {menu.label}
+                    <ChevronDown
+                      size={13}
+                      className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                </div>
               );
             })}
           </nav>
@@ -485,16 +576,19 @@ export function Navbar() {
           </div>
         </div>
 
-        {megaOpen && (
+        {activeMega ? (
           <div
             id={megaId}
             className="hidden lg:block"
-            onMouseEnter={openMega}
+            onMouseEnter={() => openMega(activeMega.key)}
             onMouseLeave={scheduleCloseMega}
           >
-            <MegaMenu onNavigate={() => setMegaOpen(false)} />
+            <MegaMenuPanel
+              menu={activeMega}
+              onNavigate={() => setOpenMenu(null)}
+            />
           </div>
-        )}
+        ) : null}
       </header>
 
       <MobileDrawer open={drawerOpen} onNavigate={closeDrawer} />

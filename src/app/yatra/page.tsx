@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import YatraPage from "@/views/YatraPage";
 import { JsonLd } from "@/components/JsonLd";
 import { buildPageMetadata } from "@/lib/seo";
@@ -20,7 +21,9 @@ export default function Page() {
   return (
     <>
       <JsonLd id="schema-yatra-index-breadcrumb" data={breadcrumbSchema(CRUMBS)} />
-      <YatraPage />
+      <Suspense fallback={<div className="min-h-[40vh] bg-white" />}>
+        <YatraPage />
+      </Suspense>
     </>
   );
 }
