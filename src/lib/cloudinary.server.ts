@@ -1,48 +1,60 @@
-import { v2 as cloudinary } from "cloudinary"
+import "server-only";
+import { v2 as cloudinary } from "cloudinary";
 
-let configured = false
+let configured = false;
 
-/** Server-only Cloudinary SDK (uploads, admin API). Do not import from client components. */
+/**
+ * Server-only Cloudinary SDK (uploads / admin API).
+ * Importing this module from a Client Component will fail the build.
+ */
 export function getCloudinary() {
-  if (typeof window !== "undefined") {
-    throw new Error("getCloudinary() is server-only")
-  }
-
   if (!configured) {
+    const cloud_name =
+      process.env.CLOUDINARY_CLOUD_NAME ||
+      process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const api_key = process.env.CLOUDINARY_API_KEY;
+    const api_secret = process.env.CLOUDINARY_API_SECRET;
+
+    if (!cloud_name || !api_key || !api_secret) {
+      throw new Error(
+        "Cloudinary server SDK requires CLOUDINARY_CLOUD_NAME (or NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME), CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET",
+      );
+    }
+
+    // Prefer discrete env vars. Do not rely on CLOUDINARY_URL in this app —
+    // a single URL embeds the secret and is easy to mishandle in dashboards.
     cloudinary.config({
-      cloud_name:
-        process.env.CLOUDINARY_CLOUD_NAME ||
-        process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-      api_key: process.env.CLOUDINARY_API_KEY,
-      api_secret: process.env.CLOUDINARY_API_SECRET,
+      cloud_name,
+      api_key,
+      api_secret,
       secure: true,
-    })
-    configured = true
+    });
+    configured = true;
   }
 
-  return cloudinary
+  return cloudinary;
 }
 
 export type UploadResult = {
-  publicId: string
-  url: string
-  secureUrl: string
-  width?: number
-  height?: number
-  format?: string
-  bytes?: number
-}
+  publicId: string;
+  url: string;
+  secureUrl: string;
+  width?: number;
+  height?: number;
+  format?: string;
+  bytes?: number;
+};
 
 export async function uploadImage(
   source: string | Buffer,
   options: {
-    folder?: string
-    publicId?: string
-    overwrite?: boolean
-    tags?: string[]
+    folder?: string;
+    publicId?: string;
+    overwrite?: boolean;
+    tags?: string[];
   } = {},
 ): Promise<UploadResult> {
-  const cld = getCloudinary()
+  const cld = getCloudinary();
   const result = await cld.uploader.upload(
     typeof source === "string"
       ? source
@@ -54,7 +66,7 @@ export async function uploadImage(
       tags: options.tags ?? ["trekroots"],
       resource_type: "image",
     },
-  )
+  );
 
   return {
     publicId: result.public_id,
@@ -64,5 +76,5 @@ export async function uploadImage(
     height: result.height,
     format: result.format,
     bytes: result.bytes,
-  }
+  };
 }

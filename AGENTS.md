@@ -30,3 +30,4 @@ is a Next.js Route Handler.
 - `/api/media/upload` is ops-only and stays disabled until `MEDIA_UPLOAD_SECRET` is set.
 - Blog posts are Sanity-backed (`blogPost` schema in Studio). Next.js owns presentation under `/blog`.
 - Do not embed Studio in Next.js; keep it standalone for admin.trekroots.com later.
+- On Vercel, mark `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, and `RESEND_API_KEY` as Sensitive. Do not set `CLOUDINARY_URL`.

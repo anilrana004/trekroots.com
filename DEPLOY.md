@@ -37,17 +37,45 @@ Copy values from `.env.example`. Never commit `.env.local`.
 ### 2. Environment variables
 
 In **Project → Settings → Environment Variables**, add for Production
-(and Preview if you want forms to work on preview URLs):
+(and Preview if you want forms to work on preview URLs).
+
+**Public (OK to leave visible):**
 
 ```
+NEXT_PUBLIC_SITE_URL=https://trekroots.com
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=...
-CLOUDINARY_CLOUD_NAME=...          # same value as above is fine
-CLOUDINARY_API_KEY=...             # only if you enable the upload API
+NEXT_PUBLIC_SANITY_PROJECT_ID=w00xdoog
+NEXT_PUBLIC_SANITY_DATASET=production
+```
+
+**Secrets — create with “Sensitive” checked** (Vercel will show
+“Needs Attention” if you skip this):
+
+```
+CLOUDINARY_CLOUD_NAME=...          # same as public cloud name is fine
+CLOUDINARY_API_KEY=...             # only needed for upload API / CLI uploads
 CLOUDINARY_API_SECRET=...
 RESEND_API_KEY=re_...
+```
+
+Optional:
+
+```
 ENQUIRY_FROM_EMAIL=TrekRoots <onboarding@resend.dev>
 ENQUIRY_TO_EMAIL=info@trekroots.com
+SANITY_API_READ_TOKEN=...          # Viewer token only; drafts/preview later
 ```
+
+**Do not add `CLOUDINARY_URL`.** This app uses discrete Cloudinary vars.
+`CLOUDINARY_URL` embeds the API secret and triggers Vercel’s secret warnings.
+
+To fix an existing “Needs Attention” Cloudinary key in Vercel:
+
+1. Open the variable → **Edit** (or delete + recreate)
+2. Enable **Sensitive**
+3. Or use **Rotate Variable** if the value may have been exposed in the UI
+4. Delete `CLOUDINARY_URL` if it exists
+5. Redeploy
 
 Notes:
 
@@ -123,6 +151,9 @@ This repo does **not** wire that up — prefer Option A or B.
 
 - [ ] Repo pushed to GitHub `main`
 - [ ] Cloudinary cloud name set (`NEXT_PUBLIC_…`)
+- [ ] Cloudinary API key/secret marked **Sensitive** on Vercel (or omitted if unused)
+- [ ] No `CLOUDINARY_URL` on Vercel
+- [ ] Sanity project id + dataset set
 - [ ] Resend key set (or accept WhatsApp-only enquiries)
 - [ ] Deployed on Vercel **or** Railway
 - [ ] Custom domain + HTTPS
