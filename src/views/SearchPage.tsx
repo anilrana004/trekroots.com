@@ -7,7 +7,8 @@ import { YatraCard } from "@/components/YatraCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { searchAll } from "@/data";
 import { Search, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 const SUGGESTIONS = [
   "Kedarkantha",
@@ -18,10 +19,27 @@ const SUGGESTIONS = [
 ] as const;
 
 export default function SearchPage() {
+  const router = useRouter();
+  const params = useSearchParams();
   const [term, setTerm] = useState("");
   const [activeTab, setActiveTab] = useState<
     "all" | "treks" | "yatras" | "packages" | "stays" | "blog"
   >("all");
+
+  useEffect(() => {
+    const q = params.get("q")?.trim() ?? "";
+    if (q) setTerm(q);
+  }, [params]);
+
+  const setQuery = (value: string) => {
+    setTerm(value);
+    const next = value.trim();
+    const url = next
+      ? `/search?q=${encodeURIComponent(next)}`
+      : "/search";
+    router.replace(url, { scroll: false });
+  };
+
   const data = useMemo(() => (term.length >= 2 ? searchAll(term) : null), [term]);
   const isLoading = false;
 
@@ -101,13 +119,13 @@ export default function SearchPage() {
                 data-ocid="search.input"
                 placeholder="Search treks, yatras, packages, stays…"
                 value={term}
-                onChange={(e) => setTerm(e.target.value)}
+                onChange={(e) => setQuery(e.target.value)}
                 className="w-full rounded-xl bg-transparent py-4 pl-12 pr-12 font-body text-[15px] text-[#1A1A1A] outline-none placeholder:text-[#888888] md:py-[1.15rem] md:text-base"
               />
               {term ? (
                 <button
                   type="button"
-                  onClick={() => setTerm("")}
+                  onClick={() => setQuery("")}
                   className="absolute right-3 flex h-8 w-8 items-center justify-center rounded-full text-[#555555] transition-colors hover:bg-[#F0F0F0]"
                   data-ocid="search.clear_button"
                   aria-label="Clear search"
@@ -125,7 +143,7 @@ export default function SearchPage() {
                 <button
                   key={s}
                   type="button"
-                  onClick={() => setTerm(s)}
+                  onClick={() => setQuery(s)}
                   data-ocid={`search.suggestion.${s.toLowerCase().replace(/\s+/g, "-")}`}
                   className="rounded-full border border-[#1A1A1A]/15 bg-white/55 px-3 py-1 font-body text-[12px] font-medium text-[#1A1A1A] backdrop-blur-sm transition-colors hover:border-[#1A1A1A]/35 hover:bg-white"
                 >

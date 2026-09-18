@@ -98,25 +98,32 @@ function uniqueBySlug(list: Trek[]): Trek[] {
   });
 }
 
-export default function TreksPage() {
+export default function TreksPage({
+  forcedDifficulty,
+}: {
+  /** Used by /easy-treks and /easy-moderate-treks sitelink landing pages. */
+  forcedDifficulty?: string;
+} = {}) {
   const treks = getAllTreks();
   const params = useSearchParams();
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [stateFilter, setStateFilter] = useState("All");
-  const [diffFilter, setDiffFilter] = useState("All");
+  const [diffFilter, setDiffFilter] = useState(forcedDifficulty ?? "All");
   const [duration, setDuration] = useState("");
   const [season, setSeason] = useState("");
   const [monthFilter, setMonthFilter] = useState(0);
 
   useEffect(() => {
     setStateFilter(params.get("state") ?? "All");
-    setDiffFilter(params.get("difficulty") ?? "All");
+    setDiffFilter(
+      forcedDifficulty ?? params.get("difficulty") ?? "All",
+    );
     setDuration(params.get("duration") ?? "");
     setSeason(params.get("season") ?? "");
     const m = Number(params.get("month") ?? 0);
     setMonthFilter(m >= 1 && m <= 12 ? m : 0);
-  }, [params]);
+  }, [params, forcedDifficulty]);
 
   const states = useMemo(
     () => [...new Set(treks.map((t) => t.state))].sort(),
@@ -134,8 +141,8 @@ export default function TreksPage() {
     if (stateFilter !== "All")
       result = result.filter((t) => t.state === stateFilter);
     if (diffFilter !== "All")
-      result = result.filter((t) =>
-        t.difficulty.toLowerCase().includes(diffFilter.toLowerCase()),
+      result = result.filter(
+        (t) => t.difficulty.toLowerCase() === diffFilter.toLowerCase(),
       );
     if (duration) result = result.filter((t) => matchesDuration(t, duration));
     if (season) result = result.filter((t) => matchesSeason(t, season));

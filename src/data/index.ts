@@ -53,6 +53,8 @@ export {
   WHATSAPP_NUMBER,
   whatsappLink,
 } from './contact'
+export { SITE_SITELINKS } from './sitelinks'
+export type { SiteSitelink } from './sitelinks'
 
 import type { SearchResults, Trek, Yatra } from './types'
 import { treks } from './treks'

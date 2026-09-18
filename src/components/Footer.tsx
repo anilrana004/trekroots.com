@@ -28,13 +28,15 @@ import { sendEnquiry } from "@/lib/enquiry";
 import { PaymentMethodIcons } from "@/components/PaymentMethodIcons";
 
 const EXPLORE_LINKS = [
-  { label: "Treks", to: "/treks" },
+  { label: "Upcoming Treks", to: "/treks" },
+  { label: "Easy Treks", to: "/easy-treks" },
+  { label: "Easy–moderate treks", to: "/easy-moderate-treks" },
   { label: "Yatra", to: "/yatra" },
   { label: "Packages", to: "/packages" },
   { label: "Stays", to: "/stays" },
-  { label: "Blog", to: "/blog" },
+  { label: "Latest News", to: "/blog" },
   { label: "About", to: "/about" },
-  { label: "Contact", to: "/contact" },
+  { label: "Contact Us", to: "/contact" },
 ] as const;
 
 const TOP_TREKS = [

@@ -5,9 +5,9 @@ import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Contact TrekRoots",
+  title: "Contact Us",
   description:
-    "Call, WhatsApp or email TrekRoots in Dehradun for trek bookings, yatra planning, packages and Himalayan stays.",
+    "Call +91 91930 28668 · WhatsApp TrekRoots in Dehradun for trek bookings, yatra planning, packages and Himalayan stays.",
   path: "/contact",
 });
 

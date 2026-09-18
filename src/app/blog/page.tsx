@@ -8,9 +8,9 @@ import { breadcrumbSchema } from "@/lib/schema";
 export const revalidate = 60;
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Himalayan Trek Guides & Travel Blog",
+  title: "Latest News",
   description:
-    "TrekRoots guides to Kedarkantha, Char Dham, Valley of Flowers, winter treks and Himalayan travel planning.",
+    "Trek guides · Char Dham updates · Winter trek tips · Himalayan travel news from the TrekRoots team in Dehradun.",
   path: "/blog",
 });
 

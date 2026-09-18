@@ -1,29 +1,32 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import TreksPage from "@/views/TreksPage";
-import TreksIndexLoading from "./loading";
 import { JsonLd } from "@/components/JsonLd";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Upcoming Treks",
+  title: "Easy Treks",
   description:
-    "Best Treks for Beginners · Kedarkantha · Valley of Flowers · Brahmatal · Hampta Pass — browse TrekRoots Himalayan departures by region, difficulty and season.",
-  path: "/treks",
+    "Nag Tibba · Devkund · Andharban · Rajmachi — best beginner Himalayan treks with TrekRoots from Dehradun.",
+  path: "/easy-treks",
 });
 
 const CRUMBS = [
   { name: "Home", path: "/" },
   { name: "Treks", path: "/treks" },
+  { name: "Easy Treks", path: "/easy-treks" },
 ];
 
 export default function Page() {
   return (
     <>
-      <JsonLd id="schema-treks-breadcrumb" data={breadcrumbSchema(CRUMBS)} />
-      <Suspense fallback={<TreksIndexLoading />}>
-        <TreksPage />
+      <JsonLd
+        id="schema-easy-treks-breadcrumb"
+        data={breadcrumbSchema(CRUMBS)}
+      />
+      <Suspense fallback={<div className="min-h-[40vh] bg-white" />}>
+        <TreksPage forcedDifficulty="Easy" />
       </Suspense>
     </>
   );

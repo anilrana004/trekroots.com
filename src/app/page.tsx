@@ -10,10 +10,11 @@ import { faqPageSchema } from "@/lib/schema";
 export const revalidate = 60;
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Himalayan Treks, Yatras & Stays",
+  title: "TrekRoots - Himalayan Treks That Transform Lives",
   description:
-    "Plan Himalayan treks, sacred yatras, curated packages and mountain stays with TrekRoots — Dehradun-based guides for Uttarakhand and beyond.",
+    "Join guided Himalayan treks, sacred yatras and mountain stays with TrekRoots — Dehradun experts for Kedarkantha, Valley of Flowers, Char Dham and more.",
   path: "/",
+  absoluteTitle: true,
 });
 
 export default async function Page() {

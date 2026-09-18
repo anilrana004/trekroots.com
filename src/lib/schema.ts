@@ -5,6 +5,7 @@ import {
   PHONE_NUMBER,
   SOCIAL_SAME_AS,
 } from "@/data/contact";
+import { SITE_SITELINKS } from "@/data/sitelinks";
 import type { FaqPair } from "@/data/home-faqs";
 import type { BlogPost, Package, Stay, Trek, Yatra } from "@/data/types";
 import { truncateMeta } from "@/lib/seo";
@@ -12,6 +13,7 @@ import { sanityImageUrl } from "@/lib/sanity/image";
 import type { SanityImage } from "@/lib/sanity/types";
 
 export const ORG_ID = `${SITE_URL}/#organization`;
+export const WEBSITE_ID = `${SITE_URL}/#website`;
 
 type JsonLd = Record<string, unknown>;
 
@@ -24,8 +26,18 @@ export function organizationSchema(): JsonLd {
     "@type": ["TravelAgency", "Organization", "LocalBusiness"],
     "@id": ORG_ID,
     name: SITE_NAME,
+    alternateName: ["Trek Roots", "TrekRoots Himalayas"],
+    legalName: "TrekRoots",
+    slogan: "Himalayan Treks That Transform Lives",
+    description:
+      "TrekRoots runs Himalayan treks, sacred yatras, curated packages and mountain stays from Dehradun since 2018.",
     url: SITE_URL,
-    logo: LOGO_URL,
+    logo: {
+      "@type": "ImageObject",
+      url: LOGO_URL,
+      width: 512,
+      height: 512,
+    },
     image: LOGO_URL,
     email: CONTACT_EMAIL,
     telephone: PHONE_NUMBER,
@@ -38,6 +50,11 @@ export function organizationSchema(): JsonLd {
       postalCode: "248001",
       addressCountry: "IN",
     },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 30.3165,
+      longitude: 78.0322,
+    },
     areaServed: [
       { "@type": "State", name: "Uttarakhand" },
       { "@type": "State", name: "Himachal Pradesh" },
@@ -45,6 +62,60 @@ export function organizationSchema(): JsonLd {
     ],
     sameAs: [...SOCIAL_SAME_AS],
     priceRange: "₹₹",
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        telephone: PHONE_NUMBER,
+        contactType: "customer service",
+        areaServed: "IN",
+        availableLanguage: ["English", "Hindi"],
+      },
+    ],
+  };
+}
+
+/**
+ * WebSite + SearchAction — helps brand SERP packaging and the Google sitelinks
+ * search box when Google awards it.
+ */
+export function websiteSchema(): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": WEBSITE_ID,
+    name: SITE_NAME,
+    alternateName: ["Trek Roots", "TrekRoots.com"],
+    url: SITE_URL,
+    description:
+      "Plan Himalayan treks, sacred yatras, packages and stays with TrekRoots — guided journeys from Dehradun since 2018.",
+    inLanguage: "en-IN",
+    publisher: { "@id": ORG_ID },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${SITE_URL}/search?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+}
+
+/** SiteNavigationElement list — mirrors primary sitelink targets. */
+export function siteNavigationSchema(): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": `${SITE_URL}/#sitenavigation`,
+    name: `${SITE_NAME} primary navigation`,
+    numberOfItems: SITE_SITELINKS.length,
+    itemListElement: SITE_SITELINKS.map((link, i) => ({
+      "@type": "SiteNavigationElement",
+      position: i + 1,
+      name: link.name,
+      description: link.description,
+      url: absoluteUrl(link.path),
+    })),
   };
 }
 

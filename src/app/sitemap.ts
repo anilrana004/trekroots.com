@@ -14,13 +14,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: absoluteUrl("/"), lastModified: now, changeFrequency: "weekly", priority: 1 },
-    { url: absoluteUrl("/treks"), lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    { url: absoluteUrl("/treks"), lastModified: now, changeFrequency: "weekly", priority: 0.95 },
+    { url: absoluteUrl("/easy-treks"), lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    {
+      url: absoluteUrl("/easy-moderate-treks"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
     { url: absoluteUrl("/yatra"), lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: absoluteUrl("/packages"), lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: absoluteUrl("/stays"), lastModified: now, changeFrequency: "weekly", priority: 0.8 },
-    { url: absoluteUrl("/blog"), lastModified: now, changeFrequency: "weekly", priority: 0.7 },
+    { url: absoluteUrl("/blog"), lastModified: now, changeFrequency: "weekly", priority: 0.85 },
     { url: absoluteUrl("/about"), lastModified: now, changeFrequency: "monthly", priority: 0.5 },
-    { url: absoluteUrl("/contact"), lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    { url: absoluteUrl("/contact"), lastModified: now, changeFrequency: "monthly", priority: 0.85 },
   ];
 
   const treks = getAllTreks().map((t) => ({
