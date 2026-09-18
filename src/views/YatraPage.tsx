@@ -1,171 +1,379 @@
 "use client";
 
-import { getAllYatras } from "@/data";
-import { SectionHeader } from "@/components/SectionHeader";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { YatraCard } from "@/components/YatraCard";
-const SKELETON_YATRAS = [1, 2, 3, 4, 5, 6];
+import {
+  getAllYatras,
+  getYatraCoverImage,
+  whatsappLink,
+  type Yatra,
+} from "@/data";
+import {
+  DiscoveryCategoryStrip,
+  DiscoveryProductCard,
+  DiscoveryRail,
+  DiscoverySearchBanner,
+  DiscoveryShell,
+  DiscoverySidebar,
+  DiscoveryThemeTiles,
+  DiscoveryWhyUs,
+  type SidebarGroup,
+} from "@/components/discovery";
+import { tripPrice } from "@/lib/price";
+import {
+  HeartHandshake,
+  Landmark,
+  MapPinned,
+  Shield,
+  Sparkles,
+  Users,
+} from "lucide-react";
+import { useMemo, useState } from "react";
 
-// Large decorative Ganesh for section background
-function SectionGaneshDecor() {
+function YatraCardItem({
+  yatra,
+  index,
+  layout = "rail",
+  badge,
+}: {
+  yatra: Yatra;
+  index: number;
+  layout?: "rail" | "grid";
+  badge?: string;
+}) {
+  const price = tripPrice(yatra.priceRange);
   return (
-    <div
-      className="pointer-events-none select-none absolute inset-0 overflow-hidden"
-      aria-hidden="true"
-    >
-      {/* Left large Ganesh */}
-      <svg
-        viewBox="0 0 200 240"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="absolute -left-16 top-8 w-64 h-80"
-        style={{ opacity: 0.06, color: "#FFD54F" }}
-        aria-hidden="true"
-      >
-        <path d="M80 10 L100 2 L120 10 L115 28 L85 28 Z" fill="#FFD54F" />
-        <circle cx="100" cy="8" r="5" fill="#FFD54F" />
-        <ellipse cx="55" cy="70" rx="22" ry="30" fill="#FFD54F" />
-        <ellipse cx="145" cy="70" rx="22" ry="30" fill="#FFD54F" />
-        <circle cx="100" cy="65" r="48" fill="#FFD54F" />
-        <path
-          d="M80 90 Q55 110 60 130 Q65 148 80 145 Q90 142 88 130 Q86 118 75 115 Q70 112 75 105 Z"
-          fill="#FFD54F"
-        />
-        <ellipse cx="100" cy="165" rx="52" ry="55" fill="#FFD54F" />
-        <circle cx="100" cy="170" r="25" fill="#FFD54F" />
-        <ellipse
-          cx="52"
-          cy="145"
-          rx="14"
-          ry="28"
-          fill="#FFD54F"
-          transform="rotate(-20 52 145)"
-        />
-        <ellipse
-          cx="148"
-          cy="145"
-          rx="14"
-          ry="28"
-          fill="#FFD54F"
-          transform="rotate(20 148 145)"
-        />
-        <ellipse cx="100" cy="228" rx="30" ry="8" fill="#FFD54F" />
-      </svg>
-      {/* Right large Ganesh */}
-      <svg
-        viewBox="0 0 200 240"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="absolute -right-16 bottom-8 w-72 h-96"
-        style={{ opacity: 0.05, color: "#FFD54F" }}
-        aria-hidden="true"
-      >
-        <path d="M80 10 L100 2 L120 10 L115 28 L85 28 Z" fill="#FFD54F" />
-        <circle cx="100" cy="8" r="5" fill="#FFD54F" />
-        <ellipse cx="55" cy="70" rx="22" ry="30" fill="#FFD54F" />
-        <ellipse cx="145" cy="70" rx="22" ry="30" fill="#FFD54F" />
-        <circle cx="100" cy="65" r="48" fill="#FFD54F" />
-        <path
-          d="M80 90 Q55 110 60 130 Q65 148 80 145 Q90 142 88 130 Q86 118 75 115 Q70 112 75 105 Z"
-          fill="#FFD54F"
-        />
-        <ellipse cx="100" cy="165" rx="52" ry="55" fill="#FFD54F" />
-        <circle cx="100" cy="170" r="25" fill="#FFD54F" />
-        <ellipse
-          cx="52"
-          cy="145"
-          rx="14"
-          ry="28"
-          fill="#FFD54F"
-          transform="rotate(-20 52 145)"
-        />
-        <ellipse
-          cx="148"
-          cy="145"
-          rx="14"
-          ry="28"
-          fill="#FFD54F"
-          transform="rotate(20 148 145)"
-        />
-        <ellipse cx="100" cy="228" rx="30" ry="8" fill="#FFD54F" />
-      </svg>
-    </div>
+    <DiscoveryProductCard
+      href={`/yatra/${yatra.slug}`}
+      imageSrc={getYatraCoverImage(yatra.slug, yatra.imageUrl)}
+      imageAlt={`${yatra.name} pilgrimage`}
+      title={yatra.name}
+      meta={`${yatra.duration} · ${yatra.season}`}
+      subtitle={yatra.route}
+      priceLabel={price.onRequest ? "On request" : price.label}
+      primaryLabel="Yatra Details"
+      secondaryLabel="Enquire"
+      secondaryHref={whatsappLink(
+        `Hi TrekRoots! I'd like to enquire about ${yatra.name}.`,
+      )}
+      badge={badge}
+      ocid={`yatra.card.${yatra.slug}`}
+      priority={index < 2}
+      layout={layout}
+    />
   );
 }
 
 export default function YatraPage() {
   const yatras = getAllYatras();
-  const isLoading = false;
+  const [search, setSearch] = useState("");
+  const [season, setSeason] = useState("All");
+  const [focus, setFocus] = useState("All");
+
+  const seasons = useMemo(
+    () => [...new Set(yatras.map((y) => y.season))].sort(),
+    [yatras],
+  );
+
+  const filtered = useMemo(() => {
+    let list = yatras;
+    if (season !== "All") list = list.filter((y) => y.season === season);
+    if (focus === "Char Dham")
+      list = list.filter((y) =>
+        /char dham|do dham|kedar|badri/i.test(y.name),
+      );
+    if (focus === "Kedarnath")
+      list = list.filter((y) => /kedarnath|kedar/i.test(y.name));
+    if (focus === "Adi Kailash")
+      list = list.filter((y) => /kailash|om parvat/i.test(y.name));
+    if (focus === "With Trek")
+      list = list.filter((y) => /trek|chopta|tungnath/i.test(y.name));
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter(
+        (y) =>
+          y.name.toLowerCase().includes(q) ||
+          y.route.toLowerCase().includes(q) ||
+          y.description.toLowerCase().includes(q),
+      );
+    }
+    return list;
+  }, [yatras, season, focus, search]);
+
+  const hasActiveFilters =
+    season !== "All" || focus !== "All" || search.trim().length > 0;
+
+  const clearFilters = () => {
+    setSeason("All");
+    setFocus("All");
+    setSearch("");
+  };
+
+  const sidebarGroups: SidebarGroup[] = [
+    {
+      title: "Sacred Circuits",
+      items: [
+        {
+          label: "All yatras",
+          active: focus === "All" && !hasActiveFilters,
+          onClick: clearFilters,
+          count: yatras.length,
+        },
+        {
+          label: "Char & Do Dham",
+          active: focus === "Char Dham",
+          onClick: () => setFocus("Char Dham"),
+          count: yatras.filter((y) =>
+            /char dham|do dham|kedar|badri/i.test(y.name),
+          ).length,
+        },
+        {
+          label: "Kedarnath",
+          active: focus === "Kedarnath",
+          onClick: () => setFocus("Kedarnath"),
+          count: yatras.filter((y) => /kedarnath|kedar/i.test(y.name)).length,
+        },
+        {
+          label: "Adi Kailash",
+          active: focus === "Adi Kailash",
+          onClick: () => setFocus("Adi Kailash"),
+          count: yatras.filter((y) => /kailash|om parvat/i.test(y.name))
+            .length,
+        },
+        {
+          label: "Yatra + Trek",
+          active: focus === "With Trek",
+          onClick: () => setFocus("With Trek"),
+          count: yatras.filter((y) =>
+            /trek|chopta|tungnath/i.test(y.name),
+          ).length,
+        },
+      ],
+    },
+    {
+      title: "By Season",
+      items: seasons.map((s) => ({
+        label: s,
+        active: season === s,
+        onClick: () => setSeason(s),
+        count: yatras.filter((y) => y.season === s).length,
+      })),
+    },
+  ];
+
+  const flagship = yatras.slice(0, 6);
+  const charDham = yatras.filter((y) =>
+    /char dham|do dham/i.test(y.name),
+  );
+  const withTrek = yatras.filter((y) =>
+    /trek|chopta|tungnath/i.test(y.name),
+  );
+  const kailash = yatras.filter((y) => /kailash|om parvat/i.test(y.name));
+
+  const categories = yatras.map((y) => ({
+    label: y.name.replace(/ Yatra$/i, ""),
+    href: `/yatra/${y.slug}`,
+    imageSrc: getYatraCoverImage(y.slug, y.imageUrl),
+    imageAlt: y.name,
+  }));
+
+  const themeTiles = [
+    {
+      title: "Char Dham",
+      href: "/yatra/char-dham",
+      imageSrc: getYatraCoverImage(
+        "char-dham",
+        yatras.find((y) => y.slug === "char-dham")?.imageUrl ??
+          yatras[0]?.imageUrl ??
+          "",
+      ),
+      imageAlt: "Char Dham Yatra",
+      caption: "Yamunotri · Gangotri · Kedarnath · Badrinath",
+    },
+    {
+      title: "Kedarnath",
+      href: "/yatra/kedarnath",
+      imageSrc: getYatraCoverImage(
+        "kedarnath",
+        yatras.find((y) => y.slug === "kedarnath")?.imageUrl ?? "",
+      ),
+      imageAlt: "Kedarnath Yatra",
+      caption: "The abode of Lord Shiva",
+    },
+    {
+      title: "Adi Kailash",
+      href: "/yatra/adi-kailash-om-parvat",
+      imageSrc: getYatraCoverImage(
+        "adi-kailash-om-parvat",
+        yatras.find((y) => y.slug === "adi-kailash-om-parvat")?.imageUrl ?? "",
+      ),
+      imageAlt: "Adi Kailash Yatra",
+      caption: "Om Parvat & the inner Kailash",
+    },
+  ].filter((t) => t.imageSrc);
+
   return (
-    <div
-      className="relative min-h-screen"
-      style={{
-        background: "linear-gradient(to bottom, #FFF8F0 0%, #FFFAF5 100%)",
-      }}
-    >
-      {/* Decorative Om symbol strip at top */}
-      <div
-        className="w-full py-2 text-center text-sm font-body tracking-[0.4em] overflow-hidden"
-        style={{
-          color: "#FFD54F",
-          opacity: 0.6,
-          borderBottom: "1px solid #FFD54F22",
-        }}
+    <div>
+      <DiscoverySearchBanner
+        title="Looking for a sacred yatra?"
+        placeholder="Search Char Dham, Kedarnath, Adi Kailash…"
+        value={search}
+        onChange={setSearch}
+        ocid="yatra.search"
+      />
+
+      <DiscoveryShell
+        ocid="yatra.shell"
+        sidebar={
+          <DiscoverySidebar
+            groups={sidebarGroups}
+            hasActiveFilters={hasActiveFilters}
+            onClear={clearFilters}
+            ocid="yatra.sidebar"
+          />
+        }
       >
-        ॐ &nbsp;&nbsp; ॐ &nbsp;&nbsp; ॐ &nbsp;&nbsp; ॐ &nbsp;&nbsp; ॐ
-        &nbsp;&nbsp; ॐ &nbsp;&nbsp; ॐ &nbsp;&nbsp; ॐ &nbsp;&nbsp; ॐ &nbsp;&nbsp;
-        ॐ &nbsp;&nbsp; ॐ &nbsp;&nbsp; ॐ
-      </div>
+        {hasActiveFilters ? (
+          <section className="pb-8 pt-2">
+            <h2 className="mb-1 font-display text-xl font-bold text-[#06281E] md:text-2xl">
+              Matching yatras
+            </h2>
+            <p className="mb-5 font-body text-sm text-[#5A6B62]">
+              Showing {filtered.length} journey
+              {filtered.length === 1 ? "" : "s"}
+            </p>
+            {filtered.length === 0 ? (
+              <div className="rounded-xl border border-[#E8E4D4] bg-[#FFFBEB] px-6 py-16 text-center">
+                <p className="font-display text-lg font-bold text-[#06281E]">
+                  No yatras match
+                </p>
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="mt-5 rounded-full px-5 py-2.5 font-body text-xs font-bold"
+                  style={{ background: "#FFC107" }}
+                >
+                  Clear filters
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {filtered.map((y, i) => (
+                  <YatraCardItem
+                    key={y.slug}
+                    yatra={y}
+                    index={i}
+                    layout="grid"
+                  />
+                ))}
+              </div>
+            )}
+          </section>
+        ) : (
+          <>
+            <DiscoveryCategoryStrip
+              title="Explore Sacred Journeys"
+              items={categories}
+              ocid="yatra.categories"
+            />
 
-      <div className="relative container mx-auto px-4 py-12">
-        <SectionGaneshDecor />
-
-        <div className="relative z-10">
-          <Breadcrumbs
-            className="mb-4"
-            items={[
-              { name: "Home", path: "/" },
-              { name: "Yatra", path: "/yatra" },
-            ]}
-          />
-          <SectionHeader
-            as="h1"
-            title="Yatra & Pilgrimage"
-            subtitle="Sacred journeys to the abode of the gods — char dham, panch kedar, and beyond."
-          />
-
-          {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {SKELETON_YATRAS.map((n) => (
-                <div
-                  key={n}
-                  className="rounded-xl bg-muted animate-pulse"
-                  style={{ minHeight: "460px" }}
+            <DiscoveryRail
+              title="Flagship Himalayan Yatras"
+              aside="Permits, stays and local expertise handled — from Dehradun to the abode of the gods."
+              ocid="yatra.rail.flagship"
+            >
+              {flagship.map((y, i) => (
+                <YatraCardItem
+                  key={y.slug}
+                  yatra={y}
+                  index={i}
+                  badge={i === 0 ? "Most loved" : undefined}
                 />
               ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {yatras.map((y, i) => (
-                <YatraCard key={String(y.id)} yatra={y} index={i} />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+            </DiscoveryRail>
 
-      {/* Bottom Om divider */}
-      <div
-        className="w-full py-2 text-center text-sm font-body tracking-[0.4em]"
-        style={{
-          color: "#FFD54F",
-          opacity: 0.5,
-          borderTop: "1px solid #FFD54F22",
-        }}
-      >
-        ॐ &nbsp;&nbsp; ॐ &nbsp;&nbsp; ॐ &nbsp;&nbsp; ॐ &nbsp;&nbsp; ॐ
-        &nbsp;&nbsp; ॐ &nbsp;&nbsp; ॐ &nbsp;&nbsp; ॐ
-      </div>
+            {charDham.length > 0 ? (
+              <DiscoveryRail
+                title="Char Dham & Do Dham Circuits"
+                aside="Complete or condensed — the four dhams that define a Himalayan pilgrimage."
+                ocid="yatra.rail.chardham"
+              >
+                {charDham.map((y, i) => (
+                  <YatraCardItem key={y.slug} yatra={y} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            {withTrek.length > 0 ? (
+              <DiscoveryRail
+                title="Yatra with Trek"
+                aside="Blend darshan with Chopta–Tungnath trails for a fuller mountain journey."
+                ocid="yatra.rail.trek"
+              >
+                {withTrek.map((y, i) => (
+                  <YatraCardItem key={y.slug} yatra={y} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            {kailash.length > 0 ? (
+              <DiscoveryRail
+                title="Adi Kailash & Om Parvat"
+                aside="The remote inner Kailash — high passes, sacred lakes and Om Parvat views."
+                ocid="yatra.rail.kailash"
+              >
+                {kailash.map((y, i) => (
+                  <YatraCardItem key={y.slug} yatra={y} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            <DiscoveryThemeTiles
+              title="Pilgrimage Themes"
+              aside="Choose the circuit that calls you."
+              tiles={themeTiles}
+              ocid="yatra.themes"
+            />
+
+            <div className="pb-10 pt-4">
+              <DiscoveryWhyUs
+                title="Why Pilgrims Choose TrekRoots"
+                items={[
+                  {
+                    icon: Landmark,
+                    title: "Temple-first itineraries",
+                    body: "Darshan windows, puja guidance and realistic travel days — not rushed tourist loops.",
+                  },
+                  {
+                    icon: MapPinned,
+                    title: "Permits & logistics handled",
+                    body: "Registration help, stays near trailheads and helicopter options where the season allows.",
+                  },
+                  {
+                    icon: Sparkles,
+                    title: "Sacred + trail blends",
+                    body: "Combine Kedarnath or Char Dham with Chopta–Tungnath when you want both darshan and altitude.",
+                  },
+                  {
+                    icon: Shield,
+                    title: "Mountain-safe pacing",
+                    body: "Acclimatisation-aware days and conservative weather calls on high routes like Adi Kailash.",
+                  },
+                  {
+                    icon: Users,
+                    title: "Small, guided groups",
+                    body: "Experienced leaders who know the routes, the rituals and the villages along the way.",
+                  },
+                  {
+                    icon: HeartHandshake,
+                    title: "WhatsApp planning",
+                    body: "One message starts your yatra plan — dates, inclusions and packing lists from our team.",
+                  },
+                ]}
+                ocid="yatra.why"
+              />
+            </div>
+          </>
+        )}
+      </DiscoveryShell>
     </div>
   );
 }

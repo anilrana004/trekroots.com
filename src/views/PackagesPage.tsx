@@ -1,202 +1,428 @@
 "use client";
 
-import { getAllPackages } from "@/data";
-import { PackageCard } from "@/components/PackageCard";
-import { SectionHeader } from "@/components/SectionHeader";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { ArrowUpDown, SlidersHorizontal } from "lucide-react";
+import { getAllPackages, whatsappLink, type Package } from "@/data";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
+import {
+  DiscoveryProductCard,
+  DiscoveryRail,
+  DiscoverySearchBanner,
+  DiscoveryShell,
+  DiscoverySidebar,
+  DiscoveryThemeTiles,
+  DiscoveryWhyUs,
+  type SidebarGroup,
+} from "@/components/discovery";
+import { tripPrice } from "@/lib/price";
+import {
+  Compass,
+  HeartHandshake,
+  Map,
+  Sparkles,
+  Users,
+  Wallet,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 
-const CATEGORIES = [
-  "All",
-  "Ladakh",
-  "Spiti",
-  "Himachal",
-  "Uttarakhand",
-  "Kerala",
-  "Adventure",
-] as const;
-
-const SORT_OPTIONS = [
-  { label: "Popularity", value: "popularity" },
-  { label: "Price: Low to High", value: "price-asc" },
-  { label: "Price: High to Low", value: "price-desc" },
-  { label: "Duration", value: "duration" },
-] as const;
-
-const SKELETON_PACKAGES = [1, 2, 3, 4, 5, 6];
+function PackageCardItem({
+  pkg,
+  index,
+  layout = "rail",
+  badge,
+}: {
+  pkg: Package;
+  index: number;
+  layout?: "rail" | "grid";
+  badge?: string;
+}) {
+  const price = tripPrice(pkg.priceRange);
+  return (
+    <DiscoveryProductCard
+      href={`/packages/${pkg.slug}`}
+      imageSrc={pkg.imageUrl}
+      imageAlt={`${pkg.name} package`}
+      title={pkg.name}
+      meta={`${pkg.category} · ${pkg.duration}`}
+      subtitle={pkg.problemSolved || pkg.description.slice(0, 90)}
+      priceLabel={price.onRequest ? "On request" : price.label}
+      primaryLabel="Package Details"
+      secondaryLabel="Enquire"
+      secondaryHref={whatsappLink(
+        `Hi TrekRoots! I'd like to enquire about ${pkg.name}.`,
+      )}
+      badge={badge}
+      ocid={`packages.card.${pkg.slug}`}
+      priority={index < 2}
+      layout={layout}
+    />
+  );
+}
 
 export default function PackagesPage() {
   const packages = getAllPackages();
-  const isLoading = false;
-  const [activeCategory, setActiveCategory] = useState<string>("All");
-  const [sortBy, setSortBy] = useState<string>("popularity");
-  const [showSort, setShowSort] = useState(false);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+  const [durationKey, setDurationKey] = useState("All");
+
+  const categories = useMemo(
+    () => [...new Set(packages.map((p) => p.category))].sort(),
+    [packages],
+  );
+
+  const durationDays = (duration: string) => {
+    const m = duration.match(/(\d+)/);
+    return m ? Number.parseInt(m[1], 10) : 0;
+  };
 
   const filtered = useMemo(() => {
-    let list = [...packages];
-    if (activeCategory !== "All") {
+    let list = packages;
+    if (category !== "All")
       list = list.filter(
-        (p) => p.category.toLowerCase() === activeCategory.toLowerCase(),
+        (p) => p.category.toLowerCase() === category.toLowerCase(),
+      );
+    if (durationKey === "short")
+      list = list.filter((p) => durationDays(p.duration) <= 5);
+    if (durationKey === "week")
+      list = list.filter((p) => {
+        const d = durationDays(p.duration);
+        return d >= 6 && d <= 8;
+      });
+    if (durationKey === "long")
+      list = list.filter((p) => durationDays(p.duration) >= 9);
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.category.toLowerCase().includes(q) ||
+          p.description.toLowerCase().includes(q),
       );
     }
-    switch (sortBy) {
-      case "price-asc":
-        list.sort(
-          (a, b) => Number(a.priceRange.minINR) - Number(b.priceRange.minINR),
-        );
-        break;
-      case "price-desc":
-        list.sort(
-          (a, b) => Number(b.priceRange.minINR) - Number(a.priceRange.minINR),
-        );
-        break;
-      case "duration": {
-        const dur = (d: string) => {
-          const m = d.match(/(\d+)/);
-          return m ? Number.parseInt(m[1]) : 0;
-        };
-        list.sort((a, b) => dur(a.duration) - dur(b.duration));
-        break;
-      }
-      default:
-        break;
-    }
     return list;
-  }, [packages, activeCategory, sortBy]);
+  }, [packages, category, durationKey, search]);
+
+  const hasActiveFilters =
+    category !== "All" ||
+    durationKey !== "All" ||
+    search.trim().length > 0;
+
+  const clearFilters = () => {
+    setCategory("All");
+    setDurationKey("All");
+    setSearch("");
+  };
+
+  const sidebarGroups: SidebarGroup[] = [
+    {
+      title: "Explore By Region",
+      items: [
+        {
+          label: "All packages",
+          active: category === "All" && !hasActiveFilters,
+          onClick: clearFilters,
+          count: packages.length,
+        },
+        ...categories.map((c) => ({
+          label: c,
+          active: category === c,
+          onClick: () => setCategory(c),
+          count: packages.filter((p) => p.category === c).length,
+        })),
+      ],
+    },
+    {
+      title: "By Duration",
+      items: [
+        {
+          label: "Short (≤ 5 nights)",
+          active: durationKey === "short",
+          onClick: () => setDurationKey("short"),
+          count: packages.filter((p) => durationDays(p.duration) <= 5).length,
+        },
+        {
+          label: "A week (6–8 nights)",
+          active: durationKey === "week",
+          onClick: () => setDurationKey("week"),
+          count: packages.filter((p) => {
+            const d = durationDays(p.duration);
+            return d >= 6 && d <= 8;
+          }).length,
+        },
+        {
+          label: "Long (9+ nights)",
+          active: durationKey === "long",
+          onClick: () => setDurationKey("long"),
+          count: packages.filter((p) => durationDays(p.duration) >= 9).length,
+        },
+      ],
+    },
+  ];
+
+  const byCat = (name: string) =>
+    packages.filter((p) => p.category.toLowerCase() === name.toLowerCase());
+
+  const ladakh = byCat("Ladakh");
+  const spiti = byCat("Spiti");
+  const himachal = byCat("Himachal");
+  const kerala = byCat("Kerala");
+  const uttarakhand = byCat("Uttarakhand");
+
+  const categoryStrip = categories.map((c) => {
+    const sample = packages.find((p) => p.category === c)!;
+    return {
+      label: c,
+      href: `/packages`,
+      imageSrc: sample.imageUrl,
+      imageAlt: `${c} packages`,
+      // We'll handle click via filter — use hash-less and set on click in strip
+    };
+  });
+
+  // Make category strip set filter instead of dead links — override with interactive strip below
+  const themeTiles = [
+    {
+      title: "Ladakh Adventures",
+      onClick: () => setCategory("Ladakh"),
+      imageSrc: ladakh[0]?.imageUrl ?? packages[0]?.imageUrl ?? "",
+      imageAlt: "Ladakh",
+      caption: "Bike trips across high passes",
+    },
+    {
+      title: "Spiti Circuits",
+      onClick: () => setCategory("Spiti"),
+      imageSrc: spiti[0]?.imageUrl ?? packages[0]?.imageUrl ?? "",
+      imageAlt: "Spiti",
+      caption: "Cold desert monasteries & valleys",
+    },
+    {
+      title: "Himachal Escapes",
+      onClick: () => setCategory("Himachal"),
+      imageSrc: himachal[0]?.imageUrl ?? packages[0]?.imageUrl ?? "",
+      imageAlt: "Himachal",
+      caption: "Kasol, Manali, Bir & beyond",
+    },
+  ].filter((t) => t.imageSrc);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero */}
-      <section className="relative bg-muted/30 border-b border-border">
-        <div className="container mx-auto px-4 py-16 md:py-24">
-          <Breadcrumbs
-            className="mb-4 justify-center"
-            items={[
-              { name: "Home", path: "/" },
-              { name: "Packages", path: "/packages" },
-            ]}
-          />
-          <SectionHeader
-            as="h1"
-            label="Curated Himalayan Packages"
-            title="Curated Himalayan Packages"
-            subtitle="Every detail handled. Every memory earned."
-            centered
-          />
-        </div>
-      </section>
+    <div>
+      <DiscoverySearchBanner
+        title="Looking for a curated package?"
+        placeholder="Search Spiti, Ladakh, Kerala, Himachal…"
+        value={search}
+        onChange={setSearch}
+        ocid="packages.search"
+      />
 
-      {/* Filters & Sort */}
-      <section className="detail-section-nav bg-card/95 backdrop-blur-sm border-b border-border">
-        <div className="container mx-auto px-4 py-2.5 md:py-3">
-          <div className="flex items-center gap-2 md:gap-3 overflow-x-auto hide-scrollbar">
-            <SlidersHorizontal
-              size={16}
-              className="text-muted-foreground shrink-0"
-            />
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                data-ocid={`package.filter.${cat.toLowerCase()}`}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-3 py-1.5 rounded-full text-xs font-body font-medium whitespace-nowrap transition-colors ${
-                  activeCategory === cat
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-            <div className="ml-auto relative shrink-0">
-              <button
-                type="button"
-                data-ocid="package.sort_toggle"
-                onClick={() => setShowSort((v) => !v)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-body font-medium bg-muted text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <ArrowUpDown size={13} />
-                {SORT_OPTIONS.find((s) => s.value === sortBy)?.label}
-              </button>
-              {showSort && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-card border border-border rounded-lg shadow-lg z-40 py-1">
-                  {SORT_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() => {
-                        setSortBy(opt.value);
-                        setShowSort(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 text-xs font-body transition-colors ${
-                        sortBy === opt.value
-                          ? "text-primary bg-primary/8"
-                          : "text-foreground hover:bg-muted"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Grid */}
-      <section className="container mx-auto px-4 py-10">
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SKELETON_PACKAGES.map((n) => (
-              <div
-                key={n}
-                className="rounded-xl overflow-hidden border border-border bg-card"
-              >
-                <div className="h-52 bg-muted animate-pulse" />
-                <div className="p-4 space-y-3">
-                  <div className="h-4 bg-muted rounded animate-pulse w-1/3" />
-                  <div className="h-5 bg-muted rounded animate-pulse w-3/4" />
-                  <div className="h-3 bg-muted rounded animate-pulse w-full" />
-                  <div className="flex justify-between">
-                    <div className="h-3 bg-muted rounded animate-pulse w-1/4" />
-                    <div className="h-3 bg-muted rounded animate-pulse w-1/4" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-muted-foreground font-body text-lg">
-              No packages found in this category.
+      <DiscoveryShell
+        ocid="packages.shell"
+        sidebar={
+          <DiscoverySidebar
+            groups={sidebarGroups}
+            hasActiveFilters={hasActiveFilters}
+            onClear={clearFilters}
+            ocid="packages.sidebar"
+          />
+        }
+      >
+        {hasActiveFilters ? (
+          <section className="pb-8 pt-2">
+            <h2 className="mb-1 font-display text-xl font-bold text-[#06281E] md:text-2xl">
+              Matching packages
+            </h2>
+            <p className="mb-5 font-body text-sm text-[#5A6B62]">
+              Showing {filtered.length} package
+              {filtered.length === 1 ? "" : "s"}
             </p>
-            <button
-              type="button"
-              onClick={() => setActiveCategory("All")}
-              className="mt-4 px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-body font-medium"
-            >
-              View All Packages
-            </button>
-          </div>
+            {filtered.length === 0 ? (
+              <div className="rounded-xl border border-[#E8E4D4] bg-[#FFFBEB] px-6 py-16 text-center">
+                <p className="font-display text-lg font-bold text-[#06281E]">
+                  No packages match
+                </p>
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="mt-5 rounded-full px-5 py-2.5 font-body text-xs font-bold"
+                  style={{ background: "#FFC107" }}
+                >
+                  Clear filters
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {filtered.map((p, i) => (
+                  <PackageCardItem
+                    key={p.slug}
+                    pkg={p}
+                    index={i}
+                    layout="grid"
+                  />
+                ))}
+              </div>
+            )}
+          </section>
         ) : (
           <>
-            <p className="text-xs text-muted-foreground font-body mb-4">
-              {filtered.length} package{filtered.length !== 1 ? "s" : ""} found
-            </p>
-            <div
-              key={activeCategory}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            <section className="pb-2 pt-2 md:pt-4">
+              <h2 className="mb-5 font-display text-xl font-bold text-[#06281E] md:mb-6 md:text-2xl">
+                Explore Our Top Categories
+              </h2>
+              <div className="flex gap-5 overflow-x-auto hide-scrollbar pb-2 sm:gap-6">
+                {categoryStrip.map((item, i) => (
+                  <button
+                    key={item.label}
+                    type="button"
+                    onClick={() => setCategory(item.label)}
+                    data-ocid={`packages.categories.${i + 1}`}
+                    className="group flex w-[88px] shrink-0 flex-col items-center gap-2.5 sm:w-[100px]"
+                  >
+                    <span
+                      className="relative block h-[72px] w-[72px] overflow-hidden rounded-full border-2 border-[#FFC107] shadow-sm transition-transform group-hover:scale-105 sm:h-[88px] sm:w-[88px]"
+                    >
+                      <CloudinaryImage
+                        src={item.imageSrc}
+                        alt={item.imageAlt}
+                        width={176}
+                        height={176}
+                        sizes="88px"
+                        className="h-full w-full object-cover"
+                        transform={{
+                          width: 176,
+                          height: 176,
+                          crop: "fill",
+                          gravity: "auto",
+                        }}
+                      />
+                    </span>
+                    <span className="text-center font-body text-[11px] font-semibold leading-tight text-[#1A1A1A] sm:text-[12px]">
+                      {item.label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </section>
+
+            <DiscoveryRail
+              title="Curated Himalayan Packages"
+              aside="Stays, transfers and day plans handled — every detail earned on the road."
+              ocid="packages.rail.all"
             >
-              {filtered.map((pkg, i) => (
-                <PackageCard key={String(pkg.id)} pkg={pkg} index={i} />
+              {packages.slice(0, 8).map((p, i) => (
+                <PackageCardItem
+                  key={p.slug}
+                  pkg={p}
+                  index={i}
+                  badge={i === 0 ? "Popular" : undefined}
+                />
               ))}
+            </DiscoveryRail>
+
+            {ladakh.length > 0 ? (
+              <DiscoveryRail
+                title="Ladakh Bike & Road Trips"
+                aside="High passes, monastic valleys and the classic Leh loops."
+                ocid="packages.rail.ladakh"
+              >
+                {ladakh.map((p, i) => (
+                  <PackageCardItem key={p.slug} pkg={p} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            {spiti.length > 0 ? (
+              <DiscoveryRail
+                title="Spiti Valley Circuits"
+                aside="Cold-desert monasteries, fossil villages and sky-high roads."
+                ocid="packages.rail.spiti"
+              >
+                {spiti.map((p, i) => (
+                  <PackageCardItem key={p.slug} pkg={p} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            {himachal.length > 0 ? (
+              <DiscoveryRail
+                title="Best of Himachal"
+                aside="Kasol, Manali, Bir, McLeodganj — mountain towns linked into one trip."
+                ocid="packages.rail.himachal"
+              >
+                {himachal.map((p, i) => (
+                  <PackageCardItem key={p.slug} pkg={p} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            {uttarakhand.length > 0 ? (
+              <DiscoveryRail
+                title="Uttarakhand Highlights"
+                aside="The best of Devbhoomi in one curated circuit."
+                ocid="packages.rail.uk"
+              >
+                {uttarakhand.map((p, i) => (
+                  <PackageCardItem key={p.slug} pkg={p} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            {kerala.length > 0 ? (
+              <DiscoveryRail
+                title="Kerala Getaways"
+                aside="Backwaters, hills and coast — when you want green after the high mountains."
+                ocid="packages.rail.kerala"
+              >
+                {kerala.map((p, i) => (
+                  <PackageCardItem key={p.slug} pkg={p} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            <DiscoveryThemeTiles
+              title="Trip Themes"
+              aside="Pick a region — we handle the rest."
+              tiles={themeTiles}
+              ocid="packages.themes"
+            />
+
+            <div className="pb-10 pt-4">
+              <DiscoveryWhyUs
+                title="Why Travellers Book Packages With Us"
+                items={[
+                  {
+                    icon: Map,
+                    title: "Logistics, done",
+                    body: "Stays, transfers and day sequencing planned so you travel — not troubleshoot.",
+                  },
+                  {
+                    icon: Compass,
+                    title: "Routes we actually run",
+                    body: "Spiti, Ladakh, Himachal and Kerala circuits refined across many departures.",
+                  },
+                  {
+                    icon: Wallet,
+                    title: "Clear pricing",
+                    body: "Transparent inclusions and WhatsApp quotes — no surprise add-ons on the road.",
+                  },
+                  {
+                    icon: Users,
+                    title: "Groups & private",
+                    body: "Join a departure or ask us to craft a private itinerary for your dates.",
+                  },
+                  {
+                    icon: Sparkles,
+                    title: "Mix with treks & stays",
+                    body: "Add a Himalayan trek or our homestays to turn a package into a fuller journey.",
+                  },
+                  {
+                    icon: HeartHandshake,
+                    title: "Human support",
+                    body: "Real mountain experts on WhatsApp before you leave and while you are on the road.",
+                  },
+                ]}
+                ocid="packages.why"
+              />
             </div>
           </>
         )}
-      </section>
+      </DiscoveryShell>
     </div>
   );
 }
