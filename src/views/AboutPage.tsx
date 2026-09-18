@@ -1,82 +1,218 @@
 "use client";
 
 import Link from "next/link";
-import { Award, Heart, Mountain, Shield, Star, Users } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowRight,
+  Award,
+  Building2,
+  Compass,
+  HeartHandshake,
+  Home,
+  Leaf,
+  MapPin,
+  Mountain,
+  Phone,
+  Shield,
+  Sparkles,
+  Users,
+} from "lucide-react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import {
+  CONTACT_EMAIL,
+  CONTACT_EMAIL_HREF,
+  PHONE_DISPLAY,
+  PHONE_HREF,
+  whatsappLink,
+} from "@/data/contact";
+
+const INK = "#0B3D2E";
+const INK_DEEP = "#06281E";
+const GOLD = "#FFC107";
+const CREAM = "#FFFBEB";
 
 const STATS = [
-  { value: "10,000+", label: "Happy Travellers", icon: Users },
-  { value: "50+", label: "Curated Treks", icon: Mountain },
-  { value: "12+", label: "Sacred Yatras", icon: Star },
-  { value: "6", label: "Owned Properties", icon: Heart },
-];
+  { value: "10,000+", label: "Travellers guided" },
+  { value: "50+", label: "Himalayan treks" },
+  { value: "12+", label: "Sacred yatras" },
+  { value: "6", label: "Owned stays" },
+  { value: "4.9/5", label: "Google rating" },
+  { value: "2018", label: "Operating since" },
+] as const;
 
-const VALUES = [
+const TIMELINE = [
+  {
+    year: "2018",
+    title: "TrekRoots begins in Dehradun",
+    body: "A small mountain desk opens with a simple promise — honest itineraries, local guides, and departures we would send our own family on.",
+  },
+  {
+    year: "2019–21",
+    title: "Routes deepen across Garhwal",
+    body: "Kedarkantha, Brahmatal, Har Ki Dun and Chopta–Tungnath become flagship winter and shoulder-season batches. We start owning base stays so the night before a trek is never left to chance.",
+  },
+  {
+    year: "2022–23",
+    title: "Yatras & Himachal join the map",
+    body: "Char Dham, Kedarnath and Adi Kailash circuits run with permit support. Hampta Pass and Sar Pass extend the catalogue into Himachal.",
+  },
+  {
+    year: "2024–26",
+    title: "Full Himalayan desk",
+    body: "Treks, yatras, curated packages and six mountain stays under one WhatsApp-first planning team — still based in Dehradun, still walking the routes we sell.",
+  },
+] as const;
+
+const ORG_NODES = [
+  {
+    title: "Founder's Desk",
+    body: "Vision, safety standards and the final call on which routes we run each season.",
+  },
+  {
+    title: "Trek Operations",
+    body: "Leaders, porters, permits, equipment and on-trail logistics for every batch.",
+  },
+  {
+    title: "Yatra Concierge",
+    body: "Temple timings, registration help, helicopter windows and pilgrim pacing.",
+  },
+  {
+    title: "Stays & Homestays",
+    body: "Owned and partner properties at Sankri, Chopta, Auli, Lohajung and beyond.",
+  },
+  {
+    title: "Packages & Road Trips",
+    body: "Spiti, Ladakh, Himachal and Kerala circuits with stays and transfers sequenced.",
+  },
+  {
+    title: "Guest Care",
+    body: "WhatsApp planning, packing lists, fitness guidance and post-trip follow-up.",
+  },
+] as const;
+
+const JOURNEY_STEPS = [
+  {
+    step: "01",
+    title: "Enquire",
+    body: "Tell us your dates, fitness and dream route on WhatsApp or the enquiry form.",
+  },
+  {
+    step: "02",
+    title: "Match",
+    body: "We recommend a trek, yatra, package or stay — or a blend — with honest altitude and difficulty.",
+  },
+  {
+    step: "03",
+    title: "Prepare",
+    body: "Packing list, fitness plan, permits and pickup points land in your chat before you leave home.",
+  },
+  {
+    step: "04",
+    title: "Travel",
+    body: "Meet your leader at the trailhead or base stay. Small batches. Clear turn-back rules.",
+  },
+  {
+    step: "05",
+    title: "Summit & return",
+    body: "Summit when the mountain allows. We carry trash down. You leave with the story — and a team that still answers after you get home.",
+  },
+] as const;
+
+const PILLARS = [
   {
     icon: Mountain,
-    title: "Expert Guides",
-    description:
-      "Certified, local guides with 10+ years of high-altitude experience on every trek and yatra.",
+    title: "Expert leaders on every trail",
+    body: "Certified guides who have walked that route in that season — not a leader hired for the week.",
   },
   {
     icon: Shield,
-    title: "Safety First",
-    description:
-      "First-aid trained staff, emergency protocols, oxygen cylinders, and satellite phones on all high-altitude expeditions.",
+    title: "Safety before the booking",
+    body: "First-aid trained staff, oxygen where altitude demands it, and conservative weather calls. We cancel rather than gamble.",
   },
   {
-    icon: Heart,
-    title: "Owned Accommodations",
-    description:
-      "We personally manage every homestay and boutique hotel — no middlemen, no compromises on quality.",
-  },
-  {
-    icon: Award,
-    title: "Verified Itineraries",
-    description:
-      "All routes based on official forest department and IMF data, updated every season for accuracy and safety.",
+    icon: Home,
+    title: "Owned mountain stays",
+    body: "Homestays and cottages we run ourselves at key base villages — so the night before your trek is part of the product.",
   },
   {
     icon: Users,
-    title: "Community First",
-    description:
-      "We partner with local communities, employ village guides, and source food from local farmers across Uttarakhand.",
+    title: "Hired from the trailhead",
+    body: "Guides, cooks and porters from the villages where your trek starts. Money stays in the mountains.",
   },
   {
-    icon: Star,
-    title: "Responsible Travel",
-    description:
-      "Zero-waste pledge on all treks. We carry out what we carry in — and train every trekker to do the same.",
+    icon: Leaf,
+    title: "Leave no trace",
+    body: "We carry our trash down, ban single-use plastic on trail, and rotate campsites so meadows recover.",
   },
-];
+  {
+    icon: HeartHandshake,
+    title: "WhatsApp-first planning",
+    body: "One conversation covers dates, inclusions and packing — from real mountain people, not a chatbot script.",
+  },
+] as const;
 
-const TEAM = [
+const OFFERINGS = [
   {
-    name: "Priya Sharma",
-    role: "Founder & Lead Guide",
-    bio: "Born in Dehradun with the Himalayas as her backyard, Priya has led 500+ trek expeditions across Uttarakhand and Himachal Pradesh over 15 years.",
-    emoji: "🧗‍♀️",
+    title: "Himalayan Treks",
+    href: "/treks",
+    body: "Winter summits, monsoon meadows and high passes across Uttarakhand, Himachal and the Sahyadris.",
+    cta: "Browse treks",
   },
   {
-    name: "Vikram Rawat",
-    role: "Head of Operations",
-    bio: "Former GMVN trek leader turned entrepreneur, Vikram manages all logistics, permits, and on-ground operations with military precision.",
-    emoji: "🧗‍♂️",
+    title: "Sacred Yatras",
+    href: "/yatra",
+    body: "Char Dham, Kedarnath, Do Dham and Adi Kailash — darshan windows, permits and pacing handled.",
+    cta: "Browse yatras",
   },
   {
-    name: "Ananya Bisht",
-    role: "Yatra Specialist",
-    bio: "A Char Dham veteran with deep knowledge of pilgrimage routes, temple timings, and the spiritual significance of every sacred site in Garhwal.",
-    emoji: "🙏",
+    title: "Curated Packages",
+    href: "/packages",
+    body: "Spiti, Ladakh, Himachal and Kerala circuits with stays and transfers already sequenced.",
+    cta: "Browse packages",
   },
-];
+  {
+    title: "Mountain Stays",
+    href: "/stays",
+    body: "Homestays, eco cottages and riverside camps at the villages where the trail begins.",
+    cta: "Browse stays",
+  },
+] as const;
+
+const TRUST = [
+  { label: "Uttarakhand Tourism registered" },
+  { label: "GMVN-aligned operations" },
+  { label: "4.9/5 from 800+ Google reviews" },
+  { label: "Eco-tourism committed" },
+] as const;
+
+function SectionLabel({ children }: { children: string }) {
+  return (
+    <p
+      className="mb-3 font-body text-[11px] font-bold uppercase tracking-[0.16em]"
+      style={{ color: INK }}
+    >
+      {children}
+    </p>
+  );
+}
 
 export default function AboutPage() {
   return (
-    <div className="bg-background min-h-screen">
+    <div className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="bg-sidebar py-20 px-4">
-        <div className="container mx-auto max-w-4xl text-center">
+      <section
+        className="relative overflow-hidden px-4 py-16 md:py-24"
+        style={{ background: INK_DEEP }}
+      >
+        <div
+          className="pointer-events-none absolute inset-0 opacity-40"
+          style={{
+            backgroundImage:
+              "radial-gradient(ellipse 70% 50% at 20% 80%, rgba(255,193,7,0.35), transparent 55%), radial-gradient(ellipse 40% 40% at 90% 10%, rgba(255,255,255,0.08), transparent 50%)",
+          }}
+          aria-hidden
+        />
+        <div className="relative mx-auto max-w-4xl text-center">
           <Breadcrumbs
             tone="dark"
             className="mb-6 justify-center"
@@ -85,104 +221,337 @@ export default function AboutPage() {
               { name: "About", path: "/about" },
             ]}
           />
-          <span className="inline-block text-xs font-semibold font-body tracking-widest text-accent/80 uppercase mb-4">
-            Est. 2010 · Dehradun, Uttarakhand
-          </span>
-          <h1 className="font-display text-5xl md:text-6xl font-bold italic text-sidebar-foreground mb-6 leading-tight">
-            Born in the Mountains,
-            <br />
-            Built for the Mountains
-          </h1>
-          <p className="text-sidebar-foreground/75 font-body text-lg leading-relaxed max-w-2xl mx-auto">
-            TrekRoots is Uttarakhand's most trusted Himalayan travel
-            company. We are the only operator with owned homestays and hotels in
-            Uttarakhand — covering every major trek, yatra, and package with
-            unmatched local expertise.
+          <p className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.18em] text-[#FFD54F]">
+            Est. 2018 · Dehradun, Uttarakhand
           </p>
+          <h1 className="mb-5 font-display text-4xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">
+            Born in the mountains.
+            <br />
+            Built for the mountains.
+          </h1>
+          <p className="mx-auto max-w-2xl font-body text-base leading-relaxed text-white/80 md:text-lg">
+            TrekRoots is a Dehradun-based Himalayan travel desk — treks, sacred
+            yatras, curated packages and owned mountain stays — run by people who
+            walk the routes they sell.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href={whatsappLink(
+                "Hi TrekRoots! I'd like to know more about planning a trip with you.",
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-ocid="about.hero_whatsapp"
+              className="inline-flex items-center gap-2 rounded-md px-5 py-2.5 font-body text-sm font-bold text-[#1A1A1A]"
+              style={{ background: GOLD }}
+            >
+              Plan on WhatsApp
+              <ArrowRight size={15} />
+            </a>
+            <Link
+              href="/treks"
+              data-ocid="about.hero_treks"
+              className="inline-flex items-center gap-2 rounded-md border border-white/35 px-5 py-2.5 font-body text-sm font-semibold text-white hover:bg-white/10"
+            >
+              Explore treks
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Stats */}
-      <section className="bg-card border-b border-border py-12 px-4">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {STATS.map(({ value, label, icon: Icon }) => (
-              <div key={label} className="text-center">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
-                  <Icon size={22} />
+      <section
+        className="border-b px-4 py-10"
+        style={{ borderColor: "#E8E4D4", background: CREAM }}
+      >
+        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-6">
+          {STATS.map((stat) => (
+            <div key={stat.label} className="text-center">
+              <p
+                className="font-display text-2xl font-bold md:text-3xl"
+                style={{ color: INK_DEEP }}
+              >
+                {stat.value}
+              </p>
+              <p className="mt-1 font-body text-xs text-[#5A6B62]">
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Story */}
+      <section className="px-4 py-16 md:py-20">
+        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start lg:gap-16">
+          <div>
+            <SectionLabel>Our story</SectionLabel>
+            <h2
+              className="font-display text-3xl font-bold leading-tight md:text-4xl"
+              style={{ color: INK_DEEP }}
+            >
+              A mountain desk that grew into a full Himalayan company
+            </h2>
+          </div>
+          <div className="space-y-4 font-body text-[15px] leading-relaxed text-[#3D4F46]">
+            <p>
+              TrekRoots started in 2018 from Dehradun with a narrow brief: run
+              Himalayan trips the way we would want them for ourselves — clear
+              pricing, local leaders, and no surprises at basecamp.
+            </p>
+            <p>
+              We built our own stays in places like Sankri, Chopta, Munsiyari,
+              Auli, Lohajung and Rishikesh because where you sleep the night
+              before a summit shapes the entire journey. Today the same desk
+              plans treks, Char Dham–class yatras, road packages and homestays
+              under one standard of care.
+            </p>
+            <p>
+              Every itinerary we publish is walked by our own people. Altitudes
+              and seasons are checked against what the trail is actually doing —
+              not a brochure written five years ago.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Timeline */}
+      <section className="px-4 py-16 md:py-20" style={{ background: CREAM }}>
+        <div className="mx-auto max-w-6xl">
+          <SectionLabel>Milestones</SectionLabel>
+          <h2
+            className="mb-10 font-display text-3xl font-bold md:text-4xl"
+            style={{ color: INK_DEEP }}
+          >
+            How TrekRoots grew
+          </h2>
+          <ol className="relative space-y-0 border-l-2 pl-8 md:pl-10" style={{ borderColor: INK }}>
+            {TIMELINE.map((item) => (
+              <li key={item.year} className="relative pb-10 last:pb-0">
+                <span
+                  className="absolute -left-[41px] top-1 flex h-5 w-5 items-center justify-center rounded-full border-2 bg-white md:-left-[49px]"
+                  style={{ borderColor: INK }}
+                >
+                  <span
+                    className="h-2 w-2 rounded-full"
+                    style={{ background: GOLD }}
+                  />
+                </span>
+                <p
+                  className="mb-1 font-body text-xs font-bold uppercase tracking-wider"
+                  style={{ color: INK }}
+                >
+                  {item.year}
+                </p>
+                <h3
+                  className="mb-2 font-display text-xl font-bold"
+                  style={{ color: INK_DEEP }}
+                >
+                  {item.title}
+                </h3>
+                <p className="max-w-2xl font-body text-sm leading-relaxed text-[#5A6B62]">
+                  {item.body}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* Company flowchart */}
+      <section className="px-4 py-16 md:py-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-10 max-w-2xl">
+            <SectionLabel>Company structure</SectionLabel>
+            <h2
+              className="font-display text-3xl font-bold md:text-4xl"
+              style={{ color: INK_DEEP }}
+            >
+              How TrekRoots is organised
+            </h2>
+            <p className="mt-3 font-body text-sm leading-relaxed text-[#5A6B62]">
+              One Dehradun HQ. Six desks that hand off cleanly — so your enquiry
+              never gets lost between &ldquo;trek guy&rdquo; and &ldquo;hotel
+              guy.&rdquo;
+            </p>
+          </div>
+
+          {/* Flowchart */}
+          <div className="flex flex-col items-center">
+            <div
+              className="w-full max-w-md rounded-xl border-2 px-6 py-5 text-center shadow-sm"
+              style={{ borderColor: INK, background: CREAM }}
+            >
+              <Building2
+                size={22}
+                className="mx-auto mb-2"
+                style={{ color: INK }}
+              />
+              <p
+                className="font-display text-lg font-bold"
+                style={{ color: INK_DEEP }}
+              >
+                TrekRoots HQ · Dehradun
+              </p>
+              <p className="mt-1 font-body text-xs text-[#5A6B62]">
+                Strategy · Safety standards · Season planning
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center py-2" aria-hidden>
+              <ArrowDown size={18} style={{ color: INK }} />
+              <div className="h-4 w-px" style={{ background: INK }} />
+            </div>
+
+            <div
+              className="mb-3 rounded-full px-4 py-1.5 font-body text-[11px] font-bold uppercase tracking-wider text-[#1A1A1A]"
+              style={{ background: GOLD }}
+            >
+              Operations desks
+            </div>
+
+            <div className="hidden w-full max-w-4xl items-center md:flex" aria-hidden>
+              <div className="h-px flex-1" style={{ background: INK }} />
+            </div>
+
+            <div className="mt-4 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {ORG_NODES.map((node) => (
+                <div
+                  key={node.title}
+                  className="relative rounded-xl border bg-white p-5 shadow-sm"
+                  style={{ borderColor: "#E8E4D4" }}
+                >
+                  <div
+                    className="absolute -top-3 left-1/2 hidden h-3 w-px -translate-x-1/2 md:block"
+                    style={{ background: INK }}
+                    aria-hidden
+                  />
+                  <h3
+                    className="mb-2 font-body text-sm font-bold"
+                    style={{ color: INK_DEEP }}
+                  >
+                    {node.title}
+                  </h3>
+                  <p className="font-body text-[12.5px] leading-relaxed text-[#5A6B62]">
+                    {node.body}
+                  </p>
                 </div>
-                <p className="font-mono text-3xl font-bold text-primary mb-1">
-                  {value}
-                </p>
-                <p className="text-sm text-muted-foreground font-body">
-                  {label}
-                </p>
+              ))}
+            </div>
+
+            <div className="flex flex-col items-center py-4" aria-hidden>
+              <div className="h-4 w-px" style={{ background: INK }} />
+              <ArrowDown size={18} style={{ color: INK }} />
+            </div>
+
+            <div
+              className="w-full max-w-lg rounded-xl border-2 px-6 py-5 text-center"
+              style={{ borderColor: GOLD, background: "#FFF8E1" }}
+            >
+              <Users
+                size={20}
+                className="mx-auto mb-2"
+                style={{ color: INK }}
+              />
+              <p
+                className="font-display text-base font-bold"
+                style={{ color: INK_DEEP }}
+              >
+                You — the trekker / pilgrim / guest
+              </p>
+              <p className="mt-1 font-body text-xs text-[#5A6B62]">
+                One WhatsApp thread. One standard of care from enquiry to
+                homecoming.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Journey flow */}
+      <section className="px-4 py-16 md:py-20" style={{ background: CREAM }}>
+        <div className="mx-auto max-w-6xl">
+          <SectionLabel>How a trip works</SectionLabel>
+          <h2
+            className="mb-3 font-display text-3xl font-bold md:text-4xl"
+            style={{ color: INK_DEEP }}
+          >
+            From first message to summit morning
+          </h2>
+          <p className="mb-10 max-w-2xl font-body text-sm text-[#5A6B62]">
+            A clear path — no opaque &ldquo;we&apos;ll get back to you&rdquo;
+            loops.
+          </p>
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-5 md:gap-3">
+            {JOURNEY_STEPS.map((item, i) => (
+              <div key={item.step} className="relative">
+                <div
+                  className="h-full rounded-xl border bg-white p-4 shadow-sm"
+                  style={{ borderColor: "#E8E4D4" }}
+                >
+                  <p
+                    className="mb-2 font-mono text-xs font-bold"
+                    style={{ color: INK }}
+                  >
+                    {item.step}
+                  </p>
+                  <h3
+                    className="mb-2 font-body text-sm font-bold"
+                    style={{ color: INK_DEEP }}
+                  >
+                    {item.title}
+                  </h3>
+                  <p className="font-body text-[12px] leading-relaxed text-[#5A6B62]">
+                    {item.body}
+                  </p>
+                </div>
+                {i < JOURNEY_STEPS.length - 1 ? (
+                  <ArrowRight
+                    size={16}
+                    className="absolute -right-2.5 top-1/2 z-10 hidden -translate-y-1/2 text-[#0B3D2E] md:block"
+                    aria-hidden
+                  />
+                ) : null}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Our Story */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto max-w-3xl">
-          <span className="inline-block text-xs font-semibold tracking-widest text-accent uppercase font-body mb-3">
-            Our Story
-          </span>
-          <h2 className="font-display text-4xl font-bold text-foreground mb-6">
-            A Family's Passion, A Nation's Mountains
-          </h2>
-          <div className="space-y-4 text-muted-foreground font-body leading-relaxed">
-            <p>
-              What started as Priya Sharma leading weekend treks for college
-              friends in 2010 has grown into Uttarakhand's most trusted
-              Himalayan travel company. Over 15 years, we've guided 10,000+
-              travellers to some of the world's most spectacular high-altitude
-              terrain.
-            </p>
-            <p>
-              Unlike tour operators who outsource everything, we built our own
-              homestays in Sankri, Chopta, Munsiyari, Auli, Lohajung, and
-              Rishikesh — because we believe where you sleep shapes the entire
-              journey. Our properties are run by local families who've lived in
-              these mountains for generations.
-            </p>
-            <p>
-              Every itinerary we publish is walked by our own guides. Every
-              altitude figure is cross-checked against IMF data. Every campsite
-              is scouted in advance. We don't sell trips — we craft experiences
-              that stay with you forever.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Values */}
-      <section className="bg-muted/30 py-16 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="font-display text-4xl font-bold text-foreground">
-              What We Stand For
+      {/* Pillars */}
+      <section className="px-4 py-16 md:py-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-10 text-center">
+            <SectionLabel>What we stand for</SectionLabel>
+            <h2
+              className="font-display text-3xl font-bold md:text-4xl"
+              style={{ color: INK_DEEP }}
+            >
+              Six principles on every departure
             </h2>
-            <p className="text-muted-foreground font-body mt-3 max-w-xl mx-auto">
-              Six principles that guide every trek, every yatra, and every stay
-              we offer.
-            </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {VALUES.map(({ icon: Icon, title, description }) => (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {PILLARS.map(({ icon: Icon, title, body }) => (
               <div
                 key={title}
-                className="bg-card rounded-lg p-6 border border-border hover:border-primary/40 hover:shadow-md transition-smooth"
+                className="rounded-xl border bg-white p-6 shadow-sm"
+                style={{ borderColor: "#E8E4D4" }}
               >
-                <div className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary/10 text-primary mb-4">
-                  <Icon size={20} />
+                <div
+                  className="mb-4 flex h-11 w-11 items-center justify-center rounded-full"
+                  style={{ background: "rgba(255,193,7,0.35)" }}
+                >
+                  <Icon size={20} style={{ color: INK }} />
                 </div>
-                <h3 className="font-display text-lg font-semibold text-foreground mb-2">
+                <h3
+                  className="mb-2 font-body text-base font-bold"
+                  style={{ color: INK_DEEP }}
+                >
                   {title}
                 </h3>
-                <p className="text-sm text-muted-foreground font-body leading-relaxed">
-                  {description}
+                <p className="font-body text-sm leading-relaxed text-[#5A6B62]">
+                  {body}
                 </p>
               </div>
             ))}
@@ -190,86 +559,186 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Team */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="font-display text-4xl font-bold text-foreground">
-              Meet the TrekRoots Team
-            </h2>
-            <p className="text-muted-foreground font-body mt-3">
-              Local experts. Mountain lovers. Your hosts.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {TEAM.map(({ name, role, bio, emoji }) => (
-              <div key={name} className="text-center">
-                <div className="w-20 h-20 rounded-full bg-primary/10 text-4xl flex items-center justify-center mx-auto mb-4">
-                  {emoji}
-                </div>
-                <h3 className="font-display text-xl font-semibold text-foreground">
-                  {name}
-                </h3>
-                <p className="text-sm text-accent font-body font-medium mb-3">
-                  {role}
-                </p>
-                <p className="text-sm text-muted-foreground font-body leading-relaxed">
-                  {bio}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Certifications */}
-      <section className="bg-card border-t border-border py-12 px-4">
-        <div className="container mx-auto max-w-3xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { emoji: "🏔️", label: "Uttarakhand Tourism Registered" },
-              { emoji: "⛰️", label: "IMF Affiliated" },
-              { emoji: "⭐", label: "Google Rating 4.9 / 5" },
-              { emoji: "🛡️", label: "Trusted Himalayan Experts" },
-            ].map(({ emoji, label }) => (
-              <div
-                key={label}
-                className="flex flex-col items-center gap-2 py-4 px-3 rounded-lg bg-muted/50 text-center"
+      {/* Offerings */}
+      <section className="px-4 py-16 md:py-20" style={{ background: INK_DEEP }}>
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-3 font-body text-[11px] font-bold uppercase tracking-[0.16em] text-[#FFD54F]">
+            What we run
+          </p>
+          <h2 className="mb-10 font-display text-3xl font-bold text-white md:text-4xl">
+            Four ways to travel with TrekRoots
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {OFFERINGS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                data-ocid={`about.offer.${item.href.slice(1)}`}
+                className="group rounded-xl border border-white/15 bg-white/5 p-6 transition-colors hover:border-[#FFC107]/50 hover:bg-white/10"
               >
-                <span className="text-2xl">{emoji}</span>
-                <span className="text-xs font-body text-muted-foreground leading-tight">
-                  {label}
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <h3 className="font-display text-xl font-bold text-white">
+                    {item.title}
+                  </h3>
+                  <Compass
+                    size={18}
+                    className="text-[#FFD54F] opacity-70 transition-opacity group-hover:opacity-100"
+                  />
+                </div>
+                <p className="mb-4 font-body text-sm leading-relaxed text-white/70">
+                  {item.body}
+                </p>
+                <span className="inline-flex items-center gap-1.5 font-body text-xs font-bold text-[#FFC107]">
+                  {item.cta}
+                  <ArrowRight size={13} />
                 </span>
-              </div>
+              </Link>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Safety + base */}
+      <section className="px-4 py-16 md:py-20">
+        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:gap-14">
+          <div>
+            <SectionLabel>Safety & responsibility</SectionLabel>
+            <h2
+              className="mb-4 font-display text-3xl font-bold"
+              style={{ color: INK_DEEP }}
+            >
+              The mountain comes first
+            </h2>
+            <ul className="space-y-3 font-body text-sm leading-relaxed text-[#3D4F46]">
+              <li className="flex gap-3">
+                <Shield size={16} className="mt-0.5 shrink-0" style={{ color: INK }} />
+                Turn-back times on summit days — written down, not improvised.
+              </li>
+              <li className="flex gap-3">
+                <Award size={16} className="mt-0.5 shrink-0" style={{ color: INK }} />
+                Fitness guidance before you book; we move you to an easier trek
+                when the mountain is not right yet.
+              </li>
+              <li className="flex gap-3">
+                <Leaf size={16} className="mt-0.5 shrink-0" style={{ color: INK }} />
+                Trash carried down. No single-use plastic on trail. Campsites
+                rotated to protect meadows.
+              </li>
+              <li className="flex gap-3">
+                <Sparkles size={16} className="mt-0.5 shrink-0" style={{ color: INK }} />
+                Price you see covers stay, trail meals, permits and camping gear
+                — GST is the only checkout add-on.
+              </li>
+            </ul>
+          </div>
+          <div
+            className="rounded-2xl border p-6 md:p-8"
+            style={{ background: CREAM, borderColor: "#E8E4D4" }}
+          >
+            <SectionLabel>Home base</SectionLabel>
+            <h2
+              className="mb-4 font-display text-2xl font-bold"
+              style={{ color: INK_DEEP }}
+            >
+              Dehradun, Uttarakhand
+            </h2>
+            <p className="mb-6 font-body text-sm leading-relaxed text-[#5A6B62]">
+              Our planning desk sits where the Himalayas begin for most
+              travellers — close to Jolly Grant Airport and the roadheads that
+              feed Garhwal and beyond.
+            </p>
+            <div className="space-y-3 font-body text-sm text-[#1A1A1A]">
+              <p className="flex items-start gap-2">
+                <MapPin size={16} className="mt-0.5 shrink-0" style={{ color: INK }} />
+                Dehradun, Uttarakhand 248001
+              </p>
+              <a
+                href={PHONE_HREF}
+                className="flex items-center gap-2 hover:underline"
+              >
+                <Phone size={16} style={{ color: INK }} />
+                {PHONE_DISPLAY}
+              </a>
+              <a
+                href={CONTACT_EMAIL_HREF}
+                className="flex items-center gap-2 hover:underline"
+              >
+                <Sparkles size={16} style={{ color: INK }} />
+                {CONTACT_EMAIL}
+              </a>
+            </div>
+            <Link
+              href="/contact"
+              data-ocid="about.base_contact"
+              className="mt-6 inline-flex items-center gap-2 rounded-md px-4 py-2.5 font-body text-xs font-bold text-[#1A1A1A]"
+              style={{ background: GOLD }}
+            >
+              Contact the desk
+              <ArrowRight size={14} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust */}
+      <section
+        className="border-y px-4 py-12"
+        style={{ borderColor: "#E8E4D4", background: "#FAFAF7" }}
+      >
+        <div className="mx-auto grid max-w-4xl grid-cols-2 gap-4 md:grid-cols-4">
+          {TRUST.map((item) => (
+            <div
+              key={item.label}
+              className="rounded-lg border bg-white px-3 py-5 text-center"
+              style={{ borderColor: "#E8E4D4" }}
+            >
+              <Award
+                size={18}
+                className="mx-auto mb-2"
+                style={{ color: INK }}
+              />
+              <p className="font-body text-[11px] font-semibold leading-snug text-[#3D4F46]">
+                {item.label}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* CTA */}
-      <section className="bg-primary py-16 px-4">
-        <div className="container mx-auto max-w-2xl text-center">
-          <h2 className="font-display text-4xl font-bold italic text-primary-foreground mb-4">
-            Ready to Begin Your Journey?
+      <section className="px-4 py-16 md:py-20" style={{ background: GOLD }}>
+        <div className="mx-auto max-w-2xl text-center">
+          <h2
+            className="mb-4 font-display text-3xl font-bold md:text-4xl"
+            style={{ color: INK_DEEP }}
+          >
+            Ready when the mountains are
           </h2>
-          <p className="text-primary-foreground/80 font-body mb-8">
-            Talk to our team. We'll help you find the perfect trek, yatra, or
-            package for your goals.
+          <p className="mb-8 font-body text-sm leading-relaxed text-[#3D4F46] md:text-base">
+            Tell us your dates and fitness. We&apos;ll match a trek, yatra,
+            package or stay — and send a packing list before you pack a bag.
           </p>
-          <div className="flex gap-4 justify-center flex-wrap">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <a
+              href={whatsappLink(
+                "Hi TrekRoots! I want to plan a Himalayan trip.",
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-ocid="about.cta_whatsapp"
+              className="inline-flex items-center gap-2 rounded-md px-6 py-3 font-body text-sm font-bold text-white"
+              style={{ background: INK_DEEP }}
+            >
+              Message on WhatsApp
+              <ArrowRight size={15} />
+            </a>
             <Link
               href="/treks"
-              data-ocid="about.explore_treks_button"
-              className="px-6 py-3 rounded-md font-semibold font-body text-sm bg-white text-primary hover:bg-white/90 transition-colors"
+              data-ocid="about.cta_treks"
+              className="inline-flex items-center gap-2 rounded-md border-2 px-6 py-3 font-body text-sm font-bold"
+              style={{ borderColor: INK_DEEP, color: INK_DEEP }}
             >
-              Explore Treks
-            </Link>
-            <Link
-              href="/contact"
-              data-ocid="about.contact_button"
-              className="px-6 py-3 rounded-md font-semibold font-body text-sm border border-white/50 text-white hover:bg-white/10 transition-colors"
-            >
-              Contact Us
+              Explore treks
             </Link>
           </div>
         </div>

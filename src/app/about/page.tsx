@@ -5,9 +5,9 @@ import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "About TrekRoots",
+  title: "About TrekRoots — Himalayan Treks & Yatras from Dehradun",
   description:
-    "TrekRoots is a Dehradun-based Himalayan trek and yatra operator — operating since 2018 across Uttarakhand, Himachal Pradesh and Maharashtra.",
+    "TrekRoots is a Dehradun-based Himalayan travel company operating since 2018 — treks, sacred yatras, packages and owned mountain stays across Uttarakhand and beyond.",
   path: "/about",
 });
 
