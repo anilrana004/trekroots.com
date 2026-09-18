@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Volume2, VolumeX } from "lucide-react";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
@@ -113,6 +113,8 @@ function HeroCarousel() {
   const [current, setCurrent] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const mutedRef = useRef(true);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const videoRefs = useRef<Record<number, HTMLVideoElement | null>>({});
 
@@ -134,6 +136,23 @@ function HeroCarousel() {
     goTo((current - 1 + CAROUSEL_ITEMS.length) % CAROUSEL_ITEMS.length);
   }, [current, goTo]);
 
+  const toggleMute = useCallback(() => {
+    const active = CAROUSEL_ITEMS[current];
+    const el = active.video ? videoRefs.current[active.id] : null;
+    const next = !mutedRef.current;
+    mutedRef.current = next;
+    setMuted(next);
+    if (el) {
+      el.muted = next;
+      if (!next) {
+        el.removeAttribute("muted");
+        void el.play().catch(() => {});
+      } else {
+        el.setAttribute("muted", "");
+      }
+    }
+  }, [current]);
+
   useEffect(() => {
     setHasAnimated(true);
   }, []);
@@ -146,9 +165,11 @@ function HeroCarousel() {
     Object.entries(videoRefs.current).forEach(([id, el]) => {
       if (!el) return;
       if (Number(id) === active.id && active.video) {
-        el.muted = true;
+        const isMuted = mutedRef.current;
+        el.muted = isMuted;
         el.defaultMuted = true;
-        el.setAttribute("muted", "");
+        if (isMuted) el.setAttribute("muted", "");
+        else el.removeAttribute("muted");
         el.setAttribute("playsinline", "");
         el.setAttribute("webkit-playsinline", "true");
 
@@ -238,7 +259,7 @@ function HeroCarousel() {
                 poster={slide.poster}
                 className="absolute inset-0 h-full w-full object-cover object-center"
                 autoPlay
-                muted
+                muted={muted}
                 playsInline
                 loop={false}
                 controls={false}
@@ -357,6 +378,19 @@ function HeroCarousel() {
           />
         ))}
       </div>
+
+      {item.video ? (
+        <button
+          type="button"
+          onClick={toggleMute}
+          data-ocid="carousel.volume_button"
+          className="no-retro absolute bottom-5 left-3 md:left-5 z-20 w-9 h-9 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-sm text-white transition-colors hover:bg-white/30"
+          aria-label={muted ? "Unmute video" : "Mute video"}
+          aria-pressed={!muted}
+        >
+          {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+        </button>
+      ) : null}
     </section>
   );
 }
