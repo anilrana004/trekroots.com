@@ -66,6 +66,8 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <link rel="preconnect" href="https://media.trekroots.com" />
+        <link rel="dns-prefetch" href="https://media.trekroots.com" />
         <JsonLd id="schema-organization" data={organizationSchema()} />
       </head>
       <body

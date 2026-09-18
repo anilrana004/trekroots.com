@@ -10,6 +10,7 @@ import { ExpertBand } from "@/components/home/ExpertBand";
 import { GoogleRating } from "@/components/home/GoogleRating";
 import { HomeFaq } from "@/components/home/HomeFaq";
 import { HomeJournal } from "@/components/home/HomeJournal";
+import { IntroVideoOverlay } from "@/components/home/IntroVideoOverlay";
 import { PromoBanner } from "@/components/home/PromoBanner";
 import { Reasons } from "@/components/home/Reasons";
 import { SacredYatras } from "@/components/home/SacredYatras";
@@ -438,6 +439,7 @@ export default function HomePage({
 }) {
   return (
     <div className="bg-white">
+      <IntroVideoOverlay />
       <HeroCarousel />
       <NoticeStrip />
       <SafetyFeature />
