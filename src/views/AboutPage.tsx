@@ -5,8 +5,11 @@ import {
   ArrowDown,
   ArrowRight,
   Award,
+  Briefcase,
   Building2,
   Compass,
+  Flag,
+  Handshake,
   HeartHandshake,
   Home,
   Leaf,
@@ -16,6 +19,7 @@ import {
   Shield,
   Sparkles,
   Users,
+  UserRound,
 } from "lucide-react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import {
@@ -26,8 +30,8 @@ import {
   whatsappLink,
 } from "@/data/contact";
 
-const INK = "#0B3D2E";
-const INK_DEEP = "#06281E";
+const INK = "#1A1A1A";
+const INK_DEEP = "#111111";
 const GOLD = "#FFC107";
 const CREAM = "#FFFBEB";
 
@@ -65,12 +69,20 @@ const TIMELINE = [
 
 const ORG_NODES = [
   {
-    title: "Founder's Desk",
-    body: "Vision, safety standards and the final call on which routes we run each season.",
+    title: "Sales Team",
+    body: "Enquiries, quotes, batch matching and WhatsApp planning from first message to booking.",
   },
   {
-    title: "Trek Operations",
-    body: "Leaders, porters, permits, equipment and on-trail logistics for every batch.",
+    title: "Operations Team",
+    body: "Permits, transport, stays, equipment and day-of logistics across every departure.",
+  },
+  {
+    title: "Trek Leaders",
+    body: "Certified batch leaders who set pace, turn-back times and on-trail decisions.",
+  },
+  {
+    title: "Mountain Guides",
+    body: "Local trail guides from the villages at the trailhead — terrain, weather and culture.",
   },
   {
     title: "Yatra Concierge",
@@ -80,13 +92,69 @@ const ORG_NODES = [
     title: "Stays & Homestays",
     body: "Owned and partner properties at Sankri, Chopta, Auli, Lohajung and beyond.",
   },
+] as const;
+
+const LEADERSHIP = [
   {
-    title: "Packages & Road Trips",
-    body: "Spiti, Ladakh, Himachal and Kerala circuits with stays and transfers sequenced.",
+    role: "Founder",
+    focus: "Vision & brand",
+    body: "Built TrekRoots in 2018 from Dehradun with a simple brief — honest itineraries, local leaders, and trips we would send our own family on. Owns the long-term vision, partnerships and the standard every departure must meet.",
+    icon: Flag,
+    initials: "F",
   },
   {
-    title: "Guest Care",
-    body: "WhatsApp planning, packing lists, fitness guidance and post-trip follow-up.",
+    role: "Chief Executive Officer",
+    focus: "Company direction",
+    body: "Runs the desk day to day — season calendars, safety policy, pricing integrity and growth across treks, yatras, packages and stays. The final call when a route is unsafe or a batch should not go.",
+    icon: Briefcase,
+    initials: "CEO",
+  },
+] as const;
+
+const TEAMS = [
+  {
+    role: "Sales Team",
+    focus: "Planning & bookings",
+    body: "Your first human contact. Matches fitness and dates to the right trek or yatra, sends clear quotes, and keeps one WhatsApp thread from enquiry to departure.",
+    icon: Handshake,
+    points: [
+      "Trek, yatra & package recommendations",
+      "Transparent pricing and inclusions",
+      "Packing lists and pre-trip briefings",
+    ],
+  },
+  {
+    role: "Operations Team",
+    focus: "Logistics that hold",
+    body: "The engine behind every batch — forest permits, jeep pickups, stay confirmations, gear checks and contingency plans when weather shifts.",
+    icon: Building2,
+    points: [
+      "Permits, transport & stay coordination",
+      "Equipment and basecamp readiness",
+      "Live updates when plans change",
+    ],
+  },
+  {
+    role: "Trek Leaders",
+    focus: "On-trail command",
+    body: "Certified leaders who have walked that route in that season. They set the pace, hold summit turn-back times, and put the group before the photo.",
+    icon: Mountain,
+    points: [
+      "Batch leadership & route decisions",
+      "First-aid and altitude awareness",
+      "Weather calls and turn-back authority",
+    ],
+  },
+  {
+    role: "Mountain Guides",
+    focus: "Local trail expertise",
+    body: "Guides hired from the villages where your trek starts. They know the streams, the late snow, the short-cuts that are safe — and the ones that are not.",
+    icon: Compass,
+    points: [
+      "Trail navigation & local knowledge",
+      "Support for cooks and porters",
+      "Culture and terrain storytelling",
+    ],
   },
 ] as const;
 
@@ -205,10 +273,10 @@ export default function AboutPage() {
         style={{ background: INK_DEEP }}
       >
         <div
-          className="pointer-events-none absolute inset-0 opacity-40"
+          className="pointer-events-none absolute inset-0 opacity-50"
           style={{
             backgroundImage:
-              "radial-gradient(ellipse 70% 50% at 20% 80%, rgba(255,193,7,0.35), transparent 55%), radial-gradient(ellipse 40% 40% at 90% 10%, rgba(255,255,255,0.08), transparent 50%)",
+              "radial-gradient(ellipse 70% 55% at 15% 85%, rgba(255,193,7,0.45), transparent 55%), radial-gradient(ellipse 45% 40% at 90% 10%, rgba(255,193,7,0.12), transparent 50%)",
           }}
           aria-hidden
         />
@@ -221,7 +289,7 @@ export default function AboutPage() {
               { name: "About", path: "/about" },
             ]}
           />
-          <p className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.18em] text-[#FFD54F]">
+          <p className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.18em] text-[#FFC107]">
             Est. 2018 · Dehradun, Uttarakhand
           </p>
           <h1 className="mb-5 font-display text-4xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">
@@ -251,7 +319,8 @@ export default function AboutPage() {
             <Link
               href="/treks"
               data-ocid="about.hero_treks"
-              className="inline-flex items-center gap-2 rounded-md border border-white/35 px-5 py-2.5 font-body text-sm font-semibold text-white hover:bg-white/10"
+              className="inline-flex items-center gap-2 rounded-md border-2 px-5 py-2.5 font-body text-sm font-semibold text-white hover:bg-[#FFC107]/15"
+              style={{ borderColor: GOLD }}
             >
               Explore treks
             </Link>
@@ -379,7 +448,7 @@ export default function AboutPage() {
           {/* Flowchart */}
           <div className="flex flex-col items-center">
             <div
-              className="w-full max-w-md rounded-xl border-2 px-6 py-5 text-center shadow-sm"
+              className="w-full max-w-lg rounded-xl border-2 px-6 py-5 text-center shadow-sm"
               style={{ borderColor: INK, background: CREAM }}
             >
               <Building2
@@ -394,8 +463,33 @@ export default function AboutPage() {
                 TrekRoots HQ · Dehradun
               </p>
               <p className="mt-1 font-body text-xs text-[#5A6B62]">
-                Strategy · Safety standards · Season planning
+                Founder · CEO · Season planning &amp; safety standards
               </p>
+            </div>
+
+            <div className="mt-3 grid w-full max-w-lg grid-cols-2 gap-3">
+              <div
+                className="rounded-lg border bg-white px-3 py-3 text-center"
+                style={{ borderColor: GOLD }}
+              >
+                <p className="font-body text-xs font-bold" style={{ color: INK_DEEP }}>
+                  Founder
+                </p>
+                <p className="mt-0.5 font-body text-[10px] text-[#5A6B62]">
+                  Vision &amp; brand
+                </p>
+              </div>
+              <div
+                className="rounded-lg border bg-white px-3 py-3 text-center"
+                style={{ borderColor: GOLD }}
+              >
+                <p className="font-body text-xs font-bold" style={{ color: INK_DEEP }}>
+                  CEO
+                </p>
+                <p className="mt-0.5 font-body text-[10px] text-[#5A6B62]">
+                  Direction &amp; standards
+                </p>
+              </div>
             </div>
 
             <div className="flex flex-col items-center py-2" aria-hidden>
@@ -407,7 +501,7 @@ export default function AboutPage() {
               className="mb-3 rounded-full px-4 py-1.5 font-body text-[11px] font-bold uppercase tracking-wider text-[#1A1A1A]"
               style={{ background: GOLD }}
             >
-              Operations desks
+              Sales · Operations · Leaders · Guides
             </div>
 
             <div className="hidden w-full max-w-4xl items-center md:flex" aria-hidden>
@@ -468,8 +562,119 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Journey flow */}
+      {/* Leadership & teams */}
       <section className="px-4 py-16 md:py-20" style={{ background: CREAM }}>
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-10 max-w-2xl">
+            <SectionLabel>Leadership &amp; field teams</SectionLabel>
+            <h2
+              className="font-display text-3xl font-bold md:text-4xl"
+              style={{ color: INK_DEEP }}
+            >
+              The people behind every departure
+            </h2>
+            <p className="mt-3 font-body text-sm leading-relaxed text-[#5A6B62]">
+              From the founder&apos;s desk to the guide at your trailhead —
+              everyone owns a clear piece of your journey.
+            </p>
+          </div>
+
+          {/* Founder + CEO */}
+          <div className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-2">
+            {LEADERSHIP.map(({ role, focus, body, icon: Icon, initials }) => (
+              <article
+                key={role}
+                className="rounded-2xl border bg-white p-6 shadow-sm md:p-8"
+                style={{ borderColor: "#E8E4D4" }}
+              >
+                <div className="mb-5 flex items-start gap-4">
+                  <div
+                    className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full font-body text-sm font-bold text-[#1A1A1A]"
+                    style={{ background: GOLD }}
+                    aria-hidden
+                  >
+                    {initials}
+                  </div>
+                  <div>
+                    <p
+                      className="font-body text-[11px] font-bold uppercase tracking-[0.14em]"
+                      style={{ color: INK }}
+                    >
+                      {focus}
+                    </p>
+                    <h3
+                      className="font-display text-xl font-bold md:text-2xl"
+                      style={{ color: INK_DEEP }}
+                    >
+                      {role}
+                    </h3>
+                  </div>
+                  <Icon
+                    size={20}
+                    className="ml-auto mt-1 shrink-0 opacity-40"
+                    style={{ color: INK }}
+                  />
+                </div>
+                <p className="font-body text-sm leading-relaxed text-[#5A6B62]">
+                  {body}
+                </p>
+              </article>
+            ))}
+          </div>
+
+          {/* Sales, Ops, Leaders, Guides */}
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            {TEAMS.map(({ role, focus, body, icon: Icon, points }) => (
+              <article
+                key={role}
+                className="flex flex-col rounded-2xl border bg-white p-6 shadow-sm"
+                style={{ borderColor: "#E8E4D4" }}
+              >
+                <div className="mb-4 flex items-center gap-3">
+                  <div
+                    className="flex h-11 w-11 items-center justify-center rounded-full"
+                    style={{ background: "rgba(255,193,7,0.35)" }}
+                  >
+                    <Icon size={20} style={{ color: INK }} />
+                  </div>
+                  <div>
+                    <h3
+                      className="font-body text-base font-bold"
+                      style={{ color: INK_DEEP }}
+                    >
+                      {role}
+                    </h3>
+                    <p className="font-body text-[11px] font-semibold uppercase tracking-wider text-[#888]">
+                      {focus}
+                    </p>
+                  </div>
+                </div>
+                <p className="mb-4 font-body text-sm leading-relaxed text-[#5A6B62]">
+                  {body}
+                </p>
+                <ul className="mt-auto space-y-2 border-t pt-4" style={{ borderColor: "#F0EDE0" }}>
+                  {points.map((point) => (
+                    <li
+                      key={point}
+                      className="flex items-start gap-2 font-body text-[12.5px] text-[#3D4F46]"
+                    >
+                      <UserRound
+                        size={13}
+                        className="mt-0.5 shrink-0"
+                        style={{ color: GOLD }}
+                      />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Journey flow */}
+      <section className="px-4 py-16 md:py-20 bg-white">
         <div className="mx-auto max-w-6xl">
           <SectionLabel>How a trip works</SectionLabel>
           <h2
@@ -509,7 +714,7 @@ export default function AboutPage() {
                 {i < JOURNEY_STEPS.length - 1 ? (
                   <ArrowRight
                     size={16}
-                    className="absolute -right-2.5 top-1/2 z-10 hidden -translate-y-1/2 text-[#0B3D2E] md:block"
+                    className="absolute -right-2.5 top-1/2 z-10 hidden -translate-y-1/2 text-[#1A1A1A] md:block"
                     aria-hidden
                   />
                 ) : null}
@@ -562,7 +767,7 @@ export default function AboutPage() {
       {/* Offerings */}
       <section className="px-4 py-16 md:py-20" style={{ background: INK_DEEP }}>
         <div className="mx-auto max-w-6xl">
-          <p className="mb-3 font-body text-[11px] font-bold uppercase tracking-[0.16em] text-[#FFD54F]">
+          <p className="mb-3 font-body text-[11px] font-bold uppercase tracking-[0.16em] text-[#FFC107]">
             What we run
           </p>
           <h2 className="mb-10 font-display text-3xl font-bold text-white md:text-4xl">
