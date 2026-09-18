@@ -9,6 +9,7 @@ import { AdvantageGrid } from "@/components/home/AdvantageGrid";
 import { ExpertBand } from "@/components/home/ExpertBand";
 import { GoogleRating } from "@/components/home/GoogleRating";
 import { HomeFaq } from "@/components/home/HomeFaq";
+import { HomeJournal } from "@/components/home/HomeJournal";
 import { PromoBanner } from "@/components/home/PromoBanner";
 import { Reasons } from "@/components/home/Reasons";
 import { SacredYatras } from "@/components/home/SacredYatras";
@@ -18,6 +19,7 @@ import { TreksByCategory } from "@/components/home/TreksByCategory";
 import { TrekkerStories } from "@/components/home/TrekkerStories";
 import { TrustedBy } from "@/components/home/TrustedBy";
 import { getTrekCoverImage, getYatraCoverImage } from "@/data";
+import type { HomeJournalData } from "@/lib/sanity/fetch";
 
 // ─── Hero Slides ──────────────────────────────────────────────────────────────
 
@@ -284,13 +286,18 @@ function NoticeStrip() {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function HomePage() {
+export default function HomePage({
+  journal,
+}: {
+  journal?: HomeJournalData | null;
+}) {
   return (
     <div className="bg-white">
       <HeroCarousel />
       <NoticeStrip />
       <SafetyFeature />
       <TrekkerStories />
+      {journal ? <HomeJournal data={journal} /> : null}
       <SeasonalTreks />
       <HomeFaq />
       <Reasons />

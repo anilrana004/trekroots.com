@@ -19,7 +19,7 @@ import {
   AeoFactsBlock,
   yatraAeoFacts,
 } from "@/components/detail/AeoFactsBlock";
-import { relatedBlogPostsForTrip } from "@/lib/related";
+import type { SanityPostCard } from "@/lib/sanity/types";
 import { DetailMobileBar } from "@/components/detail/DetailMobileBar";
 import { DetailSectionNav } from "@/components/detail/DetailSectionNav";
 import {
@@ -978,7 +978,11 @@ const SECTION_TABS = SECTIONS.map((s) => ({
             : s,
 }));
 
-export default function YatraDetailPage() {
+export default function YatraDetailPage({
+  relatedGuides = [],
+}: {
+  relatedGuides?: Pick<SanityPostCard, "slug" | "title" | "excerpt">[];
+}) {
   const params = useParams();
   const slug = params.slug as string;
   const yatra = getYatraBySlug(slug);
@@ -1999,15 +2003,14 @@ export default function YatraDetailPage() {
             </div>
           </section>
 
-          {relatedBlogPostsForTrip(yatra.name, yatra.slug, 3).length > 0 ? (
+          {relatedGuides.length > 0 ? (
             <section data-ocid="yatra.related_guides">
               <SectionLabel>Guides</SectionLabel>
               <h2 className="font-serif italic text-2xl md:text-[28px] text-[#1A1A1A] mb-5">
                 Related Guides
               </h2>
               <ul className="space-y-3">
-                {relatedBlogPostsForTrip(yatra.name, yatra.slug, 3).map(
-                  (post) => (
+                {relatedGuides.map((post) => (
                     <li key={post.slug}>
                       <Link
                         href={`/blog/${post.slug}`}
@@ -2019,8 +2022,7 @@ export default function YatraDetailPage() {
                         {post.excerpt}
                       </p>
                     </li>
-                  ),
-                )}
+                  ))}
               </ul>
             </section>
           ) : null}

@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import BlogPage from "@/views/BlogPage";
 import { JsonLd } from "@/components/JsonLd";
+import { BlogIndex } from "@/components/blog/BlogIndex";
+import { getBlogIndex } from "@/lib/sanity";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Himalayan Trek Guides & Travel Blog",
@@ -16,11 +19,13 @@ const CRUMBS = [
   { name: "Blog", path: "/blog" },
 ];
 
-export default function Page() {
+export default async function Page() {
+  const data = await getBlogIndex();
+
   return (
     <>
       <JsonLd id="schema-blog-breadcrumb" data={breadcrumbSchema(CRUMBS)} />
-      <BlogPage />
+      <BlogIndex data={data} />
     </>
   );
 }

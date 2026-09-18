@@ -1,28 +1,16 @@
-import type { BlogPost, Stay, Trek, Yatra } from "@/data/types";
-import { getAllBlogPosts, getAllStays, getAllTreks, getAllYatras } from "@/data";
+import type { Stay, Trek, Yatra } from "@/data/types";
+import { getAllStays, getAllTreks, getAllYatras } from "@/data";
 
-/** Match blog posts that mention a trek/yatra by name or slug tokens. */
+/**
+ * Legacy static catalog helper — returns [].
+ * Related guides are loaded from Sanity via `getRelatedBlogCardsForTrip`.
+ */
 export function relatedBlogPostsForTrip(
-  name: string,
-  slug: string,
-  limit = 3,
-): BlogPost[] {
-  const tokens = [
-    ...slug.split("-").filter((t) => t.length > 3),
-    ...name
-      .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, " ")
-      .split(/\s+/)
-      .filter((t) => t.length > 3 && !["trek", "yatra", "with", "from"].includes(t)),
-  ];
-  const unique = [...new Set(tokens)];
-
-  return getAllBlogPosts()
-    .filter((post) => {
-      const hay = `${post.title} ${post.slug} ${post.excerpt}`.toLowerCase();
-      return unique.some((t) => hay.includes(t));
-    })
-    .slice(0, limit);
+  _name: string,
+  _slug: string,
+  _limit = 3,
+): never[] {
+  return [];
 }
 
 /** Stays whose location or nearby attractions overlap the trek region/base. */
@@ -66,12 +54,16 @@ export function relatedTreksForTrek(trek: Trek, limit = 3): Trek[] {
   return [...sameState, ...sameDiff].slice(0, limit);
 }
 
-/** Catalog pages a blog post should link back to. */
-export function catalogLinksForBlog(post: BlogPost): {
+/** Catalog pages a blog post should link back to (title/slug/excerpt haystack). */
+export function catalogLinksForBlog(haystack: {
+  title: string;
+  slug: string;
+  excerpt?: string | null;
+}): {
   treks: Trek[];
   yatras: Yatra[];
 } {
-  const hay = `${post.title} ${post.slug} ${post.excerpt}`.toLowerCase();
+  const hay = `${haystack.title} ${haystack.slug} ${haystack.excerpt || ""}`.toLowerCase();
   const treks = getAllTreks()
     .filter((t) => {
       const key = t.slug.replace(/-trek$/, "").replace(/-/g, " ");

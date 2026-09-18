@@ -5,6 +5,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { getAllTreks, getTrekBySlug, getTrekHeroImages } from "@/data";
 import { DEFAULT_TREK_FAQS } from "@/data/default-trek-faqs";
 import { buildCldSrcSet, resolveMediaUrl } from "@/lib/cloudinary";
+import { getRelatedBlogCardsForTrip } from "@/lib/sanity";
 import { buildPageMetadata, truncateMeta } from "@/lib/seo";
 import {
   breadcrumbSchema,
@@ -13,6 +14,8 @@ import {
 } from "@/lib/schema";
 
 type Props = { params: Promise<{ slug: string }> };
+
+export const revalidate = 60;
 
 const HERO_OPTS = {
   width: 1920,
@@ -63,6 +66,11 @@ export default async function Page({ params }: Props) {
   const hero = getTrekHeroImages(trek.slug, trek.imageUrl)[0] || trek.imageUrl;
   const lcpHref = resolveMediaUrl(hero, HERO_OPTS);
   const lcpSrcSet = buildCldSrcSet(hero, HERO_OPTS);
+  const relatedGuides = await getRelatedBlogCardsForTrip(
+    trek.name,
+    trek.slug,
+    3,
+  );
 
   return (
     <>
@@ -79,7 +87,7 @@ export default async function Page({ params }: Props) {
       <JsonLd id="schema-trek" data={trekSchema(trek)} />
       <JsonLd id="schema-trek-faq" data={faqPageSchema(faqs)} />
       <JsonLd id="schema-trek-breadcrumb" data={breadcrumbSchema(crumbs)} />
-      <TrekDetailPage />
+      <TrekDetailPage relatedGuides={relatedGuides} />
     </>
   );
 }

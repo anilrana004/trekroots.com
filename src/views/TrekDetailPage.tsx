@@ -24,10 +24,10 @@ import {
   trekAeoFacts,
 } from "@/components/detail/AeoFactsBlock";
 import {
-  relatedBlogPostsForTrip,
   relatedStaysForTrek,
   relatedTreksForTrek,
 } from "@/lib/related";
+import type { SanityPostCard } from "@/lib/sanity/types";
 import {
   DetailInfoList,
   type InfoRow,
@@ -221,7 +221,11 @@ function DayBlock({ day }: { day: DayItinerary }) {
   );
 }
 
-export default function TrekDetailPage() {
+export default function TrekDetailPage({
+  relatedGuides = [],
+}: {
+  relatedGuides?: Pick<SanityPostCard, "slug" | "title" | "excerpt">[];
+}) {
   const params = useParams();
   const slug = String(params?.slug ?? "");
   const trek = getTrekBySlug(slug);
@@ -238,10 +242,7 @@ export default function TrekDetailPage() {
     return relatedTreksForTrek(trek, 3);
   }, [trek]);
 
-  const relatedBlogs = useMemo(() => {
-    if (!trek) return [];
-    return relatedBlogPostsForTrip(trek.name, trek.slug, 3);
-  }, [trek]);
+  const relatedBlogs = relatedGuides;
 
   const relatedStays = useMemo(() => {
     if (!trek) return [];

@@ -8,6 +8,8 @@ import {
 import type { FaqPair } from "@/data/home-faqs";
 import type { BlogPost, Package, Stay, Trek, Yatra } from "@/data/types";
 import { truncateMeta } from "@/lib/seo";
+import { sanityImageUrl } from "@/lib/sanity/image";
+import type { SanityImage } from "@/lib/sanity/types";
 
 export const ORG_ID = `${SITE_URL}/#organization`;
 
@@ -212,6 +214,50 @@ export function articleSchema(post: BlogPost): JsonLd {
     author: {
       "@type": "Person",
       name: post.authorName || "TrekRoots Team",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      logo: { "@type": "ImageObject", url: LOGO_URL },
+      "@id": ORG_ID,
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+  };
+}
+
+/** Article JSON-LD from Sanity blog posts (published content only). */
+export function articleSchemaFromSanity(post: {
+  title: string;
+  slug: string;
+  excerpt?: string | null;
+  publishedAt?: string | null;
+  updatedAt?: string | null;
+  author?: { name?: string | null } | null;
+  heroImage?: SanityImage | null;
+  seo?: { ogImage?: SanityImage | null } | null;
+}): JsonLd {
+  const url = absoluteUrl(`/blog/${post.slug}`);
+  const published = post.publishedAt
+    ? new Date(post.publishedAt).toISOString()
+    : new Date().toISOString();
+  const modified = post.updatedAt
+    ? new Date(post.updatedAt).toISOString()
+    : published;
+  const image =
+    sanityImageUrl(post.seo?.ogImage || post.heroImage, 1200, 630) || undefined;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${url}#article`,
+    headline: post.title,
+    description: truncateMeta(post.excerpt || post.title, 200),
+    ...(image ? { image } : {}),
+    datePublished: published,
+    dateModified: modified,
+    author: {
+      "@type": "Person",
+      name: post.author?.name || "TrekRoots Team",
     },
     publisher: {
       "@type": "Organization",

@@ -1,15 +1,15 @@
 import type { MetadataRoute } from "next";
 import {
-  getAllBlogPosts,
   getAllPackages,
   getAllStays,
   getAllTreks,
   getAllYatras,
 } from "@/data";
+import { getBlogSitemapEntries } from "@/lib/sanity";
 import { absoluteUrl } from "@/lib/site";
 
 /** Catalog is well under 500 URLs — single sitemap (no index split required). */
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -51,11 +51,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const blog = getAllBlogPosts().map((post) => ({
+  const sanityBlog = await getBlogSitemapEntries();
+  const blog = sanityBlog.map((post) => ({
     url: absoluteUrl(`/blog/${post.slug}`),
-    lastModified: post.publishedAt
-      ? new Date(post.publishedAt)
-      : now,
+    lastModified: post.updatedAt
+      ? new Date(post.updatedAt)
+      : post.publishedAt
+        ? new Date(post.publishedAt)
+        : now,
     changeFrequency: "monthly" as const,
     priority: 0.65,
   }));

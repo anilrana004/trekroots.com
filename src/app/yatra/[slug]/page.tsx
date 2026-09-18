@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import YatraDetailPage from "@/views/YatraDetailPage";
 import { JsonLd } from "@/components/JsonLd";
 import { getAllYatras, getYatraBySlug } from "@/data";
+import { getRelatedBlogCardsForTrip } from "@/lib/sanity";
 import { buildPageMetadata, truncateMeta } from "@/lib/seo";
 import {
   breadcrumbSchema,
@@ -11,6 +12,8 @@ import {
 } from "@/lib/schema";
 
 type Props = { params: Promise<{ slug: string }> };
+
+export const revalidate = 60;
 
 export function generateStaticParams() {
   return getAllYatras().map((y) => ({ slug: y.slug }));
@@ -46,6 +49,12 @@ export default async function Page({ params }: Props) {
     { name: yatra.name, path: `/yatra/${yatra.slug}` },
   ];
 
+  const relatedGuides = await getRelatedBlogCardsForTrip(
+    yatra.name,
+    yatra.slug,
+    3,
+  );
+
   return (
     <>
       <JsonLd id="schema-yatra" data={yatraSchema(yatra)} />
@@ -54,7 +63,7 @@ export default async function Page({ params }: Props) {
         data={faqPageSchema(yatra.faqs ?? [])}
       />
       <JsonLd id="schema-yatra-breadcrumb" data={breadcrumbSchema(crumbs)} />
-      <YatraDetailPage />
+      <YatraDetailPage relatedGuides={relatedGuides} />
     </>
   );
 }

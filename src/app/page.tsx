@@ -4,8 +4,11 @@ import { JsonLd } from "@/components/JsonLd";
 import { HOME_FAQS } from "@/data/home-faqs";
 import { getTrekCoverImage } from "@/data";
 import { buildCldSrcSet, resolveMediaUrl } from "@/lib/cloudinary";
+import { getHomeJournal } from "@/lib/sanity";
 import { buildPageMetadata } from "@/lib/seo";
 import { faqPageSchema } from "@/lib/schema";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Himalayan Treks, Yatras & Stays",
@@ -23,10 +26,11 @@ const LCP_OPTS = {
   format: "auto" as const,
 };
 
-export default function Page() {
+export default async function Page() {
   const lcpSrc = getTrekCoverImage("valley-of-flowers");
   const lcpHref = resolveMediaUrl(lcpSrc, LCP_OPTS);
   const lcpSrcSet = buildCldSrcSet(lcpSrc, LCP_OPTS);
+  const journal = await getHomeJournal();
 
   return (
     <>
@@ -35,14 +39,13 @@ export default function Page() {
           rel="preload"
           as="image"
           href={lcpHref}
-          // Next.js App Router hoists these into <head>
           imageSrcSet={lcpSrcSet || undefined}
           imageSizes="100vw"
           fetchPriority="high"
         />
       ) : null}
       <JsonLd id="schema-home-faq" data={faqPageSchema(HOME_FAQS)} />
-      <HomePage />
+      <HomePage journal={journal} />
     </>
   );
 }
