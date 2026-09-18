@@ -33,12 +33,10 @@ type CarouselItem = {
   duration: string;
   altitude: string;
   tagline: string;
-  /** Still used for non-video slides (Cloudinary). */
+  /** Cloudinary still — image slides only (never used as video poster on home). */
   image?: string;
   /** Cloudflare R2 MP4 — used instead of image when set. */
   video?: string;
-  /** Cloudinary still shown while the R2 clip buffers (esp. on phones). */
-  poster?: string;
 };
 
 const CAROUSEL_ITEMS: CarouselItem[] = [
@@ -52,7 +50,6 @@ const CAROUSEL_ITEMS: CarouselItem[] = [
     tagline:
       "A monsoon meadow of 300+ Himalayan wildflower species — UNESCO World Heritage.",
     video: r2VideoUrl("valley-of-flowers"),
-    poster: getTrekCoverImage("valley-of-flowers"),
   },
   {
     id: 2,
@@ -64,7 +61,6 @@ const CAROUSEL_ITEMS: CarouselItem[] = [
     tagline:
       "India's finest winter trek — a snow-clad summit at sunrise above the clouds.",
     video: r2VideoUrl("kedarkantha"),
-    poster: getTrekCoverImage("kedarkantha"),
   },
   {
     id: 3,
@@ -103,12 +99,18 @@ const CAROUSEL_ITEMS: CarouselItem[] = [
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 
-/** Keep current + neighbors only so LCP isn't competing with 5 full-bleed downloads. */
+/**
+ * Mount the active slide always.
+ * Image neighbors stay mounted for crossfade.
+ * Video neighbors stay unmounted so phones never download two HD clips at once.
+ */
 function shouldMountHeroSlide(i: number, current: number, total: number) {
-  if (total <= 2) return true;
+  if (i === current) return true;
+  if (total <= 2) return !CAROUSEL_ITEMS[i].video || i === current;
   const prev = (current - 1 + total) % total;
   const next = (current + 1) % total;
-  return i === current || i === prev || i === next;
+  if (i !== prev && i !== next) return false;
+  return !CAROUSEL_ITEMS[i].video;
 }
 
 function HeroCarousel() {
@@ -116,16 +118,18 @@ function HeroCarousel() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [muted, setMuted] = useState(true);
+  const [videoReady, setVideoReady] = useState(false);
   const mutedRef = useRef(true);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const videoRefs = useRef<Record<number, HTMLVideoElement | null>>({});
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const goTo = useCallback(
     (index: number) => {
       if (isTransitioning) return;
       setIsTransitioning(true);
+      setVideoReady(false);
       setCurrent(index);
-      setTimeout(() => setIsTransitioning(false), 700);
+      setTimeout(() => setIsTransitioning(false), 500);
     },
     [isTransitioning],
   );
@@ -139,8 +143,7 @@ function HeroCarousel() {
   }, [current, goTo]);
 
   const toggleMute = useCallback(() => {
-    const active = CAROUSEL_ITEMS[current];
-    const el = active.video ? videoRefs.current[active.id] : null;
+    const el = videoRef.current;
     const next = !mutedRef.current;
     mutedRef.current = next;
     setMuted(next);
@@ -153,74 +156,73 @@ function HeroCarousel() {
         el.setAttribute("muted", "");
       }
     }
-  }, [current]);
+  }, []);
 
   useEffect(() => {
     setHasAnimated(true);
   }, []);
 
-  // Play active video on desktop + phones; pause neighbors.
+  // Single active video — play when ready; no seek-to-0 (that stalls phones).
   useEffect(() => {
     const active = CAROUSEL_ITEMS[current];
-    const cleanups: Array<() => void> = [];
+    if (!active.video) {
+      setVideoReady(false);
+      return;
+    }
 
-    Object.entries(videoRefs.current).forEach(([id, el]) => {
-      if (!el) return;
-      if (Number(id) === active.id && active.video) {
-        const isMuted = mutedRef.current;
-        el.muted = isMuted;
-        el.defaultMuted = true;
-        if (isMuted) el.setAttribute("muted", "");
-        else el.removeAttribute("muted");
-        el.setAttribute("playsinline", "");
-        el.setAttribute("webkit-playsinline", "true");
+    const el = videoRef.current;
+    if (!el) return;
 
-        const tryPlay = () => {
-          if (el.paused) {
-            void el.play().catch(() => {
-              /* iOS may need a later canplay / first touch */
-            });
-          }
-        };
+    const isMuted = mutedRef.current;
+    el.muted = isMuted;
+    el.defaultMuted = true;
+    if (isMuted) el.setAttribute("muted", "");
+    else el.removeAttribute("muted");
+    el.setAttribute("playsinline", "");
+    el.setAttribute("webkit-playsinline", "true");
 
-        try {
-          el.currentTime = 0;
-        } catch {
-          /* ignore seek before metadata on some mobiles */
-        }
-        tryPlay();
+    let cancelled = false;
 
-        el.addEventListener("loadeddata", tryPlay);
-        el.addEventListener("canplay", tryPlay);
-        cleanups.push(() => {
-          el.removeEventListener("loadeddata", tryPlay);
-          el.removeEventListener("canplay", tryPlay);
+    const tryPlay = () => {
+      if (cancelled || !el) return;
+      void el.play()
+        .then(() => {
+          if (!cancelled) setVideoReady(true);
+        })
+        .catch(() => {
+          /* wait for gesture / canplay */
         });
+    };
 
-        const onFirstGesture = () => tryPlay();
-        document.addEventListener("touchstart", onFirstGesture, {
-          once: true,
-          passive: true,
-        });
-        document.addEventListener("click", onFirstGesture, { once: true });
-        cleanups.push(() => {
-          document.removeEventListener("touchstart", onFirstGesture);
-          document.removeEventListener("click", onFirstGesture);
-        });
-      } else {
-        el.pause();
-      }
+    const onPlaying = () => {
+      if (!cancelled) setVideoReady(true);
+    };
+
+    el.addEventListener("playing", onPlaying);
+    el.addEventListener("canplay", tryPlay);
+    tryPlay();
+
+    const onFirstGesture = () => tryPlay();
+    document.addEventListener("touchstart", onFirstGesture, {
+      once: true,
+      passive: true,
     });
 
-    return () => cleanups.forEach((fn) => fn());
+    return () => {
+      cancelled = true;
+      el.removeEventListener("playing", onPlaying);
+      el.removeEventListener("canplay", tryPlay);
+      document.removeEventListener("touchstart", onFirstGesture);
+      el.pause();
+    };
   }, [current]);
 
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
     const active = CAROUSEL_ITEMS[current];
-    // Images: 6s. Video: advance on ended, with a long mobile-safe cap.
+    // Images: 6s. Video: advance on ended (cap so a stalled clip cannot freeze the carousel).
     if (active.video) {
-      timerRef.current = setTimeout(goNext, 90000);
+      timerRef.current = setTimeout(goNext, 75000);
       return () => {
         if (timerRef.current) clearTimeout(timerRef.current);
       };
@@ -237,7 +239,7 @@ function HeroCarousel() {
   return (
     <section
       data-ocid="carousel.section"
-      className="relative h-[min(72vh,560px)] min-h-[460px] md:h-[560px] overflow-hidden"
+      className="relative h-[min(72vh,560px)] min-h-[460px] md:h-[560px] overflow-hidden bg-black"
     >
       {CAROUSEL_ITEMS.map((slide, i) => {
         if (!shouldMountHeroSlide(i, current, CAROUSEL_ITEMS.length)) {
@@ -246,28 +248,29 @@ function HeroCarousel() {
         const active = i === current;
         return (
           <div
-            key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-700 ${
+            key={slide.video ? `video-${slide.id}-${active ? "on" : "off"}` : slide.id}
+            className={`absolute inset-0 bg-black transition-opacity duration-500 ${
               active ? "opacity-100 z-[1]" : "opacity-0 z-0"
             }`}
             aria-hidden={!active}
           >
-            {slide.video ? (
+            {slide.video && active ? (
               <video
-                ref={(el) => {
-                  videoRefs.current[slide.id] = el;
-                }}
+                ref={videoRef}
+                key={slide.video}
                 src={slide.video}
-                poster={slide.poster}
-                className="absolute inset-0 h-full w-full object-cover object-center"
+                className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-500 ${
+                  videoReady ? "opacity-100" : "opacity-0"
+                }`}
                 autoPlay
                 muted={muted}
                 playsInline
                 loop={false}
                 controls={false}
                 disablePictureInPicture
-                preload={active || i === 0 ? "auto" : "metadata"}
+                preload="auto"
                 onEnded={goNext}
+                onPlaying={() => setVideoReady(true)}
                 aria-label={`${slide.name} cinematic film`}
               />
             ) : slide.image ? (
@@ -276,18 +279,16 @@ function HeroCarousel() {
                 alt={`${slide.name} — Himalayan ${slide.category === "YATRA" ? "yatra" : "trek"}`}
                 width={1920}
                 height={1080}
-                priority={i === 0}
+                priority={active}
                 sizes="100vw"
-                lazy={
-                  i !== current && i !== (current + 1) % CAROUSEL_ITEMS.length
-                }
+                lazy={!active}
                 className="w-full h-full object-cover object-center"
                 transform={{
-                  width: 1920,
-                  height: 1080,
+                  width: 1600,
+                  height: 900,
                   crop: "fill",
                   gravity: "auto",
-                  quality: i === 0 ? "auto:good" : "auto:eco",
+                  quality: active ? "auto:eco" : "auto:eco",
                   format: "auto",
                 }}
               />
