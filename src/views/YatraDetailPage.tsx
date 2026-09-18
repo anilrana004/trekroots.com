@@ -14,6 +14,12 @@ import { TreksByCategory } from "@/components/home/TreksByCategory";
 import { DetailFeePanel } from "@/components/detail/DetailFeePanel";
 import { DetailFactsGrid } from "@/components/detail/DetailFactsGrid";
 import { DetailHero } from "@/components/detail/DetailHero";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import {
+  AeoFactsBlock,
+  yatraAeoFacts,
+} from "@/components/detail/AeoFactsBlock";
+import { relatedBlogPostsForTrip } from "@/lib/related";
 import { DetailMobileBar } from "@/components/detail/DetailMobileBar";
 import { DetailSectionNav } from "@/components/detail/DetailSectionNav";
 import {
@@ -1110,9 +1116,18 @@ export default function YatraDetailPage() {
 
   return (
     <div className="bg-white min-h-screen pb-28 lg:pb-0">
+      <div className="lux-container pt-3 pb-2">
+        <Breadcrumbs
+          items={[
+            { name: "Home", path: "/" },
+            { name: "Yatra", path: "/yatra" },
+            { name: yatra.name, path: `/yatra/${yatra.slug}` },
+          ]}
+        />
+      </div>
       <DetailHero
         images={heroImages}
-        title={yatra.name}
+        title={`${yatra.name} — ${yatra.route || "Himalayan Yatra"}`}
         tagline={enrichment.tagline}
         primaryHref={`/booking/yatra-${slug}`}
         primaryLabel="View Yatra Dates"
@@ -1126,6 +1141,17 @@ export default function YatraDetailPage() {
         facts={getYatraFacts(yatra)}
         icons={YATRA_FACT_ICONS}
         ocid="yatra.facts"
+      />
+
+      <AeoFactsBlock
+        title={`Key facts — ${yatra.name}`}
+        ocid="yatra.aeo_facts"
+        facts={yatraAeoFacts({
+          duration: yatra.duration,
+          season: yatra.season,
+          route: yatra.route,
+          minINR: Number(yatra.priceRange.minINR) || 0,
+        })}
       />
 
       <DetailSectionNav
@@ -1939,7 +1965,7 @@ export default function YatraDetailPage() {
                     <div className="relative h-32 overflow-hidden">
                       <CloudinaryImage
                         src={rel.coverImage}
-                        alt={names[relSlug] || relSlug}
+                        alt={`${names[relSlug] || relSlug} pilgrimage in Uttarakhand`}
                         width={400}
                         height={160}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -1972,6 +1998,32 @@ export default function YatraDetailPage() {
               })}
             </div>
           </section>
+
+          {relatedBlogPostsForTrip(yatra.name, yatra.slug, 3).length > 0 ? (
+            <section data-ocid="yatra.related_guides">
+              <SectionLabel>Guides</SectionLabel>
+              <h2 className="font-serif italic text-2xl md:text-[28px] text-[#1A1A1A] mb-5">
+                Related Guides
+              </h2>
+              <ul className="space-y-3">
+                {relatedBlogPostsForTrip(yatra.name, yatra.slug, 3).map(
+                  (post) => (
+                    <li key={post.slug}>
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="font-body text-[14px] font-medium text-[#1A1A1A] underline underline-offset-2"
+                      >
+                        {post.title}
+                      </Link>
+                      <p className="font-body text-[12px] text-[#666666] mt-0.5 line-clamp-2">
+                        {post.excerpt}
+                      </p>
+                    </li>
+                  ),
+                )}
+              </ul>
+            </section>
+          ) : null}
         </div>
 
         {/* RIGHT — fee panel */}

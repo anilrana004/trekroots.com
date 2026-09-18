@@ -2,6 +2,9 @@
 
 import type { BlogPost } from "@/data";
 import { getAllBlogPosts, getBlogPostBySlug } from "@/data";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { catalogLinksForBlog } from "@/lib/related";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
@@ -357,6 +360,10 @@ export default function BlogPostPage() {
       .slice(0, 3);
   }, [allBackendPosts, slug, post]);
 
+  const catalogLinks = useMemo(
+    () => (post ? catalogLinksForBlog(post) : { treks: [], yatras: [] }),
+    [post],
+  );
   const readTimeNum = post ? Number(post.readTimeMin || post.readTime) : 0;
   const articleContent = post?.content?.trim()
     ? post.content
@@ -399,12 +406,32 @@ export default function BlogPostPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-6 pt-4 pb-2 max-w-4xl">
+        <Breadcrumbs
+          items={[
+            { name: "Home", path: "/" },
+            { name: "Blog", path: "/blog" },
+            { name: post.title, path: `/blog/${post.slug}` },
+          ]}
+        />
+      </div>
       {/* Hero */}
       <div className="relative w-full h-[55vh] min-h-[380px] max-h-[600px] overflow-hidden">
-        <img
+        <CloudinaryImage
           src={post.imageUrl}
           alt={post.title}
+          width={1600}
+          height={900}
+          priority
+          sizes="100vw"
           className="w-full h-full object-cover"
+          transform={{
+            width: 1600,
+            height: 900,
+            crop: "fill",
+            quality: "auto:good",
+            format: "auto",
+          }}
         />
         <div
           className="absolute inset-0"
@@ -516,6 +543,47 @@ export default function BlogPostPage() {
             </div>
 
             {/* Author Bio */}
+            {(catalogLinks.treks.length > 0 || catalogLinks.yatras.length > 0) && (
+              <aside
+                className="mt-10 p-5 rounded-2xl border border-border bg-muted/30"
+                data-ocid="blog.catalog_links"
+              >
+                <h2 className="font-display text-lg font-bold mb-3 text-foreground">
+                  Plan this trip with TrekRoots
+                </h2>
+                <ul className="space-y-2">
+                  {catalogLinks.treks.map((t) => (
+                    <li key={t.slug}>
+                      <Link
+                        href={`/treks/${t.slug}`}
+                        className="font-body text-sm font-medium underline underline-offset-2"
+                      >
+                        {t.name}
+                      </Link>
+                      <span className="font-body text-xs text-muted-foreground">
+                        {" "}
+                        — {t.durationDays} days · {t.difficulty}
+                      </span>
+                    </li>
+                  ))}
+                  {catalogLinks.yatras.map((y) => (
+                    <li key={y.slug}>
+                      <Link
+                        href={`/yatra/${y.slug}`}
+                        className="font-body text-sm font-medium underline underline-offset-2"
+                      >
+                        {y.name}
+                      </Link>
+                      <span className="font-body text-xs text-muted-foreground">
+                        {" "}
+                        — {y.duration}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </aside>
+            )}
+
             <div
               className="mt-10 p-6 rounded-2xl border border-border bg-card flex gap-4"
               data-ocid="blog.author_bio"
@@ -583,10 +651,20 @@ export default function BlogPostPage() {
                   className="group block rounded-xl overflow-hidden bg-card border border-border hover:shadow-lg transition-all duration-300"
                 >
                   <div className="aspect-[16/10] overflow-hidden">
-                    <img
+                    <CloudinaryImage
                       src={rp.imageUrl}
                       alt={rp.title}
+                      width={640}
+                      height={400}
+                      sizes="(max-width: 768px) 100vw, 33vw"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      transform={{
+                        width: 640,
+                        height: 400,
+                        crop: "fill",
+                        quality: "auto:eco",
+                        format: "auto",
+                      }}
                     />
                   </div>
                   <div className="p-4">

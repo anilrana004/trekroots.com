@@ -40,7 +40,7 @@ export function StayCard({ stay, index = 0 }: StayCardProps) {
         {stay.imageUrl ? (
           <CloudinaryImage
             src={stay.imageUrl}
-            alt={stay.name}
+            alt={`${stay.name} in ${stay.location}`}
             width={800}
             height={448}
             className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500"

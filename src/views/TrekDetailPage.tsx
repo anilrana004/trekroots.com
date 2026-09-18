@@ -2,7 +2,6 @@
 
 import type { DayItinerary, Trek } from "@/data";
 import {
-  getAllTreks,
   getTrekBySlug,
   getTrekHeroImages,
   getTrekFacts,
@@ -16,7 +15,19 @@ import {
   DetailSectionHeading,
 } from "@/components/detail/DetailFactsGrid";
 import { DetailGallery } from "@/components/detail/DetailGallery";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
 import { DetailHero } from "@/components/detail/DetailHero";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { DEFAULT_TREK_FAQS } from "@/data/default-trek-faqs";
+import {
+  AeoFactsBlock,
+  trekAeoFacts,
+} from "@/components/detail/AeoFactsBlock";
+import {
+  relatedBlogPostsForTrip,
+  relatedStaysForTrek,
+  relatedTreksForTrek,
+} from "@/lib/related";
 import {
   DetailInfoList,
   type InfoRow,
@@ -131,40 +142,7 @@ const PACKING_SECTIONS = [
   },
 ];
 
-const FAQS = [
-  {
-    q: "What fitness level is required for this trek?",
-    a: "You should be able to walk 8–12 km daily on uneven terrain. Start a 4-week pre-trek training plan with daily cardio (running/cycling), squats, and lunges.",
-  },
-  {
-    q: "Are the treks suitable for beginners?",
-    a: "Treks rated Easy or Moderate are suitable for first-timers with average fitness. Difficult and Extreme treks require prior high-altitude experience.",
-  },
-  {
-    q: "What is the cancellation policy?",
-    a: "Full refund if cancelled 30+ days before trek. 50% refund for 15–29 days. No refund within 14 days of departure.",
-  },
-  {
-    q: "Are permits included in the price?",
-    a: "Yes. Forest department permits, national park entry fees, and required government clearances are all included in the package price.",
-  },
-  {
-    q: "What is the accommodation like on the trail?",
-    a: "Accommodation varies by trek — mix of high-quality camping tents, fixed-camp setups, and guesthouses at lower altitudes. Sleeping bags and mats are provided.",
-  },
-  {
-    q: "What happens in case of bad weather or emergency?",
-    a: "Our leaders carry satellite communication devices. In emergencies, we coordinate helicopter evacuation. Safety of trekkers is our top priority.",
-  },
-  {
-    q: "Can I join as a solo traveller?",
-    a: "Absolutely. Solo trekkers are paired with group batches. We also offer women-only group departures for solo female travellers.",
-  },
-  {
-    q: "What meals are provided on the trek?",
-    a: "All meals from Day 1 dinner to last-day breakfast are included — hot nutritious Himalayan meals cooked by our camp staff.",
-  },
-];
+const FAQS = DEFAULT_TREK_FAQS;
 
 const TABS = [
   { id: "overview", label: "Overview" },
@@ -257,9 +235,17 @@ export default function TrekDetailPage() {
 
   const related = useMemo(() => {
     if (!trek) return [];
-    return getAllTreks()
-      .filter((t) => t.state === trek.state && t.slug !== trek.slug)
-      .slice(0, 3);
+    return relatedTreksForTrek(trek, 3);
+  }, [trek]);
+
+  const relatedBlogs = useMemo(() => {
+    if (!trek) return [];
+    return relatedBlogPostsForTrip(trek.name, trek.slug, 3);
+  }, [trek]);
+
+  const relatedStays = useMemo(() => {
+    if (!trek) return [];
+    return relatedStaysForTrek(trek, 2);
   }, [trek]);
 
   useEffect(() => {
@@ -470,9 +456,22 @@ export default function TrekDetailPage() {
 
   return (
     <div className="bg-white min-h-screen pb-28 lg:pb-0">
+      <div className="lux-container pt-3 pb-2">
+        <Breadcrumbs
+          items={[
+            { name: "Home", path: "/" },
+            { name: "Treks", path: "/treks" },
+            {
+              name: trek.region,
+              path: `/treks?state=${encodeURIComponent(trek.state)}`,
+            },
+            { name: trek.name, path: `/treks/${trek.slug}` },
+          ]}
+        />
+      </div>
       <DetailHero
         images={heroImages}
-        title={trek.name}
+        title={`${trek.name} — ${trek.region}`}
         tagline={trek.tagline ?? trek.description.slice(0, 120)}
         primaryHref={`/booking/${trek.id}`}
         primaryLabel="View Trek Dates"
@@ -483,6 +482,21 @@ export default function TrekDetailPage() {
       />
 
       <DetailFactsGrid facts={getTrekFacts(trek)} icons={TREK_FACT_ICONS} ocid="trek.facts" />
+
+      <AeoFactsBlock
+        title={`Key facts — ${trek.name}`}
+        ocid="trek.aeo_facts"
+        facts={trekAeoFacts({
+          durationDays: trek.durationDays,
+          durationNights: trek.durationNights,
+          maxAltitudeM: trek.maxAltitudeM,
+          maxAltitudeFt: trek.maxAltitudeFt,
+          difficulty: trek.difficulty,
+          bestSeason: trek.bestSeason,
+          startPoint: trek.startPoint,
+          minINR: Number(trek.priceRange.minINR) || 0,
+        })}
+      />
 
       <DetailSectionNav
         tabs={TABS}
@@ -527,11 +541,21 @@ export default function TrekDetailPage() {
                 data-ocid="trek.why_we_love"
               >
                 {heroImages[0] ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <CloudinaryImage
                     src={heroImages[Math.min(1, heroImages.length - 1)]}
-                    alt={trek.name}
+                    alt={`${trek.name} landscape in ${trek.region}`}
+                    width={1200}
+                    height={560}
+                    sizes="(max-width: 1024px) 100vw, 70vw"
                     className="w-full h-[220px] md:h-[280px] object-cover"
+                    transform={{
+                      width: 1200,
+                      height: 560,
+                      crop: "fill",
+                      gravity: "auto",
+                      quality: "auto:eco",
+                      format: "auto",
+                    }}
                   />
                 ) : null}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -631,7 +655,7 @@ export default function TrekDetailPage() {
 
             <DetailGallery
               images={heroImages}
-              alt={trek.name}
+              alt={`${trek.name} trek photos, ${trek.region}`}
               ocidPrefix="trek"
             />
 
@@ -659,6 +683,52 @@ export default function TrekDetailPage() {
                     <TrekCard key={t.slug} trek={t} />
                   ))}
                 </div>
+              </section>
+            ) : null}
+
+            {relatedBlogs.length > 0 ? (
+              <section data-ocid="trek.related_guides">
+                <h2 className="font-serif italic text-2xl md:text-[28px] text-[#1A1A1A] mb-5">
+                  Related Guides
+                </h2>
+                <ul className="space-y-3">
+                  {relatedBlogs.map((post) => (
+                    <li key={post.slug}>
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="font-body text-[14px] font-medium text-[#1A1A1A] underline underline-offset-2 hover:text-[#555555]"
+                      >
+                        {post.title}
+                      </Link>
+                      <p className="font-body text-[12px] text-[#666666] mt-0.5 line-clamp-2">
+                        {post.excerpt}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
+            {relatedStays.length > 0 ? (
+              <section data-ocid="trek.related_stays">
+                <h2 className="font-serif italic text-2xl md:text-[28px] text-[#1A1A1A] mb-5">
+                  Stays Near This Trail
+                </h2>
+                <ul className="space-y-3">
+                  {relatedStays.map((stay) => (
+                    <li key={stay.slug}>
+                      <Link
+                        href={`/stays/${stay.slug}`}
+                        className="font-body text-[14px] font-medium text-[#1A1A1A] underline underline-offset-2 hover:text-[#555555]"
+                      >
+                        {stay.name}
+                      </Link>
+                      <p className="font-body text-[12px] text-[#666666] mt-0.5">
+                        {stay.location}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
               </section>
             ) : null}
           </div>

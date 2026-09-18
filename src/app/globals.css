@@ -2,25 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: "Plus Jakarta Sans";
-  src: url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap");
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "JetBrains Mono";
-  src: url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap")
-    format("woff2");
-  font-display: swap;
-}
-
 @layer base {
   :root {
-    --font-display: "Plus Jakarta Sans";
-    --font-body: "Plus Jakarta Sans";
-    --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
-    --font-mono: JetBrains Mono;
+    --font-display: var(--font-jakarta), "Plus Jakarta Sans", sans-serif;
+    --font-body: var(--font-jakarta), "Plus Jakarta Sans", sans-serif;
+    --font-serif: var(--font-instrument), "Instrument Serif", Georgia, serif;
+    --font-mono: var(--font-jetbrains), "JetBrains Mono", monospace;
     --radius: 0.5rem;
 
     /* Light + yellow system (TR logo accent) */

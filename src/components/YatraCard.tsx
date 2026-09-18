@@ -101,7 +101,7 @@ export function YatraCard({ yatra, index = 0 }: YatraCardProps) {
         {yatra.imageUrl ? (
           <CloudinaryImage
             src={yatra.imageUrl}
-            alt={yatra.name}
+            alt={`${yatra.name} pilgrimage`}
             width={800}
             height={448}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Award, Heart, Mountain, Shield, Star, Users } from "lucide-react";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 const STATS = [
   { value: "10,000+", label: "Happy Travellers", icon: Users },
@@ -76,6 +77,14 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="bg-sidebar py-20 px-4">
         <div className="container mx-auto max-w-4xl text-center">
+          <Breadcrumbs
+            tone="dark"
+            className="mb-6 justify-center"
+            items={[
+              { name: "Home", path: "/" },
+              { name: "About", path: "/about" },
+            ]}
+          />
           <span className="inline-block text-xs font-semibold font-body tracking-widest text-accent/80 uppercase mb-4">
             Est. 2010 · Dehradun, Uttarakhand
           </span>

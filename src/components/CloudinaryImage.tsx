@@ -86,8 +86,8 @@ export function CloudinaryImage({
       height={height}
       className={className}
       loading={priority ? "eager" : lazy ? "lazy" : undefined}
-      fetchPriority={priority ? "high" : "auto"}
-      decoding={priority ? "sync" : "async"}
+      fetchPriority={priority ? "high" : lazy ? "low" : "auto"}
+      decoding={priority ? "async" : "async"}
       onClick={onClick}
       onError={() => setFailed(true)}
     />

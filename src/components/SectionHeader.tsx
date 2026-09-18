@@ -3,6 +3,8 @@ interface SectionHeaderProps {
   title: string;
   subtitle?: string;
   centered?: boolean;
+  /** Use h1 on catalog index pages; default h2 for in-page sections. */
+  as?: "h1" | "h2";
 }
 
 export function SectionHeader({
@@ -10,7 +12,10 @@ export function SectionHeader({
   title,
   subtitle,
   centered = false,
+  as = "h2",
 }: SectionHeaderProps) {
+  const Heading = as;
+
   return (
     <div className={`mb-10 ${centered ? "text-center" : ""}`}>
       {label && (
@@ -18,9 +23,9 @@ export function SectionHeader({
           {label}
         </p>
       )}
-      <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground leading-tight">
+      <Heading className="font-display text-3xl md:text-4xl font-bold text-foreground leading-tight">
         {title}
-      </h2>
+      </Heading>
       {subtitle && (
         <p
           className="mt-3 text-muted-foreground font-body text-base max-w-2xl"

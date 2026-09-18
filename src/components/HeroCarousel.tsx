@@ -105,7 +105,7 @@ export function HeroCarousel({
                 height: 1080,
                 crop: "fill",
                 gravity: "auto",
-                quality: "auto:good",
+                quality: i === index ? "auto:good" : "auto:eco",
                 format: "auto",
               }}
               lazy={!(i === index || i === (index + 1) % slides.length)}

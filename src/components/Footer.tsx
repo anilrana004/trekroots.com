@@ -8,7 +8,6 @@ import {
   Mail,
   MapPin,
   Phone,
-  Twitter,
   Youtube,
 } from "lucide-react";
 import { useState } from "react";
@@ -17,6 +16,9 @@ import {
   CONTACT_EMAIL_HREF,
   PHONE_DISPLAY,
   PHONE_HREF,
+  SOCIAL_FACEBOOK,
+  SOCIAL_INSTAGRAM,
+  SOCIAL_YOUTUBE,
   WHATSAPP_DISPLAY,
   WHATSAPP_NUMBER,
   whatsappLink,
@@ -147,27 +149,22 @@ export function Footer() {
             </Link>
             <p className="text-[13px] font-body leading-relaxed mb-6 text-[#555555]">
               Explore new heights. Curated Himalayan journeys across Uttarakhand
-              &amp; Himachal Pradesh since 2012.
+              &amp; Himachal Pradesh since 2018.
             </p>
             <div className="flex items-center gap-3 mb-6">
               {[
                 {
-                  href: "https://instagram.com",
+                  href: SOCIAL_INSTAGRAM,
                   icon: <Instagram size={17} />,
                   label: "Instagram",
                 },
                 {
-                  href: "https://facebook.com",
+                  href: SOCIAL_FACEBOOK,
                   icon: <Facebook size={17} />,
                   label: "Facebook",
                 },
                 {
-                  href: "https://twitter.com",
-                  icon: <Twitter size={17} />,
-                  label: "Twitter / X",
-                },
-                {
-                  href: "https://youtube.com",
+                  href: SOCIAL_YOUTUBE,
                   icon: <Youtube size={17} />,
                   label: "YouTube",
                 },

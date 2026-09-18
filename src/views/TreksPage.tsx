@@ -9,6 +9,7 @@ import {
   SEASON_BUCKETS,
 } from "@/data";
 import { SectionHeader } from "@/components/SectionHeader";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { TrekCard } from "@/components/TrekCard";
 import { X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -91,7 +92,15 @@ export default function TreksPage() {
       {/* Page Header */}
       <div className="bg-card border-b border-border py-10 px-4">
         <div className="container mx-auto">
+          <Breadcrumbs
+            className="mb-4"
+            items={[
+              { name: "Home", path: "/" },
+              { name: "Treks", path: "/treks" },
+            ]}
+          />
           <SectionHeader
+            as="h1"
             title="Himalayan Treks"
             subtitle="From snow-dusted winter trails to monsoon meadow bursts — every route, every season."
           />

@@ -2,6 +2,7 @@
 
 import { getAllYatras } from "@/data";
 import { SectionHeader } from "@/components/SectionHeader";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { YatraCard } from "@/components/YatraCard";
 const SKELETON_YATRAS = [1, 2, 3, 4, 5, 6];
 
@@ -120,7 +121,15 @@ export default function YatraPage() {
         <SectionGaneshDecor />
 
         <div className="relative z-10">
+          <Breadcrumbs
+            className="mb-4"
+            items={[
+              { name: "Home", path: "/" },
+              { name: "Yatra", path: "/yatra" },
+            ]}
+          />
           <SectionHeader
+            as="h1"
             title="Yatra & Pilgrimage"
             subtitle="Sacred journeys to the abode of the gods — char dham, panch kedar, and beyond."
           />

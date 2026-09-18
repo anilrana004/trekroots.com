@@ -81,9 +81,18 @@ const CAROUSEL_ITEMS = [
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 
+/** Keep current + neighbors only so LCP isn't competing with 5 full-bleed downloads. */
+function shouldMountHeroSlide(i: number, current: number, total: number) {
+  if (total <= 2) return true;
+  const prev = (current - 1 + total) % total;
+  const next = (current + 1) % total;
+  return i === current || i === prev || i === next;
+}
+
 function HeroCarousel() {
   const [current, setCurrent] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const goTo = useCallback(
@@ -111,6 +120,10 @@ function HeroCarousel() {
     };
   }, [goNext]);
 
+  useEffect(() => {
+    setHasAnimated(true);
+  }, []);
+
   const item = CAROUSEL_ITEMS[current];
   const isYatra = item.category === "YATRA";
 
@@ -119,39 +132,46 @@ function HeroCarousel() {
       data-ocid="carousel.section"
       className="relative h-[460px] md:h-[560px] overflow-hidden"
     >
-      {CAROUSEL_ITEMS.map((slide, i) => (
-        <div
-          key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-700 ${
-            i === current ? "opacity-100 z-[1]" : "opacity-0 z-0"
-          }`}
-          aria-hidden={i !== current}
-        >
-          <CloudinaryImage
-            src={slide.image}
-            alt={slide.name}
-            width={1920}
-            height={1080}
-            priority={i === 0}
-            sizes="100vw"
-            className="w-full h-full object-cover object-center"
-            transform={{
-              width: 1920,
-              height: 1080,
-              crop: "fill",
-              gravity: "auto",
-              quality: "auto:good",
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/50 to-black/70 md:bg-gradient-to-r md:from-black/75 md:via-black/40 md:to-black/10" />
-        </div>
-      ))}
+      {CAROUSEL_ITEMS.map((slide, i) => {
+        if (!shouldMountHeroSlide(i, current, CAROUSEL_ITEMS.length)) {
+          return null;
+        }
+        return (
+          <div
+            key={slide.id}
+            className={`absolute inset-0 transition-opacity duration-700 ${
+              i === current ? "opacity-100 z-[1]" : "opacity-0 z-0"
+            }`}
+            aria-hidden={i !== current}
+          >
+            <CloudinaryImage
+              src={slide.image}
+              alt={`${slide.name} — Himalayan ${slide.category === "YATRA" ? "yatra" : "trek"}`}
+              width={1920}
+              height={1080}
+              priority={i === 0}
+              sizes="100vw"
+              lazy={i !== current && i !== (current + 1) % CAROUSEL_ITEMS.length}
+              className="w-full h-full object-cover object-center"
+              transform={{
+                width: 1920,
+                height: 1080,
+                crop: "fill",
+                gravity: "auto",
+                quality: i === 0 ? "auto:good" : "auto:eco",
+                format: "auto",
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/50 to-black/70 md:bg-gradient-to-r md:from-black/75 md:via-black/40 md:to-black/10" />
+          </div>
+        );
+      })}
 
       <div className="absolute inset-0 z-10 flex items-center">
         <div className="lux-container w-full">
           <motion.div
             key={current}
-            initial={{ opacity: 0, y: 24 }}
+            initial={hasAnimated ? { opacity: 0, y: 24 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="mx-auto max-w-xl text-center md:mx-0 md:text-left"

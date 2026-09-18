@@ -102,7 +102,7 @@ export function SeasonalTreks() {
                     <Link href={`/treks/${trek.slug}`} tabIndex={-1}>
                       <CloudinaryImage
                         src={getTrekCoverImage(trek.slug, trek.imageUrl)}
-                        alt={trek.name}
+                        alt={`${trek.name} trek in ${trek.region}`}
                         width={420}
                         height={280}
                         sizes="(max-width: 639px) 80vw, (max-width: 1023px) 46vw, 24vw"

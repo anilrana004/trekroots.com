@@ -80,7 +80,7 @@ export function TrekCard({ trek, index = 0 }: TrekCardProps) {
                   >
                     <CloudinaryImage
                       src={gallery[i]}
-                      alt={`${trek.name} — ${i + 1}`}
+                      alt={`${trek.name} — ${trek.region}, photo ${i + 1}`}
                       width={640}
                       height={360}
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

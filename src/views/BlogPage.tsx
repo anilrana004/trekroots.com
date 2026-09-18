@@ -2,6 +2,8 @@
 
 import type { BlogPost } from "@/data";
 import { getAllBlogPosts } from "@/data";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -197,6 +199,14 @@ function BlogPage() {
         style={{ background: "var(--color-black-bean)" }}
       >
         <div className="container mx-auto px-4 pt-16 pb-12 md:pt-20 md:pb-16 text-center">
+          <Breadcrumbs
+            tone="dark"
+            className="mb-6 justify-center"
+            items={[
+              { name: "Home", path: "/" },
+              { name: "Blog", path: "/blog" },
+            ]}
+          />
           <p
             className="text-xs font-body font-semibold uppercase tracking-[0.35em] mb-4"
             style={{ color: "var(--color-gold)" }}
@@ -305,10 +315,21 @@ function BlogPage() {
                 >
                   <div className="grid grid-cols-1 lg:grid-cols-[1fr_460px]">
                     <div className="aspect-video lg:aspect-auto min-h-[300px] overflow-hidden relative">
-                      <img
+                      <CloudinaryImage
                         src={featured.imageUrl}
                         alt={featured.title}
+                        width={960}
+                        height={540}
+                        priority
+                        sizes="(max-width: 1024px) 100vw, 55vw"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        transform={{
+                          width: 960,
+                          height: 540,
+                          crop: "fill",
+                          quality: "auto:good",
+                          format: "auto",
+                        }}
                       />
                     </div>
                     <div className="p-8 md:p-10 flex flex-col justify-center">
@@ -376,10 +397,20 @@ function BlogPage() {
                     className="group flex flex-col h-full rounded-xl overflow-hidden bg-card border border-border hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
                   >
                   <div className="aspect-[16/10] overflow-hidden">
-                    <img
+                    <CloudinaryImage
                       src={post.imageUrl}
                       alt={post.title}
+                      width={640}
+                      height={400}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      transform={{
+                        width: 640,
+                        height: 400,
+                        crop: "fill",
+                        quality: "auto:eco",
+                        format: "auto",
+                      }}
                     />
                   </div>
                   <div className="p-5 flex flex-col flex-1">

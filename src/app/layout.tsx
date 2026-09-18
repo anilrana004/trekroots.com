@@ -1,12 +1,49 @@
 import type { Metadata } from "next";
+import {
+  Instrument_Serif,
+  JetBrains_Mono,
+  Plus_Jakarta_Sans,
+} from "next/font/google";
 import "./globals.css";
 import { SiteChrome } from "@/components/SiteChrome";
+import { JsonLd } from "@/components/JsonLd";
 import { LOGO_URL } from "@/lib/cloudinary";
+import { organizationSchema } from "@/lib/schema";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-jakarta",
+  display: "swap",
+  preload: true,
+});
+
+const instrument = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-instrument",
+  display: "swap",
+  preload: true,
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-jetbrains",
+  display: "swap",
+  preload: false,
+});
 
 export const metadata: Metadata = {
-  title: "TrekRoots | Explore New Heights",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} | Explore New Heights`,
+    template: `%s | ${SITE_NAME}`,
+  },
   description:
-    "Treks, yatras, packages and stays across Uttarakhand and Himachal Pradesh.",
+    "Treks, yatras, packages and Himalayan stays across Uttarakhand, Himachal Pradesh and Maharashtra. Operating since 2018 from Dehradun.",
   icons: {
     icon: LOGO_URL,
     apple: LOGO_URL,
@@ -19,22 +56,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${jakarta.variable} ${instrument.variable} ${jetbrains.variable}`}
+    >
       <head>
         <link rel="preconnect" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
+        <JsonLd id="schema-organization" data={organizationSchema()} />
       </head>
-      <body className="bg-white text-[#1A1A1A] antialiased">
+      <body
+        className={`${jakarta.className} bg-white text-[#1A1A1A] antialiased`}
+      >
         <SiteChrome>{children}</SiteChrome>
       </body>
     </html>

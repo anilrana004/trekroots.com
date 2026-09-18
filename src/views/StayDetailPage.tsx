@@ -1,6 +1,8 @@
 "use client";
 
 import { getStayBySlug, whatsappLink } from "@/data";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { CloudinaryImage } from "@/components/CloudinaryImage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -188,15 +190,13 @@ export default function StayDetailPage() {
     <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
       {/* Breadcrumb */}
       <div className="container mx-auto px-6 pt-6 pb-2">
-        <Link
-          href="/stays"
-          className="inline-flex items-center gap-1 text-sm font-body transition-colors"
-          style={{ color: "var(--text-muted)" }}
-          data-ocid="stay.back_to_list"
-        >
-          <ChevronLeft size={16} />
-          Back to Stays
-        </Link>
+        <Breadcrumbs
+          items={[
+            { name: "Home", path: "/" },
+            { name: "Stays", path: "/stays" },
+            { name: stay.name, path: `/stays/${stay.slug}` },
+          ]}
+        />
       </div>
 
       {/* Hero Gallery */}
@@ -206,10 +206,22 @@ export default function StayDetailPage() {
           style={{ background: "var(--bg-secondary)" }}
         >
           <div className="aspect-[21/9] md:aspect-[21/8]">
-            <img
+            <CloudinaryImage
               src={gallery[selectedImage]}
-              alt={stay.name}
+              alt={`${stay.name} in ${stay.location}`}
+              width={1600}
+              height={686}
+              priority
+              sizes="100vw"
               className="w-full h-full object-cover"
+              transform={{
+                width: 1600,
+                height: 686,
+                crop: "fill",
+                gravity: "auto",
+                quality: "auto:good",
+                format: "auto",
+              }}
             />
             <div
               className="absolute inset-0"
@@ -276,10 +288,20 @@ export default function StayDetailPage() {
               }}
               data-ocid={`stay.gallery.thumb.${idx + 1}`}
             >
-              <img
+              <CloudinaryImage
                 src={img}
-                alt={`${stay.name} ${idx + 1}`}
+                alt={`${stay.name} photo ${idx + 1}`}
+                width={160}
+                height={112}
+                sizes="80px"
                 className="w-full h-full object-cover"
+                transform={{
+                  width: 160,
+                  height: 112,
+                  crop: "fill",
+                  quality: "auto:eco",
+                  format: "auto",
+                }}
               />
             </button>
           ))}

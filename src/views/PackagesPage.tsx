@@ -3,6 +3,7 @@
 import { getAllPackages } from "@/data";
 import { PackageCard } from "@/components/PackageCard";
 import { SectionHeader } from "@/components/SectionHeader";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ArrowUpDown, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 
@@ -69,7 +70,15 @@ export default function PackagesPage() {
       {/* Hero */}
       <section className="relative bg-muted/30 border-b border-border">
         <div className="container mx-auto px-4 py-16 md:py-24">
+          <Breadcrumbs
+            className="mb-4 justify-center"
+            items={[
+              { name: "Home", path: "/" },
+              { name: "Packages", path: "/packages" },
+            ]}
+          />
           <SectionHeader
+            as="h1"
             label="Curated Himalayan Packages"
             title="Curated Himalayan Packages"
             subtitle="Every detail handled. Every memory earned."

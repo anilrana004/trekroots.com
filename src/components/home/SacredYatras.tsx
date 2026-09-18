@@ -35,7 +35,7 @@ export function SacredYatras() {
               <Link href={`/yatra/${yatra.slug}`} tabIndex={-1}>
                 <CloudinaryImage
                   src={getYatraCoverImage(yatra.slug, yatra.imageUrl)}
-                  alt={yatra.name}
+                  alt={`${yatra.name} sacred yatra`}
                   width={420}
                   height={280}
                   sizes="(max-width: 639px) 80vw, (max-width: 1023px) 46vw, 24vw"

@@ -1,6 +1,7 @@
 "use client";
 
 import { getAllStays, whatsappLink } from "@/data";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { StayCard } from "@/components/StayCard";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -132,6 +133,14 @@ export default function StaysPage() {
           }}
         />
         <div className="relative container mx-auto px-6 py-24 md:py-32 text-center">
+          <Breadcrumbs
+            tone="dark"
+            className="mb-6 justify-center"
+            items={[
+              { name: "Home", path: "/" },
+              { name: "Stays", path: "/stays" },
+            ]}
+          />
           <div
             className="inline-flex items-center gap-2 text-xs font-body font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-8"
             style={{

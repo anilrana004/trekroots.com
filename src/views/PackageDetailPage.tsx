@@ -12,6 +12,7 @@ import { tripPrice } from "@/lib/price";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import {
   ArrowRight,
   BedDouble,
@@ -220,17 +221,15 @@ export default function PackageDetailPage() {
           />
         </div>
         <div className="relative w-full max-w-[1400px] mx-auto px-6 pb-14 md:pb-20">
-          <nav className="flex items-center gap-2 text-white/60 text-xs font-body mb-5">
-            <Link href="/" className="hover:text-white transition-colors">
-              Home
-            </Link>
-            <span>/</span>
-            <Link href="/packages" className="hover:text-white transition-colors">
-              Packages
-            </Link>
-            <span>/</span>
-            <span className="text-white/90">{pkg.name}</span>
-          </nav>
+          <Breadcrumbs
+            tone="dark"
+            className="mb-5"
+            items={[
+              { name: "Home", path: "/" },
+              { name: "Packages", path: "/packages" },
+              { name: pkg.name, path: `/packages/${pkg.slug}` },
+            ]}
+          />
           <span
             className="inline-block px-3 py-1 text-xs font-body font-semibold mb-4 rounded-full"
             style={{ background: "var(--accent-orange)", color: "#fff" }}

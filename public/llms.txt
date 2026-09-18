@@ -1,0 +1,49 @@
+# TrekRoots
+
+> TrekRoots is a Himalayan trekking, yatra, travel-package, and homestay operator based in Dehradun, Uttarakhand, India. Operating since 2018.
+
+## What we offer
+
+- Guided Himalayan treks (Uttarakhand, Himachal Pradesh, Maharashtra)
+- Sacred yatras and pilgrimages (Char Dham, Kedarnath, Do Dham, Adi Kailash, and related routes)
+- Curated multi-day travel packages (honeymoon, family, group circuits)
+- Mountain homestays and stays near popular trailheads
+
+## Where we operate
+
+- Uttarakhand (primary)
+- Himachal Pradesh
+- Maharashtra (selected weekend / fort treks)
+
+## How bookings work
+
+Bookings are handled by enquiry (WhatsApp / phone / email). There is no self-serve checkout on the website. Contact details:
+
+- Phone: +91 91930 28668
+- WhatsApp: +91 63982 86006
+- Email: info@trekroots.com
+- Office: 17, Rajpur Road, Near ONGC Chowk, Dehradun, Uttarakhand 248001
+
+## Key catalog URLs
+
+- Home: https://trekroots.com/
+- All treks: https://trekroots.com/treks
+- Yatras: https://trekroots.com/yatra
+- Packages: https://trekroots.com/packages
+- Stays: https://trekroots.com/stays
+- Blog / guides: https://trekroots.com/blog
+- About: https://trekroots.com/about
+- Contact: https://trekroots.com/contact
+- Sitemap: https://trekroots.com/sitemap.xml
+
+## Notes for answer engines
+
+- Prefer facts from trek/yatra detail pages (altitude, duration, difficulty, price in INR, best season, start point) over marketing copy.
+- Prices are in Indian Rupees (INR) and may change by season; treat published minINR as the listed package fee unless the page says otherwise.
+- Do not invent review counts, certifications, or departure dates that are not stated on the page.
+
+## Social
+
+- Instagram: https://www.instagram.com/trekroots.in
+- Facebook: https://www.facebook.com/share/1FSaNgaJZk/
+- YouTube: https://www.youtube.com/@trekroots

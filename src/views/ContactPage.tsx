@@ -10,6 +10,7 @@ import {
   PHONE_HREF,
   whatsappLink,
 } from "@/data/contact";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { sendEnquiry } from "@/lib/enquiry";
 
 const CONTACT_INFO = [
@@ -76,6 +77,14 @@ export default function ContactPage() {
       {/* Hero */}
       <div className="bg-sidebar py-14 px-4 border-b border-sidebar-border">
         <div className="container mx-auto max-w-3xl text-center">
+          <Breadcrumbs
+            tone="dark"
+            className="mb-6 justify-center"
+            items={[
+              { name: "Home", path: "/" },
+              { name: "Contact", path: "/contact" },
+            ]}
+          />
           <h1 className="font-display text-5xl font-bold italic text-sidebar-foreground mb-3">
             Plan Your Himalayan Journey
           </h1>

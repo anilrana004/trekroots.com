@@ -42,7 +42,7 @@ export function PackageCard({ pkg, index = 0 }: PackageCardProps) {
         {pkg.imageUrl ? (
           <CloudinaryImage
             src={pkg.imageUrl}
-            alt={pkg.name}
+            alt={`${pkg.name} travel package`}
             width={800}
             height={416}
             className="w-full h-full object-cover group-hover:scale-105 transition-smooth"
