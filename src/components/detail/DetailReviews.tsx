@@ -35,7 +35,7 @@ export function DetailReviews({ tripName, ocidPrefix }: DetailReviewsProps) {
               ))}
             </div>
             <h3 className="font-body text-sm font-bold text-[#1A1A1A] mb-2">
-              {review.trip}
+              {review.headline}
             </h3>
             <p className="font-body text-[13px] text-[#555555] leading-relaxed mb-3">
               &ldquo;{review.quote}&rdquo;

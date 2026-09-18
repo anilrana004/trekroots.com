@@ -24,7 +24,7 @@ export function SectionHead({ title, aside, className }: SectionHeadProps) {
           </div>
         ) : null}
       </div>
-      <div className="mt-3 h-px w-full" style={{ backgroundColor: "#F0D48A" }} />
+      <div className="mt-3 h-px w-full" style={{ backgroundColor: "#FFC107" }} />
     </div>
   );
 }
