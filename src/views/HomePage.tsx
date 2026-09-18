@@ -19,11 +19,26 @@ import { TreksByCategory } from "@/components/home/TreksByCategory";
 import { TrekkerStories } from "@/components/home/TrekkerStories";
 import { TrustedBy } from "@/components/home/TrustedBy";
 import { getTrekCoverImage, getYatraCoverImage } from "@/data";
+import { r2VideoUrl } from "@/lib/r2-media";
 import type { HomeJournalData } from "@/lib/sanity/fetch";
 
 // ─── Hero Slides ──────────────────────────────────────────────────────────────
 
-const CAROUSEL_ITEMS = [
+type CarouselItem = {
+  id: number;
+  slug: string;
+  name: string;
+  category: "TREK" | "YATRA";
+  duration: string;
+  altitude: string;
+  tagline: string;
+  /** Still used for non-video slides (Cloudinary). */
+  image?: string;
+  /** Cloudflare R2 MP4 — used instead of image when set. */
+  video?: string;
+};
+
+const CAROUSEL_ITEMS: CarouselItem[] = [
   {
     id: 1,
     slug: "/treks/valley-of-flowers",
@@ -33,7 +48,7 @@ const CAROUSEL_ITEMS = [
     altitude: "3,962 m",
     tagline:
       "A monsoon meadow of 300+ Himalayan wildflower species — UNESCO World Heritage.",
-    image: getTrekCoverImage("valley-of-flowers"),
+    video: r2VideoUrl("valley-of-flowers"),
   },
   {
     id: 2,
@@ -96,6 +111,7 @@ function HeroCarousel() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const videoRefs = useRef<Record<number, HTMLVideoElement | null>>({});
 
   const goTo = useCallback(
     (index: number) => {
@@ -116,15 +132,35 @@ function HeroCarousel() {
   }, [current, goTo]);
 
   useEffect(() => {
+    setHasAnimated(true);
+  }, []);
+
+  // Play active video; pause others. Image slides keep the timed advance.
+  useEffect(() => {
+    const active = CAROUSEL_ITEMS[current];
+    Object.entries(videoRefs.current).forEach(([id, el]) => {
+      if (!el) return;
+      if (Number(id) === active.id && active.video) {
+        el.currentTime = 0;
+        void el.play().catch(() => {
+          /* autoplay may be blocked; muted + playsInline usually ok */
+        });
+      } else {
+        el.pause();
+      }
+    });
+  }, [current]);
+
+  useEffect(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    const active = CAROUSEL_ITEMS[current];
+    // Video slides advance when the clip ends (or after a long cap); images after 6s.
+    if (active.video) return;
     timerRef.current = setTimeout(goNext, 6000);
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [goNext]);
-
-  useEffect(() => {
-    setHasAnimated(true);
-  }, []);
+  }, [goNext, current]);
 
   const item = CAROUSEL_ITEMS[current];
   const isYatra = item.category === "YATRA";
@@ -138,32 +174,51 @@ function HeroCarousel() {
         if (!shouldMountHeroSlide(i, current, CAROUSEL_ITEMS.length)) {
           return null;
         }
+        const active = i === current;
         return (
           <div
             key={slide.id}
             className={`absolute inset-0 transition-opacity duration-700 ${
-              i === current ? "opacity-100 z-[1]" : "opacity-0 z-0"
+              active ? "opacity-100 z-[1]" : "opacity-0 z-0"
             }`}
-            aria-hidden={i !== current}
+            aria-hidden={!active}
           >
-            <CloudinaryImage
-              src={slide.image}
-              alt={`${slide.name} — Himalayan ${slide.category === "YATRA" ? "yatra" : "trek"}`}
-              width={1920}
-              height={1080}
-              priority={i === 0}
-              sizes="100vw"
-              lazy={i !== current && i !== (current + 1) % CAROUSEL_ITEMS.length}
-              className="w-full h-full object-cover object-center"
-              transform={{
-                width: 1920,
-                height: 1080,
-                crop: "fill",
-                gravity: "auto",
-                quality: i === 0 ? "auto:good" : "auto:eco",
-                format: "auto",
-              }}
-            />
+            {slide.video ? (
+              <video
+                ref={(el) => {
+                  videoRefs.current[slide.id] = el;
+                }}
+                src={slide.video}
+                className="h-full w-full object-cover object-center"
+                muted
+                playsInline
+                loop={false}
+                preload={active || i === 0 ? "auto" : "metadata"}
+                onEnded={goNext}
+                aria-label={`${slide.name} cinematic film`}
+              />
+            ) : slide.image ? (
+              <CloudinaryImage
+                src={slide.image}
+                alt={`${slide.name} — Himalayan ${slide.category === "YATRA" ? "yatra" : "trek"}`}
+                width={1920}
+                height={1080}
+                priority={i === 0}
+                sizes="100vw"
+                lazy={
+                  i !== current && i !== (current + 1) % CAROUSEL_ITEMS.length
+                }
+                className="w-full h-full object-cover object-center"
+                transform={{
+                  width: 1920,
+                  height: 1080,
+                  crop: "fill",
+                  gravity: "auto",
+                  quality: i === 0 ? "auto:good" : "auto:eco",
+                  format: "auto",
+                }}
+              />
+            ) : null}
             <div
               className="absolute inset-0"
               style={{
