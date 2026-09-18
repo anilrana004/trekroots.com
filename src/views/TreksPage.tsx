@@ -14,23 +14,29 @@ import {
 import {
   DiscoveryCategoryStrip,
   DiscoveryProductCard,
+  DiscoveryQuickNav,
   DiscoveryRail,
   DiscoverySearchBanner,
   DiscoveryShell,
   DiscoverySidebar,
   DiscoveryThemeTiles,
+  DiscoveryTipBar,
   DiscoveryWhyUs,
   type SidebarGroup,
 } from "@/components/discovery";
 import { tripPrice } from "@/lib/price";
 import {
+  BookOpen,
+  CalendarDays,
   HeartHandshake,
   Leaf,
   Mountain,
   Shield,
+  Snowflake,
   Users,
   Users2,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
@@ -254,10 +260,31 @@ export default function TreksPage() {
   const winter = uniqueBySlug(
     treks.filter((t) => matchesSeason(t, "winter")),
   ).slice(0, 8);
+  const spring = uniqueBySlug(
+    treks.filter((t) => matchesSeason(t, "spring")),
+  ).slice(0, 8);
+  const monsoon = uniqueBySlug(
+    treks.filter((t) => matchesSeason(t, "monsoon")),
+  ).slice(0, 8);
   const weekend = treks.filter((t) => matchesDuration(t, "weekend")).slice(0, 8);
+  const shortTrips = treks
+    .filter((t) => matchesDuration(t, "short"))
+    .slice(0, 8);
+  const weekLong = treks.filter((t) => matchesDuration(t, "week")).slice(0, 8);
   const autumn = uniqueBySlug(
     treks.filter((t) => matchesSeason(t, "autumn")),
   ).slice(0, 8);
+  const ukTreks = treks.filter((t) => t.state === "Uttarakhand");
+  const hpTreks = treks.filter((t) => t.state === "Himachal Pradesh");
+  const mhTreks = treks.filter((t) => t.state === "Maharashtra");
+  const moderate = treks
+    .filter((t) => t.difficulty.toLowerCase().includes("moderate"))
+    .slice(0, 8);
+  const summitPicks = uniqueBySlug(
+    [...treks]
+      .filter((t) => Number(t.maxAltitudeFt) >= 12000)
+      .sort((a, b) => Number(b.maxAltitudeFt) - Number(a.maxAltitudeFt)),
+  ).slice(0, 6);
 
   const categories = [
     {
@@ -358,6 +385,50 @@ export default function TreksPage() {
     },
   ].filter((t) => t.imageSrc);
 
+  const unexploredTiles = [
+    {
+      title: "Unexplored Uttarakhand",
+      href: "/treks?state=Uttarakhand",
+      imageSrc: getTrekCoverImage(
+        "har-ki-dun",
+        treks.find((t) => t.slug === "har-ki-dun")?.imageUrl ?? "",
+      ),
+      imageAlt: "Uttarakhand treks",
+      caption: "Bugyals, winter summits & sacred valleys",
+    },
+    {
+      title: "Unexplored Himachal",
+      href: "/treks?state=Himachal%20Pradesh",
+      imageSrc: getTrekCoverImage(
+        "hampta-pass",
+        treks.find((t) => t.slug === "hampta-pass")?.imageUrl ?? "",
+      ),
+      imageAlt: "Himachal treks",
+      caption: "High passes from Manali to Spiti approaches",
+    },
+    {
+      title: "Unexplored Maharashtra",
+      href: "/treks?state=Maharashtra",
+      imageSrc: getTrekCoverImage(
+        "rajmachi-fireflies",
+        treks.find((t) => t.slug === "rajmachi-fireflies")?.imageUrl ?? "",
+      ),
+      imageAlt: "Maharashtra treks",
+      caption: "Waterfalls, fireflies & Sahyadri weekends",
+    },
+  ].filter((t) => t.imageSrc);
+
+  const quickNav = [
+    { label: "By Season", href: "/treks?season=winter" },
+    { label: "By Difficulty", href: "/treks?difficulty=Easy" },
+    { label: "By Duration", href: "/treks?duration=weekend" },
+    { label: "Uttarakhand", href: "/treks?state=Uttarakhand" },
+    { label: "Himachal", href: "/treks?state=Himachal%20Pradesh" },
+    { label: "Maharashtra", href: "/treks?state=Maharashtra" },
+    { label: "Winter Treks", href: "/treks?season=winter" },
+    { label: "Beginners", href: "/treks?difficulty=Easy" },
+  ];
+
   return (
     <div>
       <DiscoverySearchBanner
@@ -367,6 +438,7 @@ export default function TreksPage() {
         onChange={setSearch}
         ocid="treks.search"
       />
+      <DiscoveryQuickNav items={quickNav} ocid="treks.quicknav" />
 
       <DiscoveryShell
         ocid="treks.shell"
@@ -426,6 +498,26 @@ export default function TreksPage() {
           <>
             <DiscoveryCategoryStrip items={categories} ocid="treks.categories" />
 
+            <div className="py-5 md:py-6">
+              <DiscoveryTipBar icon={BookOpen} ocid="treks.tip.first">
+                Booking a trek for the first time? Start with our{" "}
+                <Link
+                  href="/treks?difficulty=Easy"
+                  className="font-semibold text-[#0B3D2E] underline underline-offset-2"
+                >
+                  easy Himalayan treks
+                </Link>{" "}
+                or read the{" "}
+                <Link
+                  href="/blog"
+                  className="font-semibold text-[#0B3D2E] underline underline-offset-2"
+                >
+                  trekking guides
+                </Link>
+                .
+              </DiscoveryTipBar>
+            </div>
+
             {seasonal.length > 0 ? (
               <DiscoveryRail
                 title={`Top Treks for ${MONTH_LABELS[nowMonth - 1]}`}
@@ -455,6 +547,12 @@ export default function TreksPage() {
               </DiscoveryRail>
             ) : null}
 
+            <DiscoveryTipBar icon={CalendarDays} ocid="treks.tip.dates">
+              Peak seasons fill first. Message us on WhatsApp early for Kedarkantha,
+              Brahmatal and Hampta Pass — the batches our leaders recommend book out
+              weeks ahead.
+            </DiscoveryTipBar>
+
             {mountainViews.length > 0 ? (
               <DiscoveryRail
                 title="Treks with Greatest Mountain Views"
@@ -479,6 +577,13 @@ export default function TreksPage() {
               </DiscoveryRail>
             ) : null}
 
+            <DiscoveryThemeTiles
+              title="Themed Treks"
+              aside="Pick the vibe — family, group or first-timer."
+              tiles={themeTiles}
+              ocid="treks.themes"
+            />
+
             {highAltitude.length > 0 ? (
               <DiscoveryRail
                 title="Adventure Above 12,000 ft"
@@ -491,13 +596,60 @@ export default function TreksPage() {
               </DiscoveryRail>
             ) : null}
 
+            {summitPicks.length > 0 ? (
+              <DiscoveryRail
+                title="Top Summit Treks"
+                aside="Flagship peaks and ridge walks — the classics every Himalayan trekker wants on their list."
+                ocid="treks.rail.summit"
+              >
+                {summitPicks.map((trek, i) => (
+                  <TrekDiscoveryCard
+                    key={`summit-${trek.slug}`}
+                    trek={trek}
+                    index={i}
+                    badge={i < 2 ? "Summit" : undefined}
+                  />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            <DiscoveryTipBar icon={Snowflake} ocid="treks.tip.winter">
+              Winter trails need warmer layers and earlier sunsets. Our leaders share a
+              packing list with every enquiry — ask once you shortlist Kedarkantha,
+              Brahmatal or Kuari Pass.
+            </DiscoveryTipBar>
+
             {winter.length > 0 ? (
               <DiscoveryRail
-                title="Top Winter Treks"
+                title="Top Winter Treks of India"
                 aside="Snow trails, frozen lakes and the classic Himalayan winter experience."
                 ocid="treks.rail.winter"
               >
                 {winter.map((trek, i) => (
+                  <TrekDiscoveryCard key={trek.slug} trek={trek} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            {spring.length > 0 ? (
+              <DiscoveryRail
+                title="Spring & Summer Meadows"
+                aside="Flower carpets, longer daylight and high-pass windows after the snow softens."
+                ocid="treks.rail.spring"
+              >
+                {spring.map((trek, i) => (
+                  <TrekDiscoveryCard key={trek.slug} trek={trek} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            {monsoon.length > 0 ? (
+              <DiscoveryRail
+                title="Monsoon Magic Treks"
+                aside="Valley of Flowers blooms and Sahyadri waterfalls when the rains turn the hills green."
+                ocid="treks.rail.monsoon"
+              >
+                {monsoon.map((trek, i) => (
                   <TrekDiscoveryCard key={trek.slug} trek={trek} index={i} />
                 ))}
               </DiscoveryRail>
@@ -515,51 +667,131 @@ export default function TreksPage() {
               </DiscoveryRail>
             ) : null}
 
+            {shortTrips.length > 0 ? (
+              <DiscoveryRail
+                title="3–4 Day Escapes"
+                aside="Long enough for a real summit feel — short enough for a long weekend."
+                ocid="treks.rail.short"
+              >
+                {shortTrips.map((trek, i) => (
+                  <TrekDiscoveryCard key={trek.slug} trek={trek} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            {weekLong.length > 0 ? (
+              <DiscoveryRail
+                title="Week-Long Himalayan Journeys"
+                aside="Full itineraries with acclimatisation days — Har Ki Dun, Valley of Flowers and more."
+                ocid="treks.rail.week"
+              >
+                {weekLong.map((trek, i) => (
+                  <TrekDiscoveryCard key={trek.slug} trek={trek} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            {moderate.length > 0 ? (
+              <DiscoveryRail
+                title="Moderate Challenge Treks"
+                aside="When you are ready for longer days, higher camps and bigger mountain views."
+                ocid="treks.rail.moderate"
+              >
+                {moderate.map((trek, i) => (
+                  <TrekDiscoveryCard key={trek.slug} trek={trek} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
             <DiscoveryThemeTiles
-              title="Themed Treks"
-              aside="Pick the vibe — family, group or first-timer."
-              tiles={themeTiles}
-              ocid="treks.themes"
+              title="Unexplored India Treks"
+              aside="Three regions. Dozens of trails. One team that walks them with you."
+              tiles={unexploredTiles}
+              ocid="treks.unexplored"
             />
 
-            <div className="pb-10 pt-4">
-              <DiscoveryWhyUs
-                title="Why Trekkers Love Trekking With Us"
-                items={[
-                  {
-                    icon: Shield,
-                    title: "Safety-first batches",
-                    body: "Experienced trek leaders, checked gear and conservative calls on weather — so you can focus on the trail.",
-                  },
-                  {
-                    icon: Mountain,
-                    title: "50+ curated Himalayan routes",
-                    body: "Winter summits, monsoon meadows and high passes across Uttarakhand, Himachal and beyond.",
-                  },
-                  {
-                    icon: Users,
-                    title: "Local guides at the trailhead",
-                    body: "Guides, cooks and porters hired from the villages where your trek starts.",
-                  },
-                  {
-                    icon: Leaf,
-                    title: "Leave no trace",
-                    body: "We carry our trash down, ban single-use plastic on trail and rotate campsites to protect meadows.",
-                  },
-                  {
-                    icon: HeartHandshake,
-                    title: "WhatsApp-first planning",
-                    body: "Enquire once — itineraries, dates and packing lists come back from real mountain experts.",
-                  },
-                  {
-                    icon: Users2,
-                    title: "Operating since 2018",
-                    body: "Thousands of trekkers have walked with TrekRoots — from first summits to Char Dham yatras.",
-                  },
-                ]}
-                ocid="treks.why"
-              />
-            </div>
+            {ukTreks.length > 0 ? (
+              <DiscoveryRail
+                title="Best of Uttarakhand"
+                aside="From Sankri winters to Valley of Flowers monsoon meadows — Devbhoomi, done right."
+                ocid="treks.rail.uk"
+              >
+                {ukTreks.map((trek, i) => (
+                  <TrekDiscoveryCard key={trek.slug} trek={trek} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            {hpTreks.length > 0 ? (
+              <DiscoveryRail
+                title="Best of Himachal Pradesh"
+                aside="Hampta Pass, Sar Pass and the Manali high-country classics."
+                ocid="treks.rail.hp"
+              >
+                {hpTreks.map((trek, i) => (
+                  <TrekDiscoveryCard key={trek.slug} trek={trek} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            {mhTreks.length > 0 ? (
+              <DiscoveryRail
+                title="Sahyadri & Maharashtra Treks"
+                aside="Waterfalls, night trails and firefly camps — perfect for a Mumbai or Pune weekend."
+                ocid="treks.rail.mh"
+              >
+                {mhTreks.map((trek, i) => (
+                  <TrekDiscoveryCard key={trek.slug} trek={trek} index={i} />
+                ))}
+              </DiscoveryRail>
+            ) : null}
+
+            <DiscoveryRail
+              title="Complete Trek Catalogue"
+              aside={`All ${treks.length} routes on TrekRoots — filter the sidebar anytime to narrow the list.`}
+              ocid="treks.rail.all"
+            >
+              {treks.map((trek, i) => (
+                <TrekDiscoveryCard key={`all-${trek.slug}`} trek={trek} index={i} />
+              ))}
+            </DiscoveryRail>
+
+            <DiscoveryWhyUs
+              title="Why Trekkers Love Trekking With Us"
+              items={[
+                {
+                  icon: Shield,
+                  title: "Safety-first batches",
+                  body: "Experienced trek leaders, checked gear and conservative calls on weather — so you can focus on the trail.",
+                },
+                {
+                  icon: Mountain,
+                  title: "50+ curated Himalayan routes",
+                  body: "Winter summits, monsoon meadows and high passes across Uttarakhand, Himachal and beyond.",
+                },
+                {
+                  icon: Users,
+                  title: "Local guides at the trailhead",
+                  body: "Guides, cooks and porters hired from the villages where your trek starts.",
+                },
+                {
+                  icon: Leaf,
+                  title: "Leave no trace",
+                  body: "We carry our trash down, ban single-use plastic on trail and rotate campsites to protect meadows.",
+                },
+                {
+                  icon: HeartHandshake,
+                  title: "WhatsApp-first planning",
+                  body: "Enquire once — itineraries, dates and packing lists come back from real mountain experts.",
+                },
+                {
+                  icon: Users2,
+                  title: "Operating since 2018",
+                  body: "Thousands of trekkers have walked with TrekRoots — from first summits to Char Dham yatras.",
+                },
+              ]}
+              ocid="treks.why"
+            />
           </>
         )}
       </DiscoveryShell>

@@ -4,11 +4,13 @@ import { getAllStays, whatsappLink, type Stay } from "@/data";
 import {
   DiscoveryCategoryStrip,
   DiscoveryProductCard,
+  DiscoveryQuickNav,
   DiscoveryRail,
   DiscoverySearchBanner,
   DiscoveryShell,
   DiscoverySidebar,
   DiscoveryThemeTiles,
+  DiscoveryTipBar,
   DiscoveryWhyUs,
   type SidebarGroup,
 } from "@/components/discovery";
@@ -21,6 +23,7 @@ import {
   Sparkles,
   ThumbsUp,
 } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 function StayCardItem({
@@ -192,6 +195,17 @@ export default function StaysPage() {
         onChange={setSearch}
         ocid="stays.search"
       />
+      <DiscoveryQuickNav
+        items={[
+          { label: "Homestays", href: "/stays" },
+          { label: "Garhwal", href: "/stays" },
+          { label: "Kumaon", href: "/stays" },
+          { label: "Boutique", href: "/stays" },
+          { label: "Camps", href: "/stays" },
+          { label: "All Stays", href: "/stays" },
+        ]}
+        ocid="stays.quicknav"
+      />
 
       <DiscoveryShell
         ocid="stays.shell"
@@ -248,6 +262,20 @@ export default function StaysPage() {
               ocid="stays.categories"
             />
 
+            <div className="py-5 md:py-6">
+              <DiscoveryTipBar icon={Home} ocid="stays.tip.pair">
+                Pair your stay with a trek — Sankri for Kedarkantha, Lohajung for
+                Brahmatal, Chopta for Tungnath.{" "}
+                <Link
+                  href="/treks"
+                  className="font-semibold text-[#0B3D2E] underline underline-offset-2"
+                >
+                  Browse treks
+                </Link>{" "}
+                or message us to build one itinerary.
+              </DiscoveryTipBar>
+            </div>
+
             <DiscoveryRail
               title="Handpicked Mountain Stays"
               aside="TrekRoots-owned and partner properties at the heart of Himalayan base villages."
@@ -262,6 +290,11 @@ export default function StaysPage() {
                 />
               ))}
             </DiscoveryRail>
+
+            <DiscoveryTipBar icon={MapPin} ocid="stays.tip.base">
+              Base villages fill fast before winter and Char Dham season. Enquire
+              early for Sankri, Chopta and Auli weekends.
+            </DiscoveryTipBar>
 
             {homestays.length > 0 ? (
               <DiscoveryRail
@@ -306,44 +339,42 @@ export default function StaysPage() {
               ocid="stays.themes"
             />
 
-            <div className="pb-10 pt-4">
-              <DiscoveryWhyUs
-                title="Why Guests Love Staying With Us"
-                items={[
-                  {
-                    icon: Shield,
-                    title: "Handpicked properties",
-                    body: "Every stay personally vetted — location, cleanliness and trail access come first.",
-                  },
-                  {
-                    icon: ThumbsUp,
-                    title: "Book-direct rates",
-                    body: "Enquire with us for the clearest pricing and availability on our own properties.",
-                  },
-                  {
-                    icon: MapPin,
-                    title: "Right at the trailhead",
-                    body: "Sankri, Chopta, Lohajung, Auli and more — wake up where the trek begins.",
-                  },
-                  {
-                    icon: Award,
-                    title: "Local hospitality",
-                    body: "Home-cooked Garhwali meals and hosts who know the mountains like neighbours.",
-                  },
-                  {
-                    icon: Home,
-                    title: "Owned & partner-run",
-                    body: "A mix of TrekRoots-managed stays and trusted partners we would host family in.",
-                  },
-                  {
-                    icon: Sparkles,
-                    title: "Pair with your trek",
-                    body: "We help you combine stays with treks and yatras into one seamless itinerary.",
-                  },
-                ]}
-                ocid="stays.why"
-              />
-            </div>
+            <DiscoveryWhyUs
+              title="Why Guests Love Staying With Us"
+              items={[
+                {
+                  icon: Shield,
+                  title: "Handpicked properties",
+                  body: "Every stay personally vetted — location, cleanliness and trail access come first.",
+                },
+                {
+                  icon: ThumbsUp,
+                  title: "Book-direct rates",
+                  body: "Enquire with us for the clearest pricing and availability on our own properties.",
+                },
+                {
+                  icon: MapPin,
+                  title: "Right at the trailhead",
+                  body: "Sankri, Chopta, Lohajung, Auli and more — wake up where the trek begins.",
+                },
+                {
+                  icon: Award,
+                  title: "Local hospitality",
+                  body: "Home-cooked Garhwali meals and hosts who know the mountains like neighbours.",
+                },
+                {
+                  icon: Home,
+                  title: "Owned & partner-run",
+                  body: "A mix of TrekRoots-managed stays and trusted partners we would host family in.",
+                },
+                {
+                  icon: Sparkles,
+                  title: "Pair with your trek",
+                  body: "We help you combine stays with treks and yatras into one seamless itinerary.",
+                },
+              ]}
+              ocid="stays.why"
+            />
           </>
         )}
       </DiscoveryShell>

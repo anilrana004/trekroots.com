@@ -11,3 +11,8 @@ export { DiscoveryThemeTiles } from "./DiscoveryThemeTiles";
 export type { ThemeTile } from "./DiscoveryThemeTiles";
 export { DiscoveryWhyUs } from "./DiscoveryWhyUs";
 export type { WhyUsItem } from "./DiscoveryWhyUs";
+export { DiscoveryDivider } from "./DiscoveryDivider";
+export { DiscoveryTipBar } from "./DiscoveryTipBar";
+export { DiscoveryQuickNav } from "./DiscoveryQuickNav";
+export type { QuickNavItem } from "./DiscoveryQuickNav";
+export { DiscoverySection } from "./DiscoverySection";

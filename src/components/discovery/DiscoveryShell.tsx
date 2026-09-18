@@ -19,16 +19,11 @@ export function DiscoveryShell({
     <div
       data-ocid={ocid}
       className="min-h-screen"
-      style={{ background: "#FFFFFF" }}
+      style={{ background: DISCOVER.creamSoft }}
     >
       <div className="mx-auto grid max-w-[1400px] gap-6 px-4 py-6 md:px-6 md:py-8 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[260px_minmax(0,1fr)]">
         {sidebar}
-        <main
-          className="min-w-0"
-          style={{
-            background: "linear-gradient(180deg, #FFFDF8 0%, #FFFFFF 120px)",
-          }}
-        >
+        <main className="min-w-0 rounded-xl bg-white px-1 sm:px-2 md:px-3">
           {children}
         </main>
       </div>

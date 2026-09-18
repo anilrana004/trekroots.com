@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useRef, type ReactNode } from "react";
+import { DiscoveryDivider } from "./DiscoveryDivider";
 import { DISCOVER } from "./tokens";
 
 type DiscoveryRailProps = {
@@ -10,6 +10,8 @@ type DiscoveryRailProps = {
   aside?: ReactNode;
   children: ReactNode;
   ocid?: string;
+  /** Green rule above the section (default on). */
+  showDivider?: boolean;
 };
 
 export function DiscoveryRail({
@@ -17,6 +19,7 @@ export function DiscoveryRail({
   aside,
   children,
   ocid = "discovery.rail",
+  showDivider = true,
 }: DiscoveryRailProps) {
   const railRef = useRef<HTMLDivElement>(null);
 
@@ -30,7 +33,8 @@ export function DiscoveryRail({
   }, []);
 
   return (
-    <section data-ocid={ocid} className="py-8 md:py-10">
+    <section data-ocid={ocid} className="py-7 md:py-9">
+      {showDivider ? <DiscoveryDivider className="mb-7 md:mb-9" /> : null}
       <div className="mb-5 flex flex-col gap-2 md:mb-6 md:flex-row md:items-end md:justify-between md:gap-8">
         <h2
           className="font-display text-xl font-bold leading-tight md:text-2xl"

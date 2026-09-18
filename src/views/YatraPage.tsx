@@ -9,11 +9,13 @@ import {
 import {
   DiscoveryCategoryStrip,
   DiscoveryProductCard,
+  DiscoveryQuickNav,
   DiscoveryRail,
   DiscoverySearchBanner,
   DiscoveryShell,
   DiscoverySidebar,
   DiscoveryThemeTiles,
+  DiscoveryTipBar,
   DiscoveryWhyUs,
   type SidebarGroup,
 } from "@/components/discovery";
@@ -26,6 +28,7 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 function YatraCardItem({
@@ -219,6 +222,17 @@ export default function YatraPage() {
         onChange={setSearch}
         ocid="yatra.search"
       />
+      <DiscoveryQuickNav
+        items={[
+          { label: "Char Dham", href: "/yatra/char-dham" },
+          { label: "Kedarnath", href: "/yatra/kedarnath" },
+          { label: "Do Dham", href: "/yatra/do-dham-yatra" },
+          { label: "Adi Kailash", href: "/yatra/adi-kailash-om-parvat" },
+          { label: "Yatra + Trek", href: "/yatra/kedarnath-chopta-tungnath" },
+          { label: "All Yatras", href: "/yatra" },
+        ]}
+        ocid="yatra.quicknav"
+      />
 
       <DiscoveryShell
         ocid="yatra.shell"
@@ -275,6 +289,26 @@ export default function YatraPage() {
               ocid="yatra.categories"
             />
 
+            <div className="py-5 md:py-6">
+              <DiscoveryTipBar icon={Landmark} ocid="yatra.tip.first">
+                First Himalayan pilgrimage? Start with{" "}
+                <Link
+                  href="/yatra/kedarnath"
+                  className="font-semibold text-[#0B3D2E] underline underline-offset-2"
+                >
+                  Kedarnath
+                </Link>{" "}
+                or the fuller{" "}
+                <Link
+                  href="/yatra/char-dham"
+                  className="font-semibold text-[#0B3D2E] underline underline-offset-2"
+                >
+                  Char Dham circuit
+                </Link>
+                — we handle registration and stays.
+              </DiscoveryTipBar>
+            </div>
+
             <DiscoveryRail
               title="Flagship Himalayan Yatras"
               aside="Permits, stays and local expertise handled — from Dehradun to the abode of the gods."
@@ -289,6 +323,11 @@ export default function YatraPage() {
                 />
               ))}
             </DiscoveryRail>
+
+            <DiscoveryTipBar icon={MapPinned} ocid="yatra.tip.season">
+              Char Dham and Kedarnath run May–October. Adi Kailash needs more
+              buffer for weather — message us early with your preferred month.
+            </DiscoveryTipBar>
 
             {charDham.length > 0 ? (
               <DiscoveryRail
@@ -326,6 +365,16 @@ export default function YatraPage() {
               </DiscoveryRail>
             ) : null}
 
+            <DiscoveryRail
+              title="Complete Yatra Catalogue"
+              aside={`All ${yatras.length} sacred journeys — filter by circuit or season anytime.`}
+              ocid="yatra.rail.all"
+            >
+              {yatras.map((y, i) => (
+                <YatraCardItem key={`all-${y.slug}`} yatra={y} index={i} />
+              ))}
+            </DiscoveryRail>
+
             <DiscoveryThemeTiles
               title="Pilgrimage Themes"
               aside="Choose the circuit that calls you."
@@ -333,44 +382,42 @@ export default function YatraPage() {
               ocid="yatra.themes"
             />
 
-            <div className="pb-10 pt-4">
-              <DiscoveryWhyUs
-                title="Why Pilgrims Choose TrekRoots"
-                items={[
-                  {
-                    icon: Landmark,
-                    title: "Temple-first itineraries",
-                    body: "Darshan windows, puja guidance and realistic travel days — not rushed tourist loops.",
-                  },
-                  {
-                    icon: MapPinned,
-                    title: "Permits & logistics handled",
-                    body: "Registration help, stays near trailheads and helicopter options where the season allows.",
-                  },
-                  {
-                    icon: Sparkles,
-                    title: "Sacred + trail blends",
-                    body: "Combine Kedarnath or Char Dham with Chopta–Tungnath when you want both darshan and altitude.",
-                  },
-                  {
-                    icon: Shield,
-                    title: "Mountain-safe pacing",
-                    body: "Acclimatisation-aware days and conservative weather calls on high routes like Adi Kailash.",
-                  },
-                  {
-                    icon: Users,
-                    title: "Small, guided groups",
-                    body: "Experienced leaders who know the routes, the rituals and the villages along the way.",
-                  },
-                  {
-                    icon: HeartHandshake,
-                    title: "WhatsApp planning",
-                    body: "One message starts your yatra plan — dates, inclusions and packing lists from our team.",
-                  },
-                ]}
-                ocid="yatra.why"
-              />
-            </div>
+            <DiscoveryWhyUs
+              title="Why Pilgrims Choose TrekRoots"
+              items={[
+                {
+                  icon: Landmark,
+                  title: "Temple-first itineraries",
+                  body: "Darshan windows, puja guidance and realistic travel days — not rushed tourist loops.",
+                },
+                {
+                  icon: MapPinned,
+                  title: "Permits & logistics handled",
+                  body: "Registration help, stays near trailheads and helicopter options where the season allows.",
+                },
+                {
+                  icon: Sparkles,
+                  title: "Sacred + trail blends",
+                  body: "Combine Kedarnath or Char Dham with Chopta–Tungnath when you want both darshan and altitude.",
+                },
+                {
+                  icon: Shield,
+                  title: "Mountain-safe pacing",
+                  body: "Acclimatisation-aware days and conservative weather calls on high routes like Adi Kailash.",
+                },
+                {
+                  icon: Users,
+                  title: "Small, guided groups",
+                  body: "Experienced leaders who know the routes, the rituals and the villages along the way.",
+                },
+                {
+                  icon: HeartHandshake,
+                  title: "WhatsApp planning",
+                  body: "One message starts your yatra plan — dates, inclusions and packing lists from our team.",
+                },
+              ]}
+              ocid="yatra.why"
+            />
           </>
         )}
       </DiscoveryShell>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
+import { DiscoveryDivider } from "./DiscoveryDivider";
 import { DISCOVER } from "./tokens";
 
 export type CategoryItem = {
@@ -15,17 +16,20 @@ type DiscoveryCategoryStripProps = {
   title?: string;
   items: CategoryItem[];
   ocid?: string;
+  showDivider?: boolean;
 };
 
 export function DiscoveryCategoryStrip({
   title = "Explore Our Top Categories",
   items,
   ocid = "discovery.categories",
+  showDivider = false,
 }: DiscoveryCategoryStripProps) {
   if (items.length === 0) return null;
 
   return (
     <section data-ocid={ocid} className="pb-2 pt-2 md:pt-4">
+      {showDivider ? <DiscoveryDivider className="mb-7 md:mb-9" /> : null}
       <h2
         className="mb-5 font-display text-xl font-bold md:mb-6 md:text-2xl"
         style={{ color: DISCOVER.inkDeep }}

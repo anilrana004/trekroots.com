@@ -164,38 +164,44 @@ function HeroCarousel() {
                 format: "auto",
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/50 to-black/70 md:bg-gradient-to-r md:from-black/75 md:via-black/40 md:to-black/10" />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0.72) 100%)",
+              }}
+            />
           </div>
         );
       })}
 
-      <div className="absolute inset-0 z-10 flex items-center">
+      <div className="absolute inset-0 z-10 flex items-center justify-center">
         <div className="lux-container w-full">
           <motion.div
             key={current}
             initial={hasAnimated ? { opacity: 0, y: 24 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="mx-auto max-w-xl text-center md:mx-0 md:text-left"
+            className="mx-auto max-w-2xl text-center"
           >
             <h1 className="font-display text-3xl md:text-4xl lg:text-[44px] leading-tight text-white mb-4">
               {item.name}
             </h1>
 
-            <p className="font-body text-[13px] md:text-sm text-white/85 mb-6 mx-auto md:mx-0 max-w-md">
+            <p className="font-body text-[13px] md:text-sm text-white/85 mb-6 mx-auto max-w-md">
               {item.tagline}
             </p>
 
             <Link
               href={item.slug}
               data-ocid={`carousel.explore.${current + 1}`}
-              className="no-retro inline-flex items-center px-5 py-2.5 font-body text-xs font-bold text-[#1A1A1A] mx-auto md:mx-0"
+              className="no-retro inline-flex items-center justify-center px-5 py-2.5 font-body text-xs font-bold text-[#1A1A1A]"
               style={{ backgroundColor: "#FFC107" }}
             >
               Explore The {isYatra ? "Yatra" : "Trek"}
             </Link>
 
-            <p className="font-body text-[11.5px] text-white/70 mt-5 mx-auto md:mx-0 max-w-sm md:max-w-none">
+            <p className="font-body text-[11.5px] text-white/70 mt-5 mx-auto max-w-md">
               {item.duration} · {item.altitude} · Registered with Uttarakhand
               Tourism. See every departure under{" "}
               <Link

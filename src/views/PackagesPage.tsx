@@ -4,11 +4,13 @@ import { getAllPackages, whatsappLink, type Package } from "@/data";
 import { CloudinaryImage } from "@/components/CloudinaryImage";
 import {
   DiscoveryProductCard,
+  DiscoveryQuickNav,
   DiscoveryRail,
   DiscoverySearchBanner,
   DiscoveryShell,
   DiscoverySidebar,
   DiscoveryThemeTiles,
+  DiscoveryTipBar,
   DiscoveryWhyUs,
   type SidebarGroup,
 } from "@/components/discovery";
@@ -21,6 +23,7 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 function PackageCardItem({
@@ -211,6 +214,17 @@ export default function PackagesPage() {
         onChange={setSearch}
         ocid="packages.search"
       />
+      <DiscoveryQuickNav
+        items={[
+          { label: "Ladakh", href: "/packages" },
+          { label: "Spiti", href: "/packages" },
+          { label: "Himachal", href: "/packages" },
+          { label: "Uttarakhand", href: "/packages" },
+          { label: "Kerala", href: "/packages" },
+          { label: "All Packages", href: "/packages" },
+        ]}
+        ocid="packages.quicknav"
+      />
 
       <DiscoveryShell
         ocid="packages.shell"
@@ -300,6 +314,35 @@ export default function PackagesPage() {
               </div>
             </section>
 
+            <div className="py-5 md:py-6">
+              <DiscoveryTipBar icon={Compass} ocid="packages.tip.first">
+                Not sure where to start?{" "}
+                <button
+                  type="button"
+                  onClick={() => setCategory("Himachal")}
+                  className="font-semibold text-[#0B3D2E] underline underline-offset-2"
+                >
+                  Himachal escapes
+                </button>{" "}
+                and{" "}
+                <button
+                  type="button"
+                  onClick={() => setCategory("Ladakh")}
+                  className="font-semibold text-[#0B3D2E] underline underline-offset-2"
+                >
+                  Ladakh bike trips
+                </button>{" "}
+                are our most requested — or{" "}
+                <Link
+                  href="/contact"
+                  className="font-semibold text-[#0B3D2E] underline underline-offset-2"
+                >
+                  talk to an expert
+                </Link>
+                .
+              </DiscoveryTipBar>
+            </div>
+
             <DiscoveryRail
               title="Curated Himalayan Packages"
               aside="Stays, transfers and day plans handled — every detail earned on the road."
@@ -314,6 +357,11 @@ export default function PackagesPage() {
                 />
               ))}
             </DiscoveryRail>
+
+            <DiscoveryTipBar icon={Map} ocid="packages.tip.season">
+              Ladakh and Spiti run best May–September. Kerala and short Himachal
+              getaways stay open year-round — ask us for the right window.
+            </DiscoveryTipBar>
 
             {ladakh.length > 0 ? (
               <DiscoveryRail
@@ -375,6 +423,16 @@ export default function PackagesPage() {
               </DiscoveryRail>
             ) : null}
 
+            <DiscoveryRail
+              title="Complete Package Catalogue"
+              aside={`All ${packages.length} curated trips — filter by region or duration in the sidebar.`}
+              ocid="packages.rail.catalogue"
+            >
+              {packages.map((p, i) => (
+                <PackageCardItem key={`all-${p.slug}`} pkg={p} index={i} />
+              ))}
+            </DiscoveryRail>
+
             <DiscoveryThemeTiles
               title="Trip Themes"
               aside="Pick a region — we handle the rest."
@@ -382,44 +440,42 @@ export default function PackagesPage() {
               ocid="packages.themes"
             />
 
-            <div className="pb-10 pt-4">
-              <DiscoveryWhyUs
-                title="Why Travellers Book Packages With Us"
-                items={[
-                  {
-                    icon: Map,
-                    title: "Logistics, done",
-                    body: "Stays, transfers and day sequencing planned so you travel — not troubleshoot.",
-                  },
-                  {
-                    icon: Compass,
-                    title: "Routes we actually run",
-                    body: "Spiti, Ladakh, Himachal and Kerala circuits refined across many departures.",
-                  },
-                  {
-                    icon: Wallet,
-                    title: "Clear pricing",
-                    body: "Transparent inclusions and WhatsApp quotes — no surprise add-ons on the road.",
-                  },
-                  {
-                    icon: Users,
-                    title: "Groups & private",
-                    body: "Join a departure or ask us to craft a private itinerary for your dates.",
-                  },
-                  {
-                    icon: Sparkles,
-                    title: "Mix with treks & stays",
-                    body: "Add a Himalayan trek or our homestays to turn a package into a fuller journey.",
-                  },
-                  {
-                    icon: HeartHandshake,
-                    title: "Human support",
-                    body: "Real mountain experts on WhatsApp before you leave and while you are on the road.",
-                  },
-                ]}
-                ocid="packages.why"
-              />
-            </div>
+            <DiscoveryWhyUs
+              title="Why Travellers Book Packages With Us"
+              items={[
+                {
+                  icon: Map,
+                  title: "Logistics, done",
+                  body: "Stays, transfers and day sequencing planned so you travel — not troubleshoot.",
+                },
+                {
+                  icon: Compass,
+                  title: "Routes we actually run",
+                  body: "Spiti, Ladakh, Himachal and Kerala circuits refined across many departures.",
+                },
+                {
+                  icon: Wallet,
+                  title: "Clear pricing",
+                  body: "Transparent inclusions and WhatsApp quotes — no surprise add-ons on the road.",
+                },
+                {
+                  icon: Users,
+                  title: "Groups & private",
+                  body: "Join a departure or ask us to craft a private itinerary for your dates.",
+                },
+                {
+                  icon: Sparkles,
+                  title: "Mix with treks & stays",
+                  body: "Add a Himalayan trek or our homestays to turn a package into a fuller journey.",
+                },
+                {
+                  icon: HeartHandshake,
+                  title: "Human support",
+                  body: "Real mountain experts on WhatsApp before you leave and while you are on the road.",
+                },
+              ]}
+              ocid="packages.why"
+            />
           </>
         )}
       </DiscoveryShell>
