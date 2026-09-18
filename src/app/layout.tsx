@@ -7,7 +7,6 @@ import {
 import "./globals.css";
 import { SiteChrome } from "@/components/SiteChrome";
 import { JsonLd } from "@/components/JsonLd";
-import { LOGO_URL } from "@/lib/cloudinary";
 import { organizationSchema } from "@/lib/schema";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -45,8 +44,12 @@ export const metadata: Metadata = {
   description:
     "Treks, yatras, packages and Himalayan stays across Uttarakhand, Himachal Pradesh and Maharashtra. Operating since 2018 from Dehradun.",
   icons: {
-    icon: LOGO_URL,
-    apple: LOGO_URL,
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    shortcut: "/favicon.ico",
   },
 };
 
