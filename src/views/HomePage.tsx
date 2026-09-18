@@ -36,6 +36,8 @@ type CarouselItem = {
   image?: string;
   /** Cloudflare R2 MP4 — used instead of image when set. */
   video?: string;
+  /** Cloudinary still shown while the R2 clip buffers (esp. on phones). */
+  poster?: string;
 };
 
 const CAROUSEL_ITEMS: CarouselItem[] = [
@@ -49,6 +51,7 @@ const CAROUSEL_ITEMS: CarouselItem[] = [
     tagline:
       "A monsoon meadow of 300+ Himalayan wildflower species — UNESCO World Heritage.",
     video: r2VideoUrl("valley-of-flowers"),
+    poster: getTrekCoverImage("valley-of-flowers"),
   },
   {
     id: 2,
@@ -135,27 +138,70 @@ function HeroCarousel() {
     setHasAnimated(true);
   }, []);
 
-  // Play active video; pause others. Image slides keep the timed advance.
+  // Play active video on desktop + phones; pause neighbors.
   useEffect(() => {
     const active = CAROUSEL_ITEMS[current];
+    const cleanups: Array<() => void> = [];
+
     Object.entries(videoRefs.current).forEach(([id, el]) => {
       if (!el) return;
       if (Number(id) === active.id && active.video) {
-        el.currentTime = 0;
-        void el.play().catch(() => {
-          /* autoplay may be blocked; muted + playsInline usually ok */
+        el.muted = true;
+        el.defaultMuted = true;
+        el.setAttribute("muted", "");
+        el.setAttribute("playsinline", "");
+        el.setAttribute("webkit-playsinline", "true");
+
+        const tryPlay = () => {
+          if (el.paused) {
+            void el.play().catch(() => {
+              /* iOS may need a later canplay / first touch */
+            });
+          }
+        };
+
+        try {
+          el.currentTime = 0;
+        } catch {
+          /* ignore seek before metadata on some mobiles */
+        }
+        tryPlay();
+
+        el.addEventListener("loadeddata", tryPlay);
+        el.addEventListener("canplay", tryPlay);
+        cleanups.push(() => {
+          el.removeEventListener("loadeddata", tryPlay);
+          el.removeEventListener("canplay", tryPlay);
+        });
+
+        const onFirstGesture = () => tryPlay();
+        document.addEventListener("touchstart", onFirstGesture, {
+          once: true,
+          passive: true,
+        });
+        document.addEventListener("click", onFirstGesture, { once: true });
+        cleanups.push(() => {
+          document.removeEventListener("touchstart", onFirstGesture);
+          document.removeEventListener("click", onFirstGesture);
         });
       } else {
         el.pause();
       }
     });
+
+    return () => cleanups.forEach((fn) => fn());
   }, [current]);
 
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
     const active = CAROUSEL_ITEMS[current];
-    // Video slides advance when the clip ends (or after a long cap); images after 6s.
-    if (active.video) return;
+    // Images: 6s. Video: advance on ended, with a long mobile-safe cap.
+    if (active.video) {
+      timerRef.current = setTimeout(goNext, 90000);
+      return () => {
+        if (timerRef.current) clearTimeout(timerRef.current);
+      };
+    }
     timerRef.current = setTimeout(goNext, 6000);
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
@@ -168,7 +214,7 @@ function HeroCarousel() {
   return (
     <section
       data-ocid="carousel.section"
-      className="relative h-[460px] md:h-[560px] overflow-hidden"
+      className="relative h-[min(72vh,560px)] min-h-[460px] md:h-[560px] overflow-hidden"
     >
       {CAROUSEL_ITEMS.map((slide, i) => {
         if (!shouldMountHeroSlide(i, current, CAROUSEL_ITEMS.length)) {
@@ -189,10 +235,14 @@ function HeroCarousel() {
                   videoRefs.current[slide.id] = el;
                 }}
                 src={slide.video}
-                className="h-full w-full object-cover object-center"
+                poster={slide.poster}
+                className="absolute inset-0 h-full w-full object-cover object-center"
+                autoPlay
                 muted
                 playsInline
                 loop={false}
+                controls={false}
+                disablePictureInPicture
                 preload={active || i === 0 ? "auto" : "metadata"}
                 onEnded={goNext}
                 aria-label={`${slide.name} cinematic film`}
