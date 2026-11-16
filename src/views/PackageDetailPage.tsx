@@ -516,7 +516,10 @@ export default function PackageDetailPage() {
                             className="text-xs font-body mt-0.5"
                             style={{ color: "var(--text-muted)" }}
                           >
-                            {day.route} · {day.distanceKm} km
+                            {day.route}
+                            {Number(day.distanceKm) > 0
+                              ? ` · ${day.distanceKm} km`
+                              : ""}
                           </p>
                         </div>
                       </div>
@@ -540,18 +543,22 @@ export default function PackageDetailPage() {
                           className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-body"
                           style={{ color: "var(--text-muted)" }}
                         >
+                          {Number(day.startAltitudeM) > 0 ? (
                           <div>
                             <span className="block text-[10px] uppercase tracking-wider mb-0.5">
                               Start Alt
                             </span>
                             {day.startAltitudeM} m
                           </div>
+                          ) : null}
+                          {Number(day.endAltitudeM) > 0 ? (
                           <div>
                             <span className="block text-[10px] uppercase tracking-wider mb-0.5">
                               End Alt
                             </span>
                             {day.endAltitudeM} m
                           </div>
+                          ) : null}
                           <div>
                             <span className="block text-[10px] uppercase tracking-wider mb-0.5">
                               Difficulty

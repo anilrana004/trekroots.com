@@ -176,7 +176,8 @@ function DayBlock({ day }: { day: DayItinerary }) {
               {day.title}
             </p>
             <p className="font-body text-[11.5px] text-muted-foreground">
-              {day.route} · {day.distanceKm} km
+              {day.route}
+              {Number(day.distanceKm) > 0 ? ` · ${day.distanceKm} km` : null}
             </p>
           </div>
         </div>
@@ -193,15 +194,21 @@ function DayBlock({ day }: { day: DayItinerary }) {
           style={{ borderColor: "#E8E8E8", backgroundColor: "#FAFAFA" }}
         >
           <div className="flex flex-wrap gap-2 font-body text-[11px]">
-            <span className="px-2 py-0.5 bg-white border" style={{ borderColor: "#E8E8E8" }}>
-              {day.campsite}
-            </span>
-            <span className="px-2 py-0.5 bg-white border" style={{ borderColor: "#E8E8E8" }}>
-              {day.mealsIncluded}
-            </span>
-            <span className="px-2 py-0.5 bg-white border" style={{ borderColor: "#E8E8E8" }}>
-              {Number(day.startAltitudeM)}m → {Number(day.endAltitudeM)}m
-            </span>
+            {day.campsite && day.campsite !== "As per itinerary" ? (
+              <span className="px-2 py-0.5 bg-white border" style={{ borderColor: "#E8E8E8" }}>
+                {day.campsite}
+              </span>
+            ) : null}
+            {day.mealsIncluded && day.mealsIncluded !== "As per itinerary" ? (
+              <span className="px-2 py-0.5 bg-white border" style={{ borderColor: "#E8E8E8" }}>
+                {day.mealsIncluded}
+              </span>
+            ) : null}
+            {Number(day.startAltitudeM) > 0 || Number(day.endAltitudeM) > 0 ? (
+              <span className="px-2 py-0.5 bg-white border" style={{ borderColor: "#E8E8E8" }}>
+                {Number(day.startAltitudeM)}m → {Number(day.endAltitudeM)}m
+              </span>
+            ) : null}
           </div>
           <p className="font-body text-[13px] text-[#555555] leading-relaxed">
             {day.description}
@@ -299,7 +306,8 @@ export default function TrekDetailPage({
         <ol className="space-y-2 list-decimal list-inside">
           {trek.itinerary.map((d) => (
             <li key={d.day}>
-              Day {d.day}: {d.title} ({d.distanceKm} km)
+              Day {d.day}: {d.title}
+              {Number(d.distanceKm) > 0 ? ` (${d.distanceKm} km)` : ""}
             </li>
           ))}
         </ol>
