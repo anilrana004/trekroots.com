@@ -8,10 +8,7 @@ import {
 import { getBlogSitemapEntries } from "@/lib/sanity";
 import { absoluteUrl } from "@/lib/site";
 
-/** Catalog is well under 500 URLs — single sitemap (no index split required). */
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
-
+function catalogUrls(now: Date): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
     { url: absoluteUrl("/"), lastModified: now, changeFrequency: "weekly", priority: 1 },
     { url: absoluteUrl("/treks"), lastModified: now, changeFrequency: "weekly", priority: 0.95 },
@@ -58,17 +55,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  const sanityBlog = await getBlogSitemapEntries();
-  const blog = sanityBlog.map((post) => ({
-    url: absoluteUrl(`/blog/${post.slug}`),
-    lastModified: post.updatedAt
-      ? new Date(post.updatedAt)
-      : post.publishedAt
-        ? new Date(post.publishedAt)
-        : now,
-    changeFrequency: "monthly" as const,
-    priority: 0.65,
-  }));
+  return [...staticPages, ...treks, ...yatras, ...packages, ...stays];
+}
 
-  return [...staticPages, ...treks, ...yatras, ...packages, ...stays, ...blog];
+/**
+ * Always return a valid sitemap — never 500 for Googlebot.
+ * Blog entries are best-effort; catalog URLs are enough to start indexing.
+ */
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const now = new Date();
+  const base = catalogUrls(now);
+
+  try {
+    const sanityBlog = await getBlogSitemapEntries();
+    const blog = sanityBlog.map((post) => ({
+      url: absoluteUrl(`/blog/${post.slug}`),
+      lastModified: post.updatedAt
+        ? new Date(post.updatedAt)
+        : post.publishedAt
+          ? new Date(post.publishedAt)
+          : now,
+      changeFrequency: "monthly" as const,
+      priority: 0.65,
+    }));
+    return [...base, ...blog];
+  } catch (error) {
+    console.error("[sitemap] blog entries failed; returning catalog only", error);
+    return base;
+  }
 }

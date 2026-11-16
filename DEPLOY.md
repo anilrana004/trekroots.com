@@ -42,10 +42,12 @@ In **Project → Settings → Environment Variables**, add for Production
 **Public (OK to leave visible):**
 
 ```
-NEXT_PUBLIC_SITE_URL=https://trekroots.com
+NEXT_PUBLIC_SITE_URL=https://www.trekroots.com
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=...
 NEXT_PUBLIC_SANITY_PROJECT_ID=w00xdoog
 NEXT_PUBLIC_SANITY_DATASET=production
+# Optional — Search Console HTML-tag token (content= value only)
+# NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=...
 ```
 
 **Secrets — create with “Sensitive” checked** (Vercel will show

@@ -1,0 +1,614 @@
+[
+  {
+    "type": "trek",
+    "slug": "har-ki-dun",
+    "url": "https://securetravels.in/trek/har-ki-dun-trek/",
+    "duration": {
+      "nights": 6,
+      "days": 7
+    },
+    "durationLabel": "6 Nights / 7 Days",
+    "difficulty": "Easy to Moderate",
+    "bestSeason": "December to March",
+    "altitudeFt": 12000,
+    "distanceKm": 200,
+    "priceINR": 9499,
+    "originalINR": 11499,
+    "ok": true,
+    "trailKm": null
+  },
+  {
+    "type": "trek",
+    "slug": "dayara-bugyal",
+    "url": "https://securetravels.in/trek/dayara-bugyal-trek/",
+    "duration": {
+      "nights": 3,
+      "days": 4
+    },
+    "durationLabel": "3 Nights / 4 Days",
+    "difficulty": "Easy to Moderate",
+    "bestSeason": "December to March",
+    "altitudeFt": 12100,
+    "distanceKm": 185,
+    "priceINR": 4500,
+    "originalINR": 5999,
+    "ok": true,
+    "trailKm": 5
+  },
+  {
+    "type": "trek",
+    "slug": "devkund-waterfall",
+    "url": "https://securetravels.in/trek/devkund-waterfall-trek/",
+    "duration": {
+      "nights": 0,
+      "days": 1
+    },
+    "durationLabel": "1 Day",
+    "difficulty": "Easy",
+    "bestSeason": "June to February",
+    "altitudeFt": 2700,
+    "distanceKm": null,
+    "priceINR": 1549,
+    "originalINR": 1999,
+    "ok": true,
+    "trailKm": null
+  },
+  {
+    "type": "trek",
+    "slug": "sar-pass",
+    "url": "https://securetravels.in/trek/sar-pass-trek/",
+    "duration": {
+      "nights": 4,
+      "days": 5
+    },
+    "durationLabel": "4 Nights / 5 Days",
+    "difficulty": "Moderate",
+    "bestSeason": "April to October",
+    "altitudeFt": 13800,
+    "distanceKm": 7,
+    "priceINR": 5999,
+    "originalINR": 7999,
+    "ok": true,
+    "trailKm": 7
+  },
+  {
+    "type": "trek",
+    "slug": "kuari-pass",
+    "url": "https://securetravels.in/trek/kuari-pass-trek/",
+    "duration": {
+      "nights": 5,
+      "days": 6
+    },
+    "durationLabel": "5 Nights / 6 Days",
+    "difficulty": "Moderate",
+    "bestSeason": "December to March",
+    "altitudeFt": 12763,
+    "distanceKm": 256,
+    "priceINR": 7999,
+    "originalINR": 9999,
+    "ok": true,
+    "trailKm": 6
+  },
+  {
+    "type": "trek",
+    "slug": "hampta-pass",
+    "url": "https://securetravels.in/trek/hampta-pass-trek/",
+    "duration": {
+      "nights": 4,
+      "days": 5
+    },
+    "durationLabel": "4 Nights / 5 Days",
+    "difficulty": "Moderate",
+    "bestSeason": "June to Sep",
+    "altitudeFt": 14100,
+    "distanceKm": 85,
+    "priceINR": 5999,
+    "originalINR": 6999,
+    "ok": true,
+    "trailKm": null
+  },
+  {
+    "type": "trek",
+    "slug": "kedarkantha",
+    "url": "https://securetravels.in/trek/kedarkantha-trek/",
+    "duration": {
+      "nights": 4,
+      "days": 5
+    },
+    "durationLabel": "4 Nights / 5 Days",
+    "difficulty": "Easy to Moderate",
+    "bestSeason": "Nov - March",
+    "altitudeFt": 12500,
+    "distanceKm": 22,
+    "priceINR": 3999,
+    "originalINR": 5999,
+    "ok": true,
+    "trailKm": 22
+  },
+  {
+    "type": "trek",
+    "slug": "brahmatal",
+    "url": "https://securetravels.in/trek/brahmatal-trek/",
+    "duration": {
+      "nights": 5,
+      "days": 6
+    },
+    "durationLabel": "5 Nights / 6 Days",
+    "difficulty": "Moderate",
+    "bestSeason": "December to March",
+    "altitudeFt": 12250,
+    "distanceKm": 250,
+    "priceINR": 6999,
+    "originalINR": 8999,
+    "ok": true,
+    "trailKm": 6
+  },
+  {
+    "type": "trek",
+    "slug": "andharban-jungle",
+    "url": "https://securetravels.in/trek/andharban-jungle-trek/",
+    "duration": {
+      "nights": 0,
+      "days": 1
+    },
+    "durationLabel": "1 Day",
+    "difficulty": "Easy",
+    "bestSeason": "June to February",
+    "altitudeFt": 2160,
+    "distanceKm": null,
+    "priceINR": 1549,
+    "originalINR": 1999,
+    "ok": true,
+    "trailKm": null
+  },
+  {
+    "type": "trek",
+    "slug": "chopta-tungnath",
+    "url": "https://securetravels.in/trek/chopta-tungnath-trek/",
+    "duration": {
+      "nights": 2,
+      "days": 3
+    },
+    "durationLabel": "2 Nights / 3 Days",
+    "difficulty": "Easy to Moderate",
+    "bestSeason": "December to February",
+    "altitudeFt": 12073,
+    "distanceKm": null,
+    "priceINR": 6500,
+    "originalINR": 8499,
+    "ok": true,
+    "trailKm": 6
+  },
+  {
+    "type": "trek",
+    "slug": "valley-of-flowers",
+    "url": "https://securetravels.in/trek/valley-of-flowers-trek/",
+    "duration": {
+      "nights": 5,
+      "days": 6
+    },
+    "durationLabel": "5 Nights / 6 Days",
+    "difficulty": "Easy to Moderate",
+    "bestSeason": "June to October",
+    "altitudeFt": 14200,
+    "distanceKm": 265,
+    "priceINR": 6500,
+    "originalINR": 8500,
+    "ok": true,
+    "trailKm": 9
+  },
+  {
+    "type": "trek",
+    "slug": "kalsubai",
+    "url": "https://securetravels.in/trek/kalsubai-trek/",
+    "duration": {
+      "nights": 1,
+      "days": 2
+    },
+    "durationLabel": "1 Night / 2 Days",
+    "difficulty": "Moderate",
+    "bestSeason": "June to February",
+    "altitudeFt": 5400,
+    "distanceKm": null,
+    "priceINR": 1399,
+    "originalINR": 1899,
+    "ok": true,
+    "trailKm": null
+  },
+  {
+    "type": "trek",
+    "slug": "harishchandragad-night",
+    "url": "https://securetravels.in/trek/harishchandragad-night-trek/",
+    "duration": {
+      "nights": 1,
+      "days": 2
+    },
+    "durationLabel": "1 Night / 2 Days",
+    "difficulty": "Easy to Moderate",
+    "bestSeason": "June to February",
+    "altitudeFt": 4670,
+    "distanceKm": null,
+    "priceINR": 1449,
+    "originalINR": 1900,
+    "ok": true,
+    "trailKm": null
+  },
+  {
+    "type": "trek",
+    "slug": "kedarkantha-hometown",
+    "url": "https://securetravels.in/trek/kedarkantha-trek-hometown/",
+    "duration": {
+      "nights": 8,
+      "days": 9
+    },
+    "durationLabel": "8 Nights / 9 Days",
+    "difficulty": "Easy to Moderate",
+    "bestSeason": "Nov - March",
+    "altitudeFt": 12500,
+    "distanceKm": null,
+    "priceINR": 9999,
+    "originalINR": 11999,
+    "ok": true,
+    "trailKm": null
+  },
+  {
+    "type": "trek",
+    "slug": "nag-tibba",
+    "url": "https://securetravels.in/trek/nag-tibba-trek/",
+    "duration": {
+      "nights": 1,
+      "days": 2
+    },
+    "durationLabel": "1 Night / 2 Days",
+    "difficulty": "Easy",
+    "bestSeason": "December to February",
+    "altitudeFt": 9915,
+    "distanceKm": 90,
+    "priceINR": 2000,
+    "originalINR": 3000,
+    "ok": true,
+    "trailKm": 4
+  },
+  {
+    "type": "trek",
+    "slug": "rajmachi-fireflies",
+    "url": "https://securetravels.in/trek/rajmachi-fireflies-camping-trek/",
+    "duration": {
+      "nights": 1,
+      "days": 2
+    },
+    "durationLabel": "1 Night / 2 Days",
+    "difficulty": "Easy",
+    "bestSeason": "May to September",
+    "altitudeFt": 2710,
+    "distanceKm": 5,
+    "priceINR": 1699,
+    "originalINR": 2099,
+    "ok": true,
+    "trailKm": 5
+  },
+  {
+    "type": "trek",
+    "slug": "phulara-ridge",
+    "url": "https://securetravels.in/trek/phulara-ridge-trek/",
+    "duration": {
+      "nights": 5,
+      "days": 6
+    },
+    "durationLabel": "5 Nights / 6 Days",
+    "difficulty": "Moderate",
+    "bestSeason": "May to November",
+    "altitudeFt": 12150,
+    "distanceKm": 200,
+    "priceINR": 8999,
+    "originalINR": 10999,
+    "ok": true,
+    "trailKm": null
+  },
+  {
+    "type": "yatra",
+    "slug": "kedarnath",
+    "url": "https://securetravels.in/spiritual-pilgrimage/kedarnath-yatra/",
+    "duration": {
+      "nights": 3,
+      "days": 4
+    },
+    "durationLabel": "3 Nights / 4 Days",
+    "difficulty": "Moderate to Challenging",
+    "bestSeason": "May to October",
+    "altitudeFt": 11755,
+    "distanceKm": 210,
+    "priceINR": 9499,
+    "originalINR": null,
+    "ok": true
+  },
+  {
+    "type": "yatra",
+    "slug": "char-dham",
+    "url": "https://securetravels.in/spiritual-pilgrimage/char-dham-yatra/",
+    "duration": {
+      "nights": 9,
+      "days": 10
+    },
+    "durationLabel": "9 Nights / 10 Days",
+    "difficulty": "Moderate to Challenging",
+    "bestSeason": "May to October",
+    "altitudeFt": 11755,
+    "distanceKm": 180,
+    "priceINR": 19999,
+    "originalINR": 21999,
+    "ok": true
+  },
+  {
+    "type": "yatra",
+    "slug": "kedarnath-chopta-tungnath",
+    "url": "https://securetravels.in/spiritual-pilgrimage/kedarnath-with-chopta-tungnath-trek/",
+    "duration": {
+      "nights": 4,
+      "days": 5
+    },
+    "durationLabel": "4 Nights / 5 Days",
+    "difficulty": "Moderate to Challenging",
+    "bestSeason": "April to November",
+    "altitudeFt": 13123,
+    "distanceKm": 80,
+    "priceINR": 11500,
+    "originalINR": 13500,
+    "ok": true
+  },
+  {
+    "type": "yatra",
+    "slug": "kedar-badri-chopta-tungnath",
+    "url": "https://securetravels.in/spiritual-pilgrimage/kedar-badri-with-chopta-tungnath-trek/",
+    "duration": {
+      "nights": 5,
+      "days": 6
+    },
+    "durationLabel": "5 Nights / 6 Days",
+    "difficulty": "Moderate to Challenging",
+    "bestSeason": "May to October",
+    "altitudeFt": 11755,
+    "distanceKm": 230,
+    "priceINR": 13499,
+    "originalINR": 15499,
+    "ok": true
+  },
+  {
+    "type": "yatra",
+    "slug": "do-dham-yatra",
+    "url": "https://securetravels.in/spiritual-pilgrimage/do-dham-yatra/",
+    "duration": {
+      "nights": 5,
+      "days": 6
+    },
+    "durationLabel": "5 Nights / 6 Days",
+    "difficulty": "Moderate to Challenging",
+    "bestSeason": "May to October",
+    "altitudeFt": 11755,
+    "distanceKm": 230,
+    "priceINR": 13499,
+    "originalINR": 15499,
+    "ok": true
+  },
+  {
+    "type": "yatra",
+    "slug": "adi-kailash-om-parvat",
+    "url": "https://securetravels.in/spiritual-pilgrimage/adi-kailash-om-parvat-yatra/",
+    "duration": {
+      "nights": 5,
+      "days": 6
+    },
+    "durationLabel": "5 Nights / 6 Days",
+    "difficulty": "Moderate",
+    "bestSeason": "May to October",
+    "altitudeFt": 15500,
+    "distanceKm": null,
+    "priceINR": 36999,
+    "originalINR": 41999,
+    "ok": true
+  },
+  {
+    "type": "package",
+    "slug": "spiti-valley-tour",
+    "url": "https://securetravels.in/spiti-valley/spiti-valley-tour/",
+    "duration": {
+      "nights": 7,
+      "days": 8
+    },
+    "durationLabel": "7 Nights / 8 Days",
+    "difficulty": "Easy to Moderate",
+    "bestSeason": "May to October",
+    "altitudeFt": 15500,
+    "distanceKm": null,
+    "priceINR": 17999,
+    "originalINR": 21999,
+    "ok": true
+  },
+  {
+    "type": "package",
+    "slug": "summer-spiti-valley",
+    "url": "https://securetravels.in/spiti-valley/summer-spiti-valley-tour/",
+    "duration": {
+      "nights": 8,
+      "days": 9
+    },
+    "durationLabel": "8 Nights / 9 Days",
+    "difficulty": "Easy to Moderate",
+    "bestSeason": "May to October",
+    "altitudeFt": 15060,
+    "distanceKm": 230,
+    "priceINR": 18999,
+    "originalINR": 20999,
+    "ok": true
+  },
+  {
+    "type": "package",
+    "slug": "kerala-full-circuit",
+    "url": "https://securetravels.in/tours/kerala-full-circuit-tours/",
+    "duration": {
+      "nights": 9,
+      "days": 10
+    },
+    "durationLabel": "9 Nights / 10 Days",
+    "difficulty": "Easy",
+    "bestSeason": "March to August",
+    "altitudeFt": 7900,
+    "distanceKm": 130,
+    "priceINR": 17499,
+    "originalINR": 20999,
+    "ok": true
+  },
+  {
+    "type": "package",
+    "slug": "best-of-uttarakhand",
+    "url": "https://securetravels.in/tours/the-best-of-uttarakhand/",
+    "duration": {
+      "nights": 9,
+      "days": 10
+    },
+    "durationLabel": "9 Nights / 10 Days",
+    "difficulty": "Moderate",
+    "bestSeason": "September to March",
+    "altitudeFt": 13123,
+    "distanceKm": null,
+    "priceINR": 16500,
+    "originalINR": 19500,
+    "ok": true
+  },
+  {
+    "type": "package",
+    "slug": "amritsar-mcleodganj-bir-kasol-manali",
+    "url": "https://securetravels.in/tours/amritsar-mcleodganj-bir-kasol-manali-tour/",
+    "duration": {
+      "nights": 7,
+      "days": 8
+    },
+    "durationLabel": "7 Nights / 8 Days",
+    "difficulty": "Easy",
+    "bestSeason": "October to June",
+    "altitudeFt": 10040,
+    "distanceKm": null,
+    "priceINR": null,
+    "originalINR": null,
+    "ok": true
+  },
+  {
+    "type": "package",
+    "slug": "mcleodganj-bir-kasol-manali",
+    "url": "https://securetravels.in/tours/mcleodganj-bir-kasol-manali-tour/",
+    "duration": {
+      "nights": 6,
+      "days": 7
+    },
+    "durationLabel": "6 Nights / 7 Days",
+    "difficulty": "Easy",
+    "bestSeason": "October to February",
+    "altitudeFt": 13050,
+    "distanceKm": null,
+    "priceINR": null,
+    "originalINR": null,
+    "ok": true
+  },
+  {
+    "type": "package",
+    "slug": "kasol-manali-solang",
+    "url": "https://securetravels.in/tours/kasol-manali-solang-valley-tour/",
+    "duration": {
+      "nights": 3,
+      "days": 4
+    },
+    "durationLabel": "3 Nights / 4 Days",
+    "difficulty": "Easy",
+    "bestSeason": "November to May",
+    "altitudeFt": 8500,
+    "distanceKm": 14,
+    "priceINR": null,
+    "originalINR": null,
+    "ok": true
+  },
+  {
+    "type": "package",
+    "slug": "jibhi-tirthan-valley",
+    "url": "https://securetravels.in/tours/jibhi-tirthan-valley-road-trip/",
+    "duration": {
+      "nights": 4,
+      "days": 5
+    },
+    "durationLabel": "4 Nights / 5 Days",
+    "difficulty": "Easy to Moderate",
+    "bestSeason": "September to March",
+    "altitudeFt": 10800,
+    "distanceKm": 9,
+    "priceINR": null,
+    "originalINR": null,
+    "ok": true
+  },
+  {
+    "type": "package",
+    "slug": "ladakh-bike-8d-7n",
+    "url": "https://securetravels.in/ladakh/ladakh-bike-trip-8d-7n/",
+    "duration": {
+      "nights": 7,
+      "days": 8
+    },
+    "durationLabel": "7 Nights / 8 Days",
+    "difficulty": "Moderate to Challenging",
+    "bestSeason": "May – Sep",
+    "altitudeFt": 19024,
+    "distanceKm": null,
+    "priceINR": 19999,
+    "originalINR": 24999,
+    "ok": true
+  },
+  {
+    "type": "package",
+    "slug": "ladakh-bike-7d-6n",
+    "url": "https://securetravels.in/ladakh/ladakh-bike-trip-7d-6n/",
+    "duration": {
+      "nights": 6,
+      "days": 7
+    },
+    "durationLabel": "6 Nights / 7 Days",
+    "difficulty": "Moderate to Challenging",
+    "bestSeason": "May to September",
+    "altitudeFt": 18380,
+    "distanceKm": null,
+    "priceINR": 13999,
+    "originalINR": 19999,
+    "ok": true
+  },
+  {
+    "type": "package",
+    "slug": "ladakh-bike-6d-5n",
+    "url": "https://securetravels.in/ladakh/ladakh-bike-trip-6d-5n/",
+    "duration": {
+      "nights": 5,
+      "days": 6
+    },
+    "durationLabel": "5 Nights / 6 Days",
+    "difficulty": "Moderate to Challenging",
+    "bestSeason": "May to September",
+    "altitudeFt": 18380,
+    "distanceKm": null,
+    "priceINR": 10999,
+    "originalINR": 15999,
+    "ok": true
+  },
+  {
+    "type": "package",
+    "slug": "kerala-short-getaway",
+    "url": "https://securetravels.in/tours/kerala-short-getaway/",
+    "duration": {
+      "nights": 7,
+      "days": 8
+    },
+    "durationLabel": "7 Nights / 8 Days",
+    "difficulty": "Easy",
+    "bestSeason": "March to August",
+    "altitudeFt": 7900,
+    "distanceKm": 130,
+    "priceINR": 10499,
+    "originalINR": 12999,
+    "ok": true
+  }
+]

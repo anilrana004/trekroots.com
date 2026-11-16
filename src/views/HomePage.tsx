@@ -12,6 +12,9 @@ import { HomeFaq } from "@/components/home/HomeFaq";
 import { HomeJournal } from "@/components/home/HomeJournal";
 import { IntroVideoOverlay } from "@/components/home/IntroVideoOverlay";
 import { PromoBanner } from "@/components/home/PromoBanner";
+
+/** Flip to true when the fullscreen entry film should show again. */
+const SHOW_INTRO_VIDEO = false;
 import { Reasons } from "@/components/home/Reasons";
 import { SacredYatras } from "@/components/home/SacredYatras";
 import { SafetyFeature } from "@/components/home/SafetyFeature";
@@ -46,7 +49,7 @@ const CAROUSEL_ITEMS: CarouselItem[] = [
     name: "Valley of Flowers Trek",
     category: "TREK",
     duration: "6 Days",
-    altitude: "3,962 m",
+    altitude: "14,200 ft",
     tagline:
       "A monsoon meadow of 300+ Himalayan wildflower species — UNESCO World Heritage.",
     video: r2VideoUrl("valley-of-flowers"),
@@ -56,8 +59,8 @@ const CAROUSEL_ITEMS: CarouselItem[] = [
     slug: "/treks/kedarkantha",
     name: "Kedarkantha Trek",
     category: "TREK",
-    duration: "6 Days",
-    altitude: "3,811 m",
+    duration: "5 Days",
+    altitude: "12,500 ft",
     tagline:
       "India's finest winter trek — a snow-clad summit at sunrise above the clouds.",
     video: r2VideoUrl("kedarkantha"),
@@ -78,8 +81,8 @@ const CAROUSEL_ITEMS: CarouselItem[] = [
     slug: "/yatra/char-dham",
     name: "Char Dham Yatra",
     category: "YATRA",
-    duration: "12 Days",
-    altitude: "3,583 m",
+    duration: "10 Days",
+    altitude: "11,755 ft",
     tagline:
       "Walk the four sacred shrines of Uttarakhand — a journey of a lifetime.",
     image: getYatraCoverImage("char-dham"),
@@ -90,7 +93,7 @@ const CAROUSEL_ITEMS: CarouselItem[] = [
     name: "Kedarnath Yatra",
     category: "YATRA",
     duration: "4 Days",
-    altitude: "3,583 m",
+    altitude: "11,755 ft",
     tagline:
       "Lord Shiva's high abode — one of the 12 Jyotirlingas in the Himalayas.",
     image: getYatraCoverImage("kedarnath"),
@@ -443,7 +446,7 @@ export default function HomePage({
 }) {
   return (
     <div className="bg-white">
-      <IntroVideoOverlay />
+      {SHOW_INTRO_VIDEO ? <IntroVideoOverlay /> : null}
       <HeroCarousel />
       <NoticeStrip />
       <SafetyFeature />
