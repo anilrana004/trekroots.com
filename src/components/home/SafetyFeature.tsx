@@ -92,7 +92,7 @@ export function SafetyFeature() {
 
             <div className="mt-6">
               <p className="font-body text-sm font-semibold text-[#1A1A1A]">
-                Priya Sharma
+                Ankit Singh Rana
               </p>
               <p className="font-body text-xs text-muted-foreground mt-0.5">
                 Founder &amp; Lead Guide, TrekRoots
